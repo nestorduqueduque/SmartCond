@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "SmartCond",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

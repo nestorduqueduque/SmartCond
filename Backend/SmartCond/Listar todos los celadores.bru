@@ -1,0 +1,15 @@
+meta {
+  name: Listar todos los celadores
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:8080/admin/find-all-celador
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

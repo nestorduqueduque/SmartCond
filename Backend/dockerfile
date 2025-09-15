@@ -1,0 +1,22 @@
+FROM openjdk:21-jdk-slim as builder
+
+WORKDIR /app
+
+COPY .mvn/ .mvn
+COPY mvnw ./
+COPY pom.xml ./
+
+RUN chmod +x mvnw && ./mvnw dependency:go-offline
+
+COPY src/ ./src
+
+RUN ./mvnw clean package -DskipTests
+
+FROM openjdk:21-jdk-slim
+
+WORKDIR /app
+RUN mkdir ./logs
+COPY --from=builder /app/target/smartcond-0.0.1-SNAPSHOT.jar .
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "smartcond-0.0.1-SNAPSHOT.jar"]
