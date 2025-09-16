@@ -1,4 +1,6 @@
-package server.smartcond.Domain.Dto.request;
+package server.smartcond.Domain.Dto.response;
+
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,13 +9,16 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CeladorRequestDTO {
+public class ResidentResponseDTO {
 
+    private Long id;
     private String name;
     private String lastName;
     private Long document;
     private String email;
-    private String password;
     private Long phoneNumber;
-    private String direction;
+    private Integer tower;
+    private Integer apartment;
+    private boolean isEnabled;
+    private String role;
 }

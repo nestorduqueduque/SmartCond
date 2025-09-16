@@ -5,11 +5,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import server.smartcond.Domain.Dto.request.CeladorRequestDTO;
+import server.smartcond.Domain.Dto.request.ResidentRequestDTO;
 import server.smartcond.Domain.Dto.response.CeladorResponseDTO;
+import server.smartcond.Domain.Dto.response.ResidentResponseDTO;
 import server.smartcond.Domain.Entities.UserEntity;
 import server.smartcond.Domain.Services.IAdminService;
 import server.smartcond.Domain.Utils.RoleEnum;
 import server.smartcond.Domain.dao.interfaces.ICeladorDao;
+import server.smartcond.Domain.dao.interfaces.IResidentDao;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,11 +24,14 @@ public class AdminServiceImpl implements IAdminService {
 
     @Autowired
     private ICeladorDao celadorDao;
+    @Autowired
+    private IResidentDao residentDao;
 
+    //celador
     @Override
-    public List<CeladorResponseDTO> findAll() {
+    public List<CeladorResponseDTO> findAllCeladors() {
             ModelMapper modelMapper = new ModelMapper();
-            return this.celadorDao.findAll()
+            return this.celadorDao.findAllCeladors()
                     .stream()
                     .map(entity -> modelMapper.map(entity, CeladorResponseDTO.class))
                     .collect(Collectors.toList());
@@ -55,7 +61,7 @@ public class AdminServiceImpl implements IAdminService {
             userEntity.setAccountNoLocked(true);
             userEntity.setCredentialNoExpired(true);
             userEntity.setRole(RoleEnum.CELADOR);
-            celadorDao.saveUser(userEntity);
+            celadorDao.saveUserCelador(userEntity);
             CeladorResponseDTO responseDTO = modelMapper.map(userEntity, CeladorResponseDTO.class);
             return responseDTO;
 
@@ -67,4 +73,36 @@ public class AdminServiceImpl implements IAdminService {
     public CeladorResponseDTO updateCelador(CeladorRequestDTO celadorRequestDTO, Long id) {
         return null;
     }
+
+
+    //Resident
+    @Override
+    public ResidentResponseDTO createResident(ResidentRequestDTO residentRequestDTO) {
+        try {
+            ModelMapper modelMapper = new ModelMapper();
+            UserEntity userEntity = modelMapper.map(residentRequestDTO, UserEntity.class);
+            userEntity.setEnabled(true);
+            userEntity.setAccountNoExpired(true);
+            userEntity.setAccountNoLocked(true);
+            userEntity.setCredentialNoExpired(true);
+            userEntity.setRole(RoleEnum.RESIDENT);
+            residentDao.saveUserResident(userEntity);
+            ResidentResponseDTO responseDTO = modelMapper.map(userEntity, ResidentResponseDTO.class);
+            return responseDTO;
+
+        } catch (Exception e) {
+            throw new UnsupportedOperationException("Error al guardar Usuario");
+        }
+    }
+
+    @Override
+    public List<ResidentResponseDTO> findAllResidents() {
+        ModelMapper modelMapper = new ModelMapper();
+        return this.residentDao.findAllResidents()
+                .stream()
+                .map(entity -> modelMapper.map(entity, ResidentResponseDTO.class))
+                .collect(Collectors.toList());
+    }
+
+
 }

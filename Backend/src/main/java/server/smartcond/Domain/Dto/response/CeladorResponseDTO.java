@@ -13,9 +13,10 @@ public class CeladorResponseDTO {
     private Long id;
     private String name;
     private String lastName;
-    private String document;
+    private Long document;
     private String email;
-    private String phoneNumber;
+    private Long phoneNumber;
+    private String direction;
     private boolean isEnabled;
     private String role;
 

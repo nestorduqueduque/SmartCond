@@ -25,7 +25,7 @@ public class UserEntity {
     private String lastName;
 
     @Column
-    private String document;
+    private Long document;
 
     @Column
     private String email;
@@ -34,16 +34,16 @@ public class UserEntity {
     private String password;
 
     @Column(name = "phone_number")
-    private String phoneNumber;
+    private Long phoneNumber;
 
     @Column(nullable = true)
     private String direction;
 
     @Column(nullable = true)
-    private String tower;
+    private Integer tower;
 
     @Column(nullable = true)
-    private String apartment;
+    private Integer apartment;
 
     @Column(name = "is_enabled")
     private boolean isEnabled;

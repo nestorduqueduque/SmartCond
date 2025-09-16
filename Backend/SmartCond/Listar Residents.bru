@@ -1,0 +1,15 @@
+meta {
+  name: Listar Residents
+  type: http
+  seq: 4
+}
+
+get {
+  url: http://localhost:8080/admin/find-all-resident
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

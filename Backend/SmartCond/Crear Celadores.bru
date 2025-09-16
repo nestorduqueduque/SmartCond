@@ -6,8 +6,26 @@ meta {
 
 post {
   url: http://localhost:8080/admin/create-celador
-  body: none
-  auth: inherit
+  body: json
+  auth: basic
+}
+
+auth:basic {
+  username: nestor
+  password: 1234
+}
+
+body:json {
+  {
+    "name": "Carlos",
+    "lastName": "Gómez",
+    "document": "123456789",
+    "email": "carlos.gomez@smartcond.com",
+    "password": "password123",
+    "phoneNumber": "3004567890",
+    "direction": "Calle 45 #67-89"
+  }
+  
 }
 
 settings {
