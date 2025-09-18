@@ -8,9 +8,11 @@ import server.smartcond.Domain.Dto.request.CeladorRequestDTO;
 import server.smartcond.Domain.Dto.request.ResidentRequestDTO;
 import server.smartcond.Domain.Dto.response.CeladorResponseDTO;
 import server.smartcond.Domain.Dto.response.ResidentResponseDTO;
+import server.smartcond.Domain.Entities.ApartmentEntity;
 import server.smartcond.Domain.Entities.UserEntity;
 import server.smartcond.Domain.Services.IAdminService;
 import server.smartcond.Domain.Utils.RoleEnum;
+import server.smartcond.Domain.dao.interfaces.IApartmentDao;
 import server.smartcond.Domain.dao.interfaces.ICeladorDao;
 import server.smartcond.Domain.dao.interfaces.IResidentDao;
 
@@ -26,6 +28,9 @@ public class AdminServiceImpl implements IAdminService {
     private ICeladorDao celadorDao;
     @Autowired
     private IResidentDao residentDao;
+    @Autowired
+    private IApartmentDao apartmentDao;
+
 
     //celador
     @Override
@@ -81,13 +86,16 @@ public class AdminServiceImpl implements IAdminService {
         try {
             ModelMapper modelMapper = new ModelMapper();
             UserEntity userEntity = modelMapper.map(residentRequestDTO, UserEntity.class);
+            ApartmentEntity apartmentEntity = apartmentDao.findByNumber(residentRequestDTO.getApartment()).
+                    orElseThrow(() -> new RuntimeException("Apartamento No Encontrado " + residentRequestDTO.getApartment()));
+            userEntity.setApartment(apartmentEntity);
             userEntity.setEnabled(true);
             userEntity.setAccountNoExpired(true);
             userEntity.setAccountNoLocked(true);
             userEntity.setCredentialNoExpired(true);
             userEntity.setRole(RoleEnum.RESIDENT);
             residentDao.saveUserResident(userEntity);
-            ResidentResponseDTO responseDTO = modelMapper.map(userEntity, ResidentResponseDTO.class);
+            ResidentResponseDTO responseDTO = toResidentResponse(userEntity);
             return responseDTO;
 
         } catch (Exception e) {
@@ -95,14 +103,27 @@ public class AdminServiceImpl implements IAdminService {
         }
     }
 
-    @Override
-    public List<ResidentResponseDTO> findAllResidents() {
-        ModelMapper modelMapper = new ModelMapper();
-        return this.residentDao.findAllResidents()
-                .stream()
-                .map(entity -> modelMapper.map(entity, ResidentResponseDTO.class))
-                .collect(Collectors.toList());
+    private ResidentResponseDTO toResidentResponse(UserEntity userEntity) {
+        ResidentResponseDTO dto = new ResidentResponseDTO();
+        dto.setId(userEntity.getId());
+        dto.setName(userEntity.getName());
+        dto.setLastName(userEntity.getLastName());
+        dto.setDocument(userEntity.getDocument());
+        dto.setEmail(userEntity.getEmail());
+        dto.setPhoneNumber(userEntity.getPhoneNumber());
+        dto.setRole(userEntity.getRole().name());
+        dto.setEnabled(userEntity.isEnabled());
+        dto.setApartment(userEntity.getApartment().getNumber());
+        return dto;
     }
 
+
+    @Override
+    public List<ResidentResponseDTO> findAllResidents() {
+        return this.residentDao.findAllResidents()
+                .stream()
+                .map(this::toResidentResponse)
+                .collect(Collectors.toList());
+    }
 
 }

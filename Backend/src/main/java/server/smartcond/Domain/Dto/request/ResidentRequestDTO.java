@@ -14,7 +14,6 @@ public class ResidentRequestDTO {
     private String email;
     private String password;
     private Long phoneNumber;
-    private Integer tower;
     private Integer apartment;
 
 }

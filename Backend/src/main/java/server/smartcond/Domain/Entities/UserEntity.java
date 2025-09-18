@@ -39,11 +39,10 @@ public class UserEntity {
     @Column(nullable = true)
     private String direction;
 
-    @Column(nullable = true)
-    private Integer tower;
 
-    @Column(nullable = true)
-    private Integer apartment;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "apartment_id", nullable = true)
+    private ApartmentEntity apartment;
 
     @Column(name = "is_enabled")
     private boolean isEnabled;

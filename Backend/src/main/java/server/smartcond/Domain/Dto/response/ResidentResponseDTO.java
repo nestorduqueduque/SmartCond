@@ -17,7 +17,6 @@ public class ResidentResponseDTO {
     private Long document;
     private String email;
     private Long phoneNumber;
-    private Integer tower;
     private Integer apartment;
     private boolean isEnabled;
     private String role;
