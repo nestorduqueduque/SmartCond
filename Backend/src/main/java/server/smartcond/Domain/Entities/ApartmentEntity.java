@@ -30,4 +30,7 @@ public class ApartmentEntity {
     @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL)
     private List<UserEntity> residents = new ArrayList<>();
 
+    @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL)
+    private List<VehicleEntity> vehicles = new ArrayList<>();
+
 }
