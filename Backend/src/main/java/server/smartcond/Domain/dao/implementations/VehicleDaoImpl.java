@@ -19,6 +19,15 @@ public class VehicleDaoImpl implements IVehicleDao {
     public List<VehicleEntity> findAll() {
         return em.createQuery("SELECT v FROM VehicleEntity v", VehicleEntity.class).getResultList();
     }
+
+    @Override
+    public List<VehicleEntity> findByApartmentNumber(Integer number) {
+        return em.createQuery
+                ("SELECT v FROM VehicleEntity v WHERE v.apartment.number = :number", VehicleEntity.class)
+                .setParameter("number", number)
+                .getResultList();
+    }
+
     @Override
     @Transactional
     public void saveVehicleEntity(VehicleEntity vehicleEntity) {

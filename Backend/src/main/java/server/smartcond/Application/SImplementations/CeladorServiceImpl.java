@@ -7,9 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import server.smartcond.Domain.Dto.request.VehicleRequestDTO;
 
+import server.smartcond.Domain.Dto.response.CeladorResponseDTO;
 import server.smartcond.Domain.Dto.response.VehicleResponseDTO;
 import server.smartcond.Domain.Entities.ApartmentEntity;
 
+import server.smartcond.Domain.Entities.UserEntity;
 import server.smartcond.Domain.Entities.VehicleEntity;
 import server.smartcond.Domain.Services.ICeladorService;
 
@@ -17,6 +19,7 @@ import server.smartcond.Domain.dao.interfaces.IApartmentDao;
 import server.smartcond.Domain.dao.interfaces.IVehicleDao;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -51,6 +54,15 @@ public class CeladorServiceImpl implements ICeladorService {
                 .map(this::toVehicleResponse)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<VehicleResponseDTO> findVehiclesByApartmentNumber(Integer number) {
+        return this.vehicleDao.findByApartmentNumber(number)
+                .stream()
+                .map(this::toVehicleResponse)
+                .collect(Collectors.toList());
+    }
+
 
     private VehicleResponseDTO toVehicleResponse(VehicleEntity vehicleEntity) {
         VehicleResponseDTO dto = new VehicleResponseDTO();

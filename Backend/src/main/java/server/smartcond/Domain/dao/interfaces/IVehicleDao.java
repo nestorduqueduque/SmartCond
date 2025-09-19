@@ -8,7 +8,9 @@ import java.util.List;
 public interface IVehicleDao {
 
     List<VehicleEntity> findAll();
-    void saveVehicleEntity(VehicleEntity vehicleEntity);
+
+    List<VehicleEntity> findByApartmentNumber(Integer number);
+     void saveVehicleEntity(VehicleEntity vehicleEntity);
 
 
 }
