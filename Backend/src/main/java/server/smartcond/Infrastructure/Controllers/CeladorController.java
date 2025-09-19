@@ -6,8 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.smartcond.Domain.Dto.request.VehicleRequestDTO;
+import server.smartcond.Domain.Dto.request.VisitorRequestDTO;
 import server.smartcond.Domain.Dto.response.CeladorResponseDTO;
 import server.smartcond.Domain.Dto.response.VehicleResponseDTO;
+import server.smartcond.Domain.Dto.response.VisitorResponseDTO;
 import server.smartcond.Domain.Services.ICeladorService;
 
 import java.util.List;
@@ -34,6 +36,17 @@ public class CeladorController {
     @GetMapping("/find-vehicles-apartment/{number}")
     public ResponseEntity<List<VehicleResponseDTO>> findAllVehiclesByApartment(@PathVariable Integer number){
         return new ResponseEntity<>(this.celadorService.findVehiclesByApartmentNumber(number), HttpStatus.OK);
+    }
+
+    //Visitors
+    @PostMapping("/create-visitor")
+    public ResponseEntity<VisitorResponseDTO> createVisitor(@RequestBody VisitorRequestDTO visitorRequestDTO){
+        return new ResponseEntity<>(this.celadorService.createVisitor(visitorRequestDTO), HttpStatus.OK );
+    }
+
+    @GetMapping("/find-visitors-apartment/{number}")
+    public ResponseEntity<List<VisitorResponseDTO>> findVisitorByApartment(@PathVariable Integer number){
+        return new ResponseEntity<>(this.celadorService.findVisitorByApartment(number), HttpStatus.OK );
     }
 
 }

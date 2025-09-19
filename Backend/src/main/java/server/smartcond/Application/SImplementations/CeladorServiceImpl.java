@@ -7,17 +7,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import server.smartcond.Domain.Dto.request.VehicleRequestDTO;
 
+import server.smartcond.Domain.Dto.request.VisitorRequestDTO;
 import server.smartcond.Domain.Dto.response.CeladorResponseDTO;
 import server.smartcond.Domain.Dto.response.VehicleResponseDTO;
+import server.smartcond.Domain.Dto.response.VisitorResponseDTO;
 import server.smartcond.Domain.Entities.ApartmentEntity;
 
 import server.smartcond.Domain.Entities.UserEntity;
 import server.smartcond.Domain.Entities.VehicleEntity;
+import server.smartcond.Domain.Entities.VisitorEntity;
 import server.smartcond.Domain.Services.ICeladorService;
 
 import server.smartcond.Domain.dao.interfaces.IApartmentDao;
 import server.smartcond.Domain.dao.interfaces.IVehicleDao;
+import server.smartcond.Domain.dao.interfaces.IVisitorDao;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,6 +35,9 @@ public class CeladorServiceImpl implements ICeladorService {
     IVehicleDao vehicleDao;
     @Autowired
     IApartmentDao apartmentDao;
+
+    @Autowired
+    IVisitorDao visitorDao;
 
     @Override
     public VehicleResponseDTO createVehicle(VehicleRequestDTO vehicleRequestDto) {
@@ -64,6 +73,37 @@ public class CeladorServiceImpl implements ICeladorService {
     }
 
 
+    //Visitor
+    @Override
+    public VisitorResponseDTO createVisitor(VisitorRequestDTO visitorRequestDTO) {
+        try {
+            ModelMapper modelMapper = new ModelMapper();
+            VisitorEntity visitorEntity = modelMapper.map(visitorRequestDTO, VisitorEntity.class);
+            ApartmentEntity apartment = apartmentDao.findByNumber(visitorRequestDTO.getApartment())
+                    .orElseThrow(() -> new RuntimeException("Apartamento no encontrado: " + visitorRequestDTO.getApartment()));
+
+            visitorEntity.setApartment(apartment);
+            visitorEntity.setEntryTime(LocalDateTime.now(ZoneId.of("America/Bogota")));
+            visitorDao.saveVisitor(visitorEntity);
+            VisitorResponseDTO responseDTO = toVisitorResponse(visitorEntity);
+            return responseDTO;
+        }
+        catch (Exception e) {
+            throw new UnsupportedOperationException("Error al guardar Visitante");
+        }
+    }
+
+    @Override
+    public List<VisitorResponseDTO> findVisitorByApartment(Integer number) {
+        return visitorDao.findByApartmentNumber(number)
+                .stream()
+                .map(this::toVisitorResponse)
+                .collect(Collectors.toList());
+    }
+
+
+
+    //Methods
     private VehicleResponseDTO toVehicleResponse(VehicleEntity vehicleEntity) {
         VehicleResponseDTO dto = new VehicleResponseDTO();
         dto.setId(vehicleEntity.getId());
@@ -72,6 +112,17 @@ public class CeladorServiceImpl implements ICeladorService {
         dto.setBrand(vehicleEntity.getBrand());
         dto.setModel(vehicleEntity.getModel());
         dto.setApartment(vehicleEntity.getApartment().getNumber());
+        return dto;
+    }
+
+    private VisitorResponseDTO toVisitorResponse(VisitorEntity entity) {
+        VisitorResponseDTO dto = new VisitorResponseDTO();
+        dto.setId(entity.getId());
+        dto.setName(entity.getName());
+        dto.setDocument(entity.getDocument());
+        dto.setReason(entity.getReason());
+        dto.setEntryTime(entity.getEntryTime());
+        dto.setApartment(entity.getApartment().getNumber());
         return dto;
     }
 }
