@@ -36,4 +36,7 @@ public class ApartmentEntity {
     @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL)
     private List<VisitorEntity> visitors = new ArrayList<>();
 
+    @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL)
+    private List<PackageEntity> packages = new ArrayList<>();
+
 }

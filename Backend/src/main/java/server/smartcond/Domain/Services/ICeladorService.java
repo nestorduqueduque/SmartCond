@@ -1,7 +1,9 @@
 package server.smartcond.Domain.Services;
 
+import server.smartcond.Domain.Dto.request.PackageRequestDTO;
 import server.smartcond.Domain.Dto.request.VehicleRequestDTO;
 import server.smartcond.Domain.Dto.request.VisitorRequestDTO;
+import server.smartcond.Domain.Dto.response.PackageResponseDTO;
 import server.smartcond.Domain.Dto.response.VehicleResponseDTO;
 import server.smartcond.Domain.Dto.response.VisitorResponseDTO;
 
@@ -19,4 +21,16 @@ public interface ICeladorService {
     VisitorResponseDTO createVisitor(VisitorRequestDTO visitorRequestDTO);
 
     List<VisitorResponseDTO> findVisitorByApartment(Integer number);
+
+
+    //Packages
+    List<PackageResponseDTO> findPackageNotDelivered();
+
+    List<PackageResponseDTO> findByApartment(Integer number);
+    PackageResponseDTO createPackage(PackageRequestDTO packageRequestDTO);
+
+    PackageResponseDTO deliveredPackage(Long id);
+
+
+
 }

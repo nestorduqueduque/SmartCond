@@ -5,9 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import server.smartcond.Domain.Dto.request.PackageRequestDTO;
 import server.smartcond.Domain.Dto.request.VehicleRequestDTO;
 import server.smartcond.Domain.Dto.request.VisitorRequestDTO;
 import server.smartcond.Domain.Dto.response.CeladorResponseDTO;
+import server.smartcond.Domain.Dto.response.PackageResponseDTO;
 import server.smartcond.Domain.Dto.response.VehicleResponseDTO;
 import server.smartcond.Domain.Dto.response.VisitorResponseDTO;
 import server.smartcond.Domain.Services.ICeladorService;
@@ -48,6 +50,29 @@ public class CeladorController {
     public ResponseEntity<List<VisitorResponseDTO>> findVisitorByApartment(@PathVariable Integer number){
         return new ResponseEntity<>(this.celadorService.findVisitorByApartment(number), HttpStatus.OK );
     }
+
+    //Packages
+
+    @PostMapping("/create-package")
+    public  ResponseEntity<PackageResponseDTO> createPackage(@RequestBody PackageRequestDTO packageRequestDTO){
+        return new ResponseEntity<>(this.celadorService.createPackage(packageRequestDTO), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/find-package-apartment/{number}")
+    public ResponseEntity<List<PackageResponseDTO>> findPackageByApartment(@PathVariable Integer number){
+        return new ResponseEntity<>(this.celadorService.findByApartment(number), HttpStatus.OK);
+    }
+
+    @GetMapping("/find-package-not-delivered")
+    public ResponseEntity<List<PackageResponseDTO>> findPackageNotDelivered(){
+        return new ResponseEntity<>(this.celadorService.findPackageNotDelivered(), HttpStatus.OK);
+    }
+
+     @PutMapping("/package-delivered/{id}")
+    public ResponseEntity<PackageResponseDTO> deliveredPackage(@PathVariable Long id){
+        return  ResponseEntity.ok(celadorService.deliveredPackage(id));
+     }
+
 
 }
 

@@ -5,20 +5,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import server.smartcond.Domain.Dto.request.PackageRequestDTO;
 import server.smartcond.Domain.Dto.request.VehicleRequestDTO;
 
 import server.smartcond.Domain.Dto.request.VisitorRequestDTO;
 import server.smartcond.Domain.Dto.response.CeladorResponseDTO;
+import server.smartcond.Domain.Dto.response.PackageResponseDTO;
 import server.smartcond.Domain.Dto.response.VehicleResponseDTO;
 import server.smartcond.Domain.Dto.response.VisitorResponseDTO;
-import server.smartcond.Domain.Entities.ApartmentEntity;
+import server.smartcond.Domain.Entities.*;
 
-import server.smartcond.Domain.Entities.UserEntity;
-import server.smartcond.Domain.Entities.VehicleEntity;
-import server.smartcond.Domain.Entities.VisitorEntity;
 import server.smartcond.Domain.Services.ICeladorService;
 
+import server.smartcond.Domain.Utils.PackageStatus;
 import server.smartcond.Domain.dao.interfaces.IApartmentDao;
+import server.smartcond.Domain.dao.interfaces.IPackageDao;
 import server.smartcond.Domain.dao.interfaces.IVehicleDao;
 import server.smartcond.Domain.dao.interfaces.IVisitorDao;
 
@@ -35,9 +36,10 @@ public class CeladorServiceImpl implements ICeladorService {
     IVehicleDao vehicleDao;
     @Autowired
     IApartmentDao apartmentDao;
-
     @Autowired
     IVisitorDao visitorDao;
+    @Autowired
+    IPackageDao packageDao;
 
     @Override
     public VehicleResponseDTO createVehicle(VehicleRequestDTO vehicleRequestDto) {
@@ -102,6 +104,53 @@ public class CeladorServiceImpl implements ICeladorService {
     }
 
 
+    //Packages
+
+    @Override
+    public List<PackageResponseDTO> findPackageNotDelivered() {
+        return packageDao.findByStatusNoDelivered()
+                .stream()
+                .map(this::toPackageResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PackageResponseDTO> findByApartment(Integer number) {
+        return packageDao.findByApartmentNumber(number)
+                .stream()
+                .map(this::toPackageResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public PackageResponseDTO createPackage(PackageRequestDTO packageRequestDTO) {
+        try {
+            ModelMapper modelMapper = new ModelMapper();
+            PackageEntity packageEntity = modelMapper.map(packageRequestDTO, PackageEntity.class);
+            ApartmentEntity apartment = apartmentDao.findByNumber(packageRequestDTO.getApartment())
+                    .orElseThrow(() -> new RuntimeException("Apartamento no encontrado: " + packageRequestDTO.getApartment()));
+
+            packageEntity.setApartment(apartment);
+            packageEntity.setReceivedAt(LocalDateTime.now(ZoneId.of("America/Bogota")));
+            packageEntity.setStatus(PackageStatus.RECEIVED);
+            packageDao.savePackage(packageEntity);
+            PackageResponseDTO responseDTO = toPackageResponse(packageEntity);
+            return responseDTO;
+        }
+        catch (Exception e) {
+            throw new UnsupportedOperationException("Error al guardar Paquete");
+        }
+    }
+
+    @Override
+    public PackageResponseDTO deliveredPackage(Long id) {
+        PackageEntity packageEntity = packageDao.findById(id).orElseThrow(() -> new RuntimeException("Paquete no encontrado con id " + id));
+        packageEntity.setStatus(PackageStatus.DELIVERED);
+        packageEntity.setDeliveredAt(LocalDateTime.now(ZoneId.of("America/Bogota")));
+        PackageEntity updated = packageDao.update(packageEntity);
+        return toPackageResponse(updated);
+    }
+
 
     //Methods
     private VehicleResponseDTO toVehicleResponse(VehicleEntity vehicleEntity) {
@@ -125,4 +174,17 @@ public class CeladorServiceImpl implements ICeladorService {
         dto.setApartment(entity.getApartment().getNumber());
         return dto;
     }
+
+    private PackageResponseDTO toPackageResponse(PackageEntity entity) {
+        PackageResponseDTO dto = new PackageResponseDTO();
+        dto.setId(entity.getId());
+        dto.setDescription(entity.getDescription());
+        dto.setReceivedAt(entity.getReceivedAt());
+        dto.setDeliveredAt(entity.getDeliveredAt());
+        dto.setStatus(entity.getStatus());
+        dto.setApartment(entity.getApartment().getNumber());
+        return dto;
+    }
+
+
 }
