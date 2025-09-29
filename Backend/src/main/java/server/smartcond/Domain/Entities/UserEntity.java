@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import server.smartcond.Domain.Utils.RoleEnum;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Setter
 @Getter
@@ -55,6 +58,9 @@ public class UserEntity {
 
     @Column(name = "credential_No_Expired")
     private boolean credentialNoExpired;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    private List<NoticeEntity> notices = new ArrayList<>();
 
 
     @Enumerated(EnumType.STRING)

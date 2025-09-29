@@ -1,8 +1,10 @@
 package server.smartcond.Domain.Services;
 
 import server.smartcond.Domain.Dto.request.CeladorRequestDTO;
+import server.smartcond.Domain.Dto.request.NoticeRequestDTO;
 import server.smartcond.Domain.Dto.request.ResidentRequestDTO;
 import server.smartcond.Domain.Dto.response.CeladorResponseDTO;
+import server.smartcond.Domain.Dto.response.NoticeResponseDTO;
 import server.smartcond.Domain.Dto.response.ResidentResponseDTO;
 
 import java.util.List;
@@ -19,6 +21,12 @@ public interface IAdminService {
     //Resident Method
     ResidentResponseDTO createResident(ResidentRequestDTO residentRequestDTO);
     List<ResidentResponseDTO> findAllResidents();
+
+    //Notices
+    NoticeResponseDTO createNotice(NoticeRequestDTO dto);
+    List<NoticeResponseDTO> getAllNotice();
+
+    NoticeResponseDTO findNoticeById(Long id);
 
 
 }

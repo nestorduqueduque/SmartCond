@@ -5,17 +5,20 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import server.smartcond.Domain.Dto.request.CeladorRequestDTO;
+import server.smartcond.Domain.Dto.request.NoticeRequestDTO;
 import server.smartcond.Domain.Dto.request.ResidentRequestDTO;
 import server.smartcond.Domain.Dto.response.CeladorResponseDTO;
+import server.smartcond.Domain.Dto.response.NoticeResponseDTO;
 import server.smartcond.Domain.Dto.response.ResidentResponseDTO;
 import server.smartcond.Domain.Entities.ApartmentEntity;
+import server.smartcond.Domain.Entities.NoticeEntity;
 import server.smartcond.Domain.Entities.UserEntity;
 import server.smartcond.Domain.Services.IAdminService;
 import server.smartcond.Domain.Utils.RoleEnum;
-import server.smartcond.Domain.dao.interfaces.IApartmentDao;
-import server.smartcond.Domain.dao.interfaces.ICeladorDao;
-import server.smartcond.Domain.dao.interfaces.IResidentDao;
+import server.smartcond.Domain.dao.interfaces.*;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,6 +33,12 @@ public class AdminServiceImpl implements IAdminService {
     private IResidentDao residentDao;
     @Autowired
     private IApartmentDao apartmentDao;
+
+    @Autowired
+    private INoticeDao noticeDao;
+
+    @Autowired
+    private IAdminDao adminDao;
 
 
     //celador
@@ -103,6 +112,41 @@ public class AdminServiceImpl implements IAdminService {
         }
     }
 
+    @Override
+    public List<ResidentResponseDTO> findAllResidents() {
+        return this.residentDao.findAllResidents()
+                .stream()
+                .map(this::toResidentResponse)
+                .collect(Collectors.toList());
+    }
+
+    //Notices
+        @Override
+        public NoticeResponseDTO createNotice(NoticeRequestDTO dto) {
+            UserEntity author =  adminDao.findAdminById(dto.getAuthorId())
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+            NoticeEntity entity = new NoticeEntity();
+            entity.setTitle(dto.getTitle());
+            entity.setContent(dto.getContent());
+            entity.setCreatedAt(LocalDateTime.now(ZoneId.of("America/Bogota")));
+            entity.setAuthor(author);
+            noticeDao.save(entity);
+            return toNoticeResponse(entity);
+        }
+
+        @Override
+        public List<NoticeResponseDTO> getAllNotice() {
+            return this.noticeDao.findAll()
+                    .stream()
+                    .map(this::toNoticeResponse)
+                    .collect(Collectors.toList());
+        }
+
+        @Override
+        public NoticeResponseDTO findNoticeById(Long id) {
+            return null;
+        }
+
     private ResidentResponseDTO toResidentResponse(UserEntity userEntity) {
         ResidentResponseDTO dto = new ResidentResponseDTO();
         dto.setId(userEntity.getId());
@@ -117,13 +161,16 @@ public class AdminServiceImpl implements IAdminService {
         return dto;
     }
 
-
-    @Override
-    public List<ResidentResponseDTO> findAllResidents() {
-        return this.residentDao.findAllResidents()
-                .stream()
-                .map(this::toResidentResponse)
-                .collect(Collectors.toList());
+    private NoticeResponseDTO toNoticeResponse(NoticeEntity entity) {
+        return new NoticeResponseDTO(
+                entity.getId(),
+                entity.getTitle(),
+                entity.getContent(), entity.getAuthor().getName() + " " + entity.getAuthor().getLastName(),
+                entity.getCreatedAt()
+        );
     }
+
+
+
 
 }

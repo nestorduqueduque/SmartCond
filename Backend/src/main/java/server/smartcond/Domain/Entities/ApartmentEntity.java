@@ -2,8 +2,6 @@ package server.smartcond.Domain.Entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import server.smartcond.Domain.Utils.RoleEnum;
-
 import java.util.ArrayList;
 import java.util.List;
 

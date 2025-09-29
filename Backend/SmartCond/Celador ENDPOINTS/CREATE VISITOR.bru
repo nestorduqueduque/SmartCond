@@ -6,8 +6,18 @@ meta {
 
 post {
   url: http://localhost:8080/celador/create-visitor
-  body: none
+  body: json
   auth: inherit
+}
+
+body:json {
+  {
+    "name": "Juan Pérez",
+    "document": 12345678,
+    "reason": "Visita familiar",
+    "apartment": 551
+  
+  }
 }
 
 settings {

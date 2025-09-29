@@ -1,0 +1,28 @@
+meta {
+  name: CREATE ADMIN
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:8080/developer/create-admin
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Nestor",
+    "lastName": "Duque",
+    "document": 1785963,
+    "email": "nestor.gomez@smartcond.com",
+    "password": "prueba1234",
+    "phoneNumber": 345447557,
+    "direction": "Calle 45 #67-89"
+  }
+  
+}
+
+settings {
+  encodeUrl: true
+}

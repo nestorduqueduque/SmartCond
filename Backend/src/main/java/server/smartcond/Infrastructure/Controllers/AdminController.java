@@ -8,8 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.smartcond.Domain.Dto.request.CeladorRequestDTO;
+import server.smartcond.Domain.Dto.request.NoticeRequestDTO;
 import server.smartcond.Domain.Dto.request.ResidentRequestDTO;
 import server.smartcond.Domain.Dto.response.CeladorResponseDTO;
+import server.smartcond.Domain.Dto.response.NoticeResponseDTO;
 import server.smartcond.Domain.Dto.response.ResidentResponseDTO;
 import server.smartcond.Domain.Services.IAdminService;
 
@@ -65,5 +67,20 @@ public class AdminController {
     public ResponseEntity<List<ResidentResponseDTO>> findAllResidents(){
         return new ResponseEntity<>(this.adminService.findAllResidents(), HttpStatus.OK);
     }
+
+
+    @Operation(summary = "Post a Notice")
+    @PostMapping("/create-notice")
+    public ResponseEntity<NoticeResponseDTO> create(@RequestBody NoticeRequestDTO noticeRequestDTO) {
+        return ResponseEntity.ok(adminService.createNotice(noticeRequestDTO));
+    }
+
+    @Operation(summary = "Get all Notices")
+    @GetMapping("/find-all-notices")
+    public ResponseEntity<List<NoticeResponseDTO>> getAll() {
+        return ResponseEntity.ok(adminService.getAllNotice());
+    }
+
+
     }
 
