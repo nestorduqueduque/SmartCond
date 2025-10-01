@@ -30,7 +30,7 @@ public class UserEntity {
     @Column
     private Long document;
 
-    @Column
+    @Column(unique = true)
     private String email;
 
     @Column

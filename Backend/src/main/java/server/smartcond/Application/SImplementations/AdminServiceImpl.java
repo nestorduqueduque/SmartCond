@@ -1,8 +1,10 @@
 package server.smartcond.Application.SImplementations;
 
 
+import jakarta.persistence.EntityExistsException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import server.smartcond.Domain.Dto.request.CeladorRequestDTO;
 import server.smartcond.Domain.Dto.request.NoticeRequestDTO;
@@ -33,12 +35,14 @@ public class AdminServiceImpl implements IAdminService {
     private IResidentDao residentDao;
     @Autowired
     private IApartmentDao apartmentDao;
-
     @Autowired
     private INoticeDao noticeDao;
-
     @Autowired
     private IAdminDao adminDao;
+    @Autowired
+    private IUserDao userDao;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 
     //celador
@@ -68,8 +72,13 @@ public class AdminServiceImpl implements IAdminService {
     @Override
     public CeladorResponseDTO createCelador(CeladorRequestDTO celadorRequestDTO) {
         try {
+            var emailExists = userDao.findByEmail(celadorRequestDTO.getEmail());
+            if (emailExists.isPresent()) {
+                throw new EntityExistsException("El email ya está en uso");}
             ModelMapper modelMapper = new ModelMapper();
             UserEntity userEntity = modelMapper.map(celadorRequestDTO, UserEntity.class);
+            String encodedPassword = passwordEncoder.encode(celadorRequestDTO.getPassword());
+            userEntity.setPassword(encodedPassword);
             userEntity.setEnabled(true);
             userEntity.setAccountNoExpired(true);
             userEntity.setAccountNoLocked(true);
@@ -93,10 +102,15 @@ public class AdminServiceImpl implements IAdminService {
     @Override
     public ResidentResponseDTO createResident(ResidentRequestDTO residentRequestDTO) {
         try {
+            var emailExists = userDao.findByEmail(residentRequestDTO.getEmail());
+            if (emailExists.isPresent()) {
+                throw new EntityExistsException("El email ya está en uso");}
             ModelMapper modelMapper = new ModelMapper();
             UserEntity userEntity = modelMapper.map(residentRequestDTO, UserEntity.class);
             ApartmentEntity apartmentEntity = apartmentDao.findByNumber(residentRequestDTO.getApartment()).
                     orElseThrow(() -> new RuntimeException("Apartamento No Encontrado " + residentRequestDTO.getApartment()));
+            String encodedPassword = passwordEncoder.encode(residentRequestDTO.getPassword());
+            userEntity.setPassword(encodedPassword);
             userEntity.setApartment(apartmentEntity);
             userEntity.setEnabled(true);
             userEntity.setAccountNoExpired(true);
