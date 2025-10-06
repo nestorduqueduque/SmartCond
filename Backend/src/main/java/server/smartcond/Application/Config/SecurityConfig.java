@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(http -> {
-                    http.requestMatchers(HttpMethod.POST, "/developer/create-admin").permitAll();
+                    http.requestMatchers("/auth/**").permitAll();
                     http.requestMatchers("/admin/**").hasRole("ADMIN");
                     http.requestMatchers("/celador/**").hasRole("CELADOR");
                     http.anyRequest().denyAll();

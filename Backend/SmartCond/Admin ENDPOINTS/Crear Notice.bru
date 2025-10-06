@@ -5,9 +5,17 @@ meta {
 }
 
 post {
-  url: 
-  body: none
+  url: http://localhost:8080/admin/create-notice
+  body: json
   auth: inherit
+}
+
+body:json {
+  {
+    "title": "Mantenimiento de ascensores",
+    "content": "Se informa que el día lunes se realizará mantenimiento en los ascensores de la Torre 3.",
+    "authorId": 18
+  }
 }
 
 settings {

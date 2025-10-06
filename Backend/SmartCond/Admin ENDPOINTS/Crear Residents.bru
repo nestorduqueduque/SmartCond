@@ -7,18 +7,23 @@ meta {
 post {
   url: http://localhost:8080/admin/create-resident
   body: json
-  auth: inherit
+  auth: basic
+}
+
+auth:basic {
+  username: nestorduqueduque@gmail.com
+  password: 1807NestorDuque
 }
 
 body:json {
   {
-    "name": "Carlos",
-    "lastName": "Gómez",
+    "name": "Nestor Residente",
+    "lastName": "Duque Residente",
     "document": 123456789,
-    "email": "carlos.gomez@smartcond.com",
-    "password": "1234Segura!",
+    "email": "nestorduqueresidente@gmail.com",
+    "password": "1807NestorDuque",
     "phoneNumber": 3004567890,
-    "apartment": 854
+    "apartment": 554
   }
   
 }
