@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Visitante</title>
+</head>
+<body>
+<h2>Registro de Visitante</h2>
+
+<form id="visitorForm">
+    <label>Nombre:</label><br>
+    <input type="text" id="name" required><br><br>
+
+    <label>Documento:</label><br>
+    <input type="number" id="document" required><br><br>
+
+    <label>Motivo de la visita:</label><br>
+    <input type="text" id="reason" required><br><br>
+
+    <label>Apartamento:</label><br>
+    <input type="number" id="apartment" required><br><br>
+
+    <button type="submit">Registrar</button>
+    <button type="button" onclick="goBack()">Volver</button>
+</form>
+
+<p id="response"></p>
+
+<script>
+    const form = document.getElementById('visitorForm');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const visitorData = {
+        name: document.getElementById('name').value,
+        document: document.getElementById('document').value,
+        reason: document.getElementById('reason').value,
+        apartment: document.getElementById('apartment').value
+      };
+
+      try {
+        const response = await fetch('/celador/create-visitor', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(visitorData)
+        });
+
+        if (response.ok) {
+          document.getElementById('response').innerText = "✅ Visitante registrado correctamente.";
+          window.location.href = '/view/dashboard-celador';
+        } else {
+          document.getElementById('response').innerText = "❌ Error al registrar el visitante.";
+        }
+      } catch (error) {
+        document.getElementById('response').innerText = "⚠️ Error de conexión con el servidor.";
+      }
+    });
+
+    function goBack() {
+      window.location.href = '/view/dashboard-celador';
+    }
+  </script>
+</body>
+</html>

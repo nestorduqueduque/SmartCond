@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard del Residente</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h3 { border-bottom: 2px solid #ccc; padding-bottom: 5px; margin-top: 20px; }
+        ul { list-style-type: none; padding: 0; }
+        li { border: 1px solid #eee; margin-bottom: 10px; padding: 10px; border-radius: 4px; }
+        .notice-title { color: #0056b3; }
+        .package-item { font-style: italic; }
+    </style>
+</head>
+<body>
+<h2 id="greeting">Cargando...</h2>
+
+<div>
+    <h3>Información del Apartamento</h3>
+    <p id="apartmentInfo">Cargando información...</p>
+</div>
+
+---
+
+<div>
+    <h3>Últimos Visitantes</h3>
+    <ul id="visitorsContainer">Cargando visitantes...</ul>
+</div>
+
+---
+
+<div>
+    <h3>Últimas Encomiendas</h3>
+    <ul id="packagesContainer">Cargando encomiendas...</ul>
+</div>
+
+---
+
+<div>
+    <h3>Últimos Comunicados</h3>
+    <ul id="noticesContainer">Cargando comunicados...</ul>
+</div>
+
+<button onclick="logout()">Cerrar sesión</button>
+
+<script>
+        /**
+         * Carga los datos del residente y actualiza la interfaz del dashboard.
+         */
+        async function loadDashboard() {
+            const residentId = localStorage.getItem('residentId');
+            const residentName = localStorage.getItem('residentName');
+            const greetingElement = document.getElementById('greeting');
+            const apartmentInfoElement = document.getElementById('apartmentInfo');
+
+            // 1. Verificar sesión
+            if (!residentId) {
+                window.location.href = '/view/login';
+                return;
+            }
+
+            greetingElement.innerText = `Hola, ${residentName}`;
+
+            try {
+                // Asume que el endpoint es /resident/{id} y maneja la autenticación si es necesaria
+                const response = await fetch(`/resident/${residentId}`);
+
+                // 2. Manejar respuesta no exitosa (ej: 404, 500, o si falta auth)
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    apartmentInfoElement.innerText = `Error ${response.status}: No se pudo cargar el dashboard. ¿Falta autenticación?`;
+                    console.error("Error del servidor:", errorText);
+                    return;
+                }
+
+                const data = await response.json();
+
+                // 3. Renderizar la Información del Apartamento (Robusto contra datos nulos)
+                const apartment = data.apartment;
+                let aptInfo = 'No se encontró información del apartamento.';
+
+                if (apartment) {
+                    // Acceso seguro: si apartment.tower no existe, usa 'N/A'
+                    const towerNum = (apartment.tower && apartment.tower.number) ? apartment.tower.number : 'N/A';
+                    aptInfo = `Torre: ${towerNum}, Apartamento: ${apartment.number}`;
+                }
+                apartmentInfoElement.innerText = aptInfo;
+
+                // 4. Renderizar Visitantes
+                renderList(
+                    'visitorsContainer',
+                    data.latestVisitors,
+                    visitor => `<strong>${visitor.name}</strong> - ${visitor.reason}`,
+                    'No hay visitantes recientes.'
+                );
+
+                // 5. Renderizar Encomiendas
+                renderList(
+                    'packagesContainer',
+                    data.latestPackages,
+                    pkg => `<span class="package-item">${pkg.description}</span>`,
+                    'No hay encomiendas recientes.'
+                );
+
+                // 6. Renderizar Comunicados
+                renderList(
+                    'noticesContainer',
+                    data.latestNotices,
+                    notice => `<h4 class="notice-title">${notice.title}</h4><p>${notice.content}</p>`,
+                    'No hay comunicados recientes.'
+                );
+
+            } catch (error) {
+                apartmentInfoElement.innerText = 'Error al conectar con el servidor. Revise la consola para más detalles.';
+                console.error("Error de conexión/parseo:", error);
+            }
+        }
+
+        /**
+         * Función genérica para renderizar una lista de datos en un contenedor <ul>.
+         * @param {string} containerId - El ID del elemento <ul>.
+         * @param {Array<Object>} items - La lista de datos.
+         * @param {function(Object): string} itemMapper - Función para generar el HTML de cada elemento.
+         * @param {string} emptyMessage - Mensaje si la lista está vacía.
+         */
+        function renderList(containerId, items, itemMapper, emptyMessage) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            if (items && items.length > 0) {
+                items.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerHTML = itemMapper(item);
+                    container.appendChild(li);
+                });
+            } else {
+                container.innerHTML = `<p>${emptyMessage}</p>`;
+            }
+        }
+
+
+        /**
+         * Limpia el localStorage y redirige al login.
+         */
+        function logout() {
+            localStorage.clear();
+            window.location.href = '/view/login';
+        }
+
+        // Inicia la carga del dashboard al cargar la página
+        loadDashboard();
+    </script>
+</body>
+</html>

@@ -3,9 +3,7 @@ package server.smartcond.Domain.Services;
 import server.smartcond.Domain.Dto.request.PackageRequestDTO;
 import server.smartcond.Domain.Dto.request.VehicleRequestDTO;
 import server.smartcond.Domain.Dto.request.VisitorRequestDTO;
-import server.smartcond.Domain.Dto.response.PackageResponseDTO;
-import server.smartcond.Domain.Dto.response.VehicleResponseDTO;
-import server.smartcond.Domain.Dto.response.VisitorResponseDTO;
+import server.smartcond.Domain.Dto.response.*;
 
 import java.util.List;
 
@@ -30,6 +28,9 @@ public interface ICeladorService {
     PackageResponseDTO createPackage(PackageRequestDTO packageRequestDTO);
 
     PackageResponseDTO deliveredPackage(Long id);
+
+    //Dashboard
+    CeladorDashboardDTO getCeladorDashboard(Long id);
 
 
 

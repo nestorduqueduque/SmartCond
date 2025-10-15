@@ -1,15 +1,16 @@
 package server.smartcond.Application.SImplementations;
 
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import server.smartcond.Domain.Dto.response.*;
-import server.smartcond.Domain.Entities.NoticeEntity;
-import server.smartcond.Domain.Entities.PackageEntity;
-import server.smartcond.Domain.Entities.VehicleEntity;
-import server.smartcond.Domain.Entities.VisitorEntity;
+import server.smartcond.Domain.Entities.*;
 import server.smartcond.Domain.Services.IResidentService;
 import server.smartcond.Domain.dao.interfaces.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ResidentServiceImpl implements IResidentService {
@@ -25,16 +26,15 @@ public class ResidentServiceImpl implements IResidentService {
     @Autowired
     private IVisitorDao visitorDao;
 
+    @Autowired
+    private IUserDao userDao;
 
-    @Override
-    public ResidentDashboardResponseDTO getResidentDashboard(Integer number) {
-        ResidentDashboardResponseDTO dto = new ResidentDashboardResponseDTO();
-        dto.setLastPackages(packageDao.findByApartmentNumber(number).stream().map(this::toPackageResponse).toList());
-        dto.setLastNotices(noticeDao.findAll().stream().map(this::toNoticeResponse).toList());
-        dto.setVehicles(vehicleDao.findByApartmentNumber(number).stream().map(this::toVehicleResponse).toList());
-        dto.setVisitors(visitorDao.findByApartmentNumber(number).stream().map(this::toVisitorResponse).toList());
-        return dto;
-    }
+    @Autowired
+    private IResidentDao residentDao;
+
+
+
+
 
 
 
@@ -80,4 +80,38 @@ public class ResidentServiceImpl implements IResidentService {
                 entity.getCreatedAt()
         );
     }
+
+    @Override
+    public ResidentDashboardDTO getResidentDashboard(Long residentId) {
+       ModelMapper modelMapper = new ModelMapper();
+        modelMapper.typeMap(PackageEntity.class, PackageResponseDTO.class).addMappings(mapper -> {
+            mapper.map(src -> src.getApartment().getId(), PackageResponseDTO::setApartment);
+        });
+
+        modelMapper.typeMap(VisitorEntity.class, VisitorResponseDTO.class).addMappings(mapper -> {
+            mapper.map(src -> src.getApartment().getId(), VisitorResponseDTO::setApartment);
+        });
+       UserEntity author = residentDao.findById(residentId).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+       Long apartmentId = author.getApartment().getId();
+       List<NoticeEntity> lastNotices = noticeDao.findLatestNotices();
+       List<NoticeResponseDTO> noticeResponseDTOS = lastNotices.stream()
+               .map(notice -> modelMapper.map(notice, NoticeResponseDTO.class)).collect(Collectors.toList());
+       List<VisitorEntity> lastVisitors = visitorDao.findLatestVisitorsByApartment(apartmentId, 4);
+       List<VisitorResponseDTO> visitorResponseDTOS = lastVisitors.stream()
+               .map(visitor -> modelMapper.map(visitor, VisitorResponseDTO.class)).collect(Collectors.toList());
+       List<PackageEntity> lastPackages = packageDao.findLatestPackagesByApartment(apartmentId, 4);
+       List<PackageResponseDTO>  packageResponseDTOS = lastPackages.stream()
+               .map(packages -> modelMapper.map(packages, PackageResponseDTO.class )).collect(Collectors.toList());
+       ApartmentInfoResponseDTO apartmentDTO = modelMapper.map(author.getApartment(), ApartmentInfoResponseDTO.class);
+
+       ResidentDashboardDTO dashboardDTO = new ResidentDashboardDTO();
+       dashboardDTO.setResidentName(author.getName());
+       dashboardDTO.setApartment(apartmentDTO);
+       dashboardDTO.setLatestPackages(packageResponseDTOS);
+       dashboardDTO.setLatestVisitors(visitorResponseDTOS);
+       dashboardDTO.setLatestNotices(noticeResponseDTOS);
+       return dashboardDTO;
+
+    }
+
 }

@@ -1,8 +1,8 @@
 package server.smartcond.Domain.Services;
 
-import server.smartcond.Domain.Dto.response.ResidentDashboardResponseDTO;
+import server.smartcond.Domain.Dto.response.ResidentDashboardDTO;
 
 public interface IResidentService {
 
-    ResidentDashboardResponseDTO getResidentDashboard(Integer number);
+    ResidentDashboardDTO getResidentDashboard(Long residentId);
 }

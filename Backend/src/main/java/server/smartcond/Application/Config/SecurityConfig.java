@@ -34,13 +34,13 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(http -> {
-                    http.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
-                    http.requestMatchers("/auth/**").permitAll();
-                    http.requestMatchers("/admin/**").hasRole("ADMIN");
-                    http.requestMatchers("/celador/**").hasRole("CELADOR");
-                    http.anyRequest().denyAll();
-                })
+                .authorizeHttpRequests(http -> http
+                        .requestMatchers("/view/**").permitAll()         // vistas Thymeleaf
+                        .requestMatchers("/auth/**").permitAll()         // login
+                        .requestMatchers("/admin/**").permitAll()        // pruebas admin
+                        .requestMatchers("/celador/**").permitAll()      // pruebas celador
+                        .anyRequest().permitAll()                        // ⚠️ temporal para desarrollo
+                )
                 .build();
     }
 

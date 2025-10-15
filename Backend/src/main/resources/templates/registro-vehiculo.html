@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro de Vehículo</title>
+</head>
+<body>
+<h2>Registro de Vehículo</h2>
+
+<form id="vehiculoForm">
+    <label>Placa:</label>
+    <input type="text" name="plate" required><br>
+
+    <label>Tipo (por ejemplo: CARRO, MOTO, CAMIONETA):</label>
+    <input type="text" name="type" required><br>
+
+    <label>Marca:</label>
+    <input type="text" name="brand" required><br>
+
+    <label>Modelo:</label>
+    <input type="text" name="model" required><br>
+
+    <label>Número de Apartamento:</label>
+    <input type="number" name="apartment" required><br>
+
+    <button type="submit">Registrar Vehículo</button>
+</form>
+
+<button onclick="window.location.href='/view/dashboard'">Volver al Dashboard</button>
+
+<script>
+document.getElementById('vehiculoForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const data = {
+        plate: this.plate.value,
+        type: this.type.value.toUpperCase(), // en mayúsculas si tu enum lo requiere
+        brand: this.brand.value,
+        model: this.model.value,
+        apartment: parseInt(this.apartment.value)
+    };
+
+    const response = await fetch('/celador/create-vehicle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+        alert('Vehículo registrado con éxito');
+        window.location.href = '/view/dashboard';
+    } else {
+        alert('Error al registrar el vehículo');
+    }
+});
+</script>
+</body>
+</html>

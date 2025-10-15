@@ -52,4 +52,15 @@ public class PackageDaoImpl implements IPackageDao {
     public PackageEntity update(PackageEntity packageEntity) {
         return  em.merge(packageEntity);
     }
+
+    @Override
+    public List<PackageEntity> findLatestPackagesByApartment(Long apartmentId, int limit) {
+        return em.createQuery(
+                        "SELECT p FROM PackageEntity p WHERE p.apartment.id = :apartmentId ORDER BY p.id DESC",
+                        PackageEntity.class)
+                .setParameter("apartmentId", apartmentId)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
 }

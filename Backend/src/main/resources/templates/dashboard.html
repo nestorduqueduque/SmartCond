@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard del Administrador</title>
+</head>
+<body>
+<h2 id="greeting">Cargando...</h2>
+<button onclick="logout()">Cerrar sesión</button>
+
+<div>
+    <h3>Gestión de Usuarios</h3>
+
+    <div>
+        <p>Registro de Celador</p>
+        <button onclick="window.location.href='/view/registro-celador'">Crear cuenta</button>
+    </div>
+
+    <div>
+        <p>Registro de Residente</p>
+        <button onclick="window.location.href='/view/registro-residente'">Crear cuenta</button>
+    </div>
+
+    <div>
+        <p>Registro de Vehículo</p>
+        <button onclick="window.location.href='/view/registro-vehiculo'">Crear cuenta</button>
+    </div>
+</div>
+
+<div>
+    <h3>Comunicados</h3>
+    <button onclick="goToCreateNotice()">Registrar comunicado</button>
+</div>
+
+<h3>Últimos comunicados</h3>
+<div id="noticesContainer">Cargando comunicados...</div>
+
+<script>
+     async function loadDashboard() {
+    const adminId = localStorage.getItem('adminId');
+    const adminName = localStorage.getItem('adminName');
+
+    if (!adminId) {
+      window.location.href = '/login';
+      return;
+    }
+
+    document.getElementById('greeting').innerText = `Hola, ${adminName}`;
+
+    try {
+      const response = await fetch(`/admin/${adminId}`);
+      if (!response.ok) {
+        document.getElementById('noticesContainer').innerText = 'Error al cargar el dashboard';
+        return;
+      }
+
+      const data = await response.json();
+      const container = document.getElementById('noticesContainer');
+      container.innerHTML = '';
+
+      if (data.latestNotices && data.latestNotices.length > 0) {
+        data.latestNotices.forEach(notice => {
+          const div = document.createElement('div');
+          div.innerHTML = `<h4>${notice.title}</h4><p>${notice.content}</p><hr>`;
+          container.appendChild(div);
+        });
+      } else {
+        container.innerText = 'No hay comunicados recientes.';
+      }
+    } catch (error) {
+      document.getElementById('noticesContainer').innerText = 'Error al conectar con el servidor.';
+    }
+  }
+
+  // ✅ Redirección a la vista de crear comunicado
+  function goToCreateNotice() {
+    const adminId = localStorage.getItem('adminId');
+    if (!adminId) {
+      alert("No se encontró el ID del administrador. Inicie sesión nuevamente.");
+      window.location.href = '/login';
+      return;
+    }
+    window.location.href = `/view/create-notice?authorId=${adminId}`;
+  }
+
+  // ✅ Cerrar sesión
+  function logout() {
+    // Limpia todos los datos almacenados del usuario
+    localStorage.clear();
+    // Redirige al login
+    window.location.href = '/view/login';
+  }
+
+  loadDashboard();
+  </script>
+</body>
+</html>

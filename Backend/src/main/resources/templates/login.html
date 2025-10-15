@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+<h2>Iniciar sesión</h2>
+
+<form id="loginForm">
+    <label>Email:</label>
+    <input type="email" id="email" name="email" required><br><br>
+
+    <label>Contraseña:</label>
+    <input type="password" id="password" name="password" required><br><br>
+
+    <button type="submit">Ingresar</button>
+</form>
+
+<p id="response"></p>
+
+<script>
+const form = document.getElementById('loginForm');
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const data = {
+      email: document.getElementById('email').value,
+      password: document.getElementById('password').value
+    };
+
+    try {
+      const response = await fetch('/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        const role = result.role; // ya viene en mayúsculas
+
+        if (role === 'ADMIN') {
+          localStorage.setItem('adminId', result.id);
+          localStorage.setItem('adminName', result.name);
+          window.location.href = '/view/dashboard';
+        }
+        else if (role === 'CELADOR') {
+          localStorage.setItem('celadorId', result.id);
+          localStorage.setItem('celadorName', result.name);
+          window.location.href = '/view/dashboard-celador';
+        }
+        else if (role === 'RESIDENT') {
+          localStorage.setItem('residentId', result.id);
+          localStorage.setItem('residentName', result.name);
+          window.location.href = '/view/dashboard-resident';
+        }
+        else {
+          document.getElementById('response').innerText = 'Rol no reconocido.';
+        }
+
+      } else {
+        document.getElementById('response').innerText = result.message || 'Credenciales incorrectas.';
+      }
+
+    } catch (error) {
+      document.getElementById('response').innerText = 'Error de conexión con el servidor.';
+    }
+  });
+</script>
+</body>
+</html>

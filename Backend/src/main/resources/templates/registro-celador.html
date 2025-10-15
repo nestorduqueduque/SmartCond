@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro de Celador</title>
+</head>
+<body>
+<h2>Registro de Celador</h2>
+
+<form id="celadorForm">
+    <label>Nombre:</label>
+    <input type="text" name="name" required><br>
+
+    <label>Apellido:</label>
+    <input type="text" name="lastName" required><br>
+
+    <label>Documento:</label>
+    <input type="number" name="document" required><br>
+
+    <label>Email:</label>
+    <input type="email" name="email" required><br>
+
+    <label>Contraseña:</label>
+    <input type="password" name="password" required><br>
+
+    <label>Teléfono:</label>
+    <input type="number" name="phoneNumber" required><br>
+
+    <label>Dirección:</label>
+    <input type="text" name="direction" required><br>
+
+    <button type="submit">Registrar Celador</button>
+</form>
+
+<button onclick="window.location.href='/view/dashboard'">Volver al Dashboard</button>
+
+<script>
+document.getElementById('celadorForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const data = {
+        name: this.name.value,
+        lastName: this.lastName.value,
+        document: parseInt(this.document.value),
+        email: this.email.value,
+        password: this.password.value,
+        phoneNumber: parseInt(this.phoneNumber.value),
+        direction: this.direction.value
+    };
+
+    const response = await fetch('/admin/create-celador', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+        alert('Celador registrado con éxito');
+        window.location.href = '/view/dashboard';
+    } else {
+        alert('Error al registrar el celador');
+    }
+});
+</script>
+
+</body>
+</html>

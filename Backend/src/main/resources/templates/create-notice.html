@@ -1,0 +1,48 @@
+<h2>Registro de Comunicado</h2>
+
+<form id="noticeForm">
+    <label>Título:</label>
+    <input type="text" id="title" name="title" required><br>
+
+    <label>Contenido:</label>
+    <textarea id="content" name="content" required></textarea><br>
+
+    <button type="submit">Publicar comunicado</button>
+</form>
+
+<button onclick="window.location.href='/view/dashboard'">Volver al Dashboard</button>
+
+<script>
+document.getElementById('noticeForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const adminId = localStorage.getItem('adminId');
+  if (!adminId) {
+    alert("Error: no se encontró el ID del administrador. Inicia sesión nuevamente.");
+    return;
+  }
+
+  const notice = {
+    title: document.getElementById('title').value,
+    content: document.getElementById('content').value
+  };
+
+  try {
+    const res = await fetch(`/admin/${adminId}/create-notice`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(notice)
+    });
+
+    if (res.ok) {
+      alert("Comunicado publicado exitosamente");
+      window.location.href = '/view/dashboard';
+    } else {
+      alert("Error al publicar el comunicado");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Error de conexión con el servidor");
+  }
+});
+</script>

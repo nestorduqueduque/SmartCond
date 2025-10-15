@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro de Residente</title>
+</head>
+<body>
+<h2>Registro de Residente</h2>
+
+<form id="residenteForm">
+    <label>Nombre:</label>
+    <input type="text" name="name" required><br>
+
+    <label>Apellido:</label>
+    <input type="text" name="lastName" required><br>
+
+    <label>Documento:</label>
+    <input type="number" name="document" required><br>
+
+    <label>Email:</label>
+    <input type="email" name="email" required><br>
+
+    <label>Contraseña:</label>
+    <input type="password" name="password" required><br>
+
+    <label>Teléfono:</label>
+    <input type="number" name="phoneNumber" required><br>
+
+    <label>Número de Apartamento:</label>
+    <input type="number" name="apartment" required><br>
+
+    <button type="submit">Registrar Residente</button>
+</form>
+
+<button onclick="window.location.href='/view/dashboard'">Volver al Dashboard</button>
+
+<script>
+document.getElementById('residenteForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const data = {
+        name: this.name.value,
+        lastName: this.lastName.value,
+        document: parseInt(this.document.value),
+        email: this.email.value,
+        password: this.password.value,
+        phoneNumber: parseInt(this.phoneNumber.value),
+        apartment: parseInt(this.apartment.value)
+    };
+
+    const response = await fetch('/admin/create-resident', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+        alert('Residente registrado con éxito');
+        window.location.href = '/view/dashboard';
+    } else {
+        alert('Error al registrar el residente');
+    }
+});
+</script>
+</body>
+</html>

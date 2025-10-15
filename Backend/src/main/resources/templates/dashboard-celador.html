@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard del Celador</title>
+</head>
+<body>
+<h2 id="greeting"></h2>
+
+<div>
+    <div>
+        <button onclick="goToRegisterVisitor()">Registrar Visitante</button>
+    </div>
+    <div>
+        <button onclick="goToRegisterPackage()">Registrar Encomienda</button>
+    </div>
+    <div>
+        <button onclick="logout()">Cerrar Sesión</button>
+    </div>
+
+</div>
+
+<h3>Comunicados</h3>
+<div id="noticesContainer"></div>
+
+<script>
+async function loadDashboard() {
+    const celadorId = localStorage.getItem('celadorId');
+    const celadorName = localStorage.getItem('celadorName');
+
+    if (!celadorId) {
+      window.location.href = '/view/login';
+      return;
+    }
+
+    document.getElementById('greeting').innerText = `Hola, ${celadorName}`;
+
+    try {
+      const response = await fetch(`/celador/${celadorId}`);
+      if (!response.ok) {
+        document.getElementById('noticesContainer').innerText = 'Error al cargar el dashboard';
+        return;
+      }
+
+      const data = await response.json();
+      const container = document.getElementById('noticesContainer');
+      container.innerHTML = '';
+
+      if (data.latestNotices && data.latestNotices.length > 0) {
+        data.latestNotices.forEach(notice => {
+          const div = document.createElement('div');
+          div.innerHTML = `<h4>${notice.title}</h4><p>${notice.content}</p><hr>`;
+          container.appendChild(div);
+        });
+      } else {
+        container.innerText = 'No hay comunicados recientes.';
+      }
+    } catch (error) {
+      document.getElementById('noticesContainer').innerText = 'Error al conectar con el servidor.';
+    }
+  }
+
+  // ✅ Botones de redirección
+  function goToRegisterVisitor() {
+    const celadorId = localStorage.getItem('celadorId');
+    window.location.href = `/view/register-visitor?celadorId=${celadorId}`;
+  }
+
+  function goToRegisterVehicle() {
+    const celadorId = localStorage.getItem('celadorId');
+    window.location.href = `/view/register-visitor-vehicle?celadorId=${celadorId}`;
+  }
+
+  function goToRegisterPackage() {
+    const celadorId = localStorage.getItem('celadorId');
+    window.location.href = `/view/register-package?celadorId=${celadorId}`;
+  }
+
+  // ✅ Cerrar sesión
+  function logout() {
+    localStorage.clear();
+    window.location.href = '/view/login';
+  }
+
+  // Carga inicial
+  loadDashboard();
+</script>
+</body>
+</html>

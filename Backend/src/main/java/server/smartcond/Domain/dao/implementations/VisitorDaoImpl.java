@@ -30,4 +30,14 @@ public class VisitorDaoImpl implements IVisitorDao {
                 .setParameter("number", number)
                 .getResultList();
     }
+
+    @Override
+    public List<VisitorEntity> findLatestVisitorsByApartment(Long apartmentId, int limit) {
+        return em.createQuery(
+                        "SELECT v FROM VisitorEntity v WHERE v.apartment.id = :apartmentId ORDER BY v.id DESC",
+                        VisitorEntity.class)
+                .setParameter("apartmentId", apartmentId)
+                .setMaxResults(limit)
+                .getResultList();
+    }
 }

@@ -9,19 +9,13 @@ import server.smartcond.Domain.Dto.request.PackageRequestDTO;
 import server.smartcond.Domain.Dto.request.VehicleRequestDTO;
 
 import server.smartcond.Domain.Dto.request.VisitorRequestDTO;
-import server.smartcond.Domain.Dto.response.CeladorResponseDTO;
-import server.smartcond.Domain.Dto.response.PackageResponseDTO;
-import server.smartcond.Domain.Dto.response.VehicleResponseDTO;
-import server.smartcond.Domain.Dto.response.VisitorResponseDTO;
+import server.smartcond.Domain.Dto.response.*;
 import server.smartcond.Domain.Entities.*;
 
 import server.smartcond.Domain.Services.ICeladorService;
 
 import server.smartcond.Domain.Utils.PackageStatus;
-import server.smartcond.Domain.dao.interfaces.IApartmentDao;
-import server.smartcond.Domain.dao.interfaces.IPackageDao;
-import server.smartcond.Domain.dao.interfaces.IVehicleDao;
-import server.smartcond.Domain.dao.interfaces.IVisitorDao;
+import server.smartcond.Domain.dao.interfaces.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -40,6 +34,10 @@ public class CeladorServiceImpl implements ICeladorService {
     IVisitorDao visitorDao;
     @Autowired
     IPackageDao packageDao;
+    @Autowired
+    ICeladorDao celadorDao;
+    @Autowired
+    INoticeDao noticeDao;
 
     @Override
     public VehicleResponseDTO createVehicle(VehicleRequestDTO vehicleRequestDto) {
@@ -151,7 +149,20 @@ public class CeladorServiceImpl implements ICeladorService {
         return toPackageResponse(updated);
     }
 
+    @Override
+    public CeladorDashboardDTO getCeladorDashboard(Long id) {
+        ModelMapper modelMapper = new ModelMapper();
+        UserEntity author =  celadorDao.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        List<NoticeEntity> lastNotices = noticeDao.findLatestNotices();
+        List<NoticeResponseDTO> noticeResponseDTOS = lastNotices.stream()
+                .map(notice -> modelMapper.map(notice, NoticeResponseDTO.class)).collect(Collectors.toList());
+        CeladorDashboardDTO dashboardDTO = new CeladorDashboardDTO();
+        dashboardDTO.setCeladorName(author.getName());
+        dashboardDTO.setLatestNotices(noticeResponseDTOS);
+        return dashboardDTO;
 
+    }
     //Methods
     private VehicleResponseDTO toVehicleResponse(VehicleEntity vehicleEntity) {
         VehicleResponseDTO dto = new VehicleResponseDTO();

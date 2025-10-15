@@ -1,6 +1,7 @@
 package server.smartcond.Infrastructure.Controllers;
 
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import server.smartcond.Domain.Dto.response.ResidentDashboardResponseDTO;
+import server.smartcond.Domain.Dto.response.ResidentDashboardDTO;
 import server.smartcond.Domain.Services.IResidentService;
 
 @RestController
@@ -19,9 +20,11 @@ public class ResidentController {
     @Autowired
     IResidentService residentService;
 
-    @GetMapping("/{number}/dashboard")
-    public ResponseEntity<ResidentDashboardResponseDTO> getDashboard(@PathVariable Integer number) {
-        ResidentDashboardResponseDTO response = residentService.getResidentDashboard(number);
+
+    @Operation(summary = "Dashboard del residente")
+    @GetMapping("/{residentId}")
+    public ResponseEntity<ResidentDashboardDTO> getDashboard(@PathVariable Long residentId) {
+        ResidentDashboardDTO response = residentService.getResidentDashboard(residentId);
         return ResponseEntity.ok(response);
     }
 }

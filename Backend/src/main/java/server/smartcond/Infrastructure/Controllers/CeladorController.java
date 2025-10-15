@@ -1,6 +1,7 @@
 package server.smartcond.Infrastructure.Controllers;
 
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,10 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import server.smartcond.Domain.Dto.request.PackageRequestDTO;
 import server.smartcond.Domain.Dto.request.VehicleRequestDTO;
 import server.smartcond.Domain.Dto.request.VisitorRequestDTO;
-import server.smartcond.Domain.Dto.response.CeladorResponseDTO;
-import server.smartcond.Domain.Dto.response.PackageResponseDTO;
-import server.smartcond.Domain.Dto.response.VehicleResponseDTO;
-import server.smartcond.Domain.Dto.response.VisitorResponseDTO;
+import server.smartcond.Domain.Dto.response.*;
 import server.smartcond.Domain.Services.ICeladorService;
 
 import java.util.List;
@@ -71,6 +69,14 @@ public class CeladorController {
      @PutMapping("/package-delivered/{id}")
     public ResponseEntity<PackageResponseDTO> deliveredPackage(@PathVariable Long id){
         return  ResponseEntity.ok(celadorService.deliveredPackage(id));
+     }
+
+     //Dashboard
+     @Operation(summary = "DashboardCelador")
+     @GetMapping("/{celadorId}")
+     public ResponseEntity<CeladorDashboardDTO> getAdminDashboard(@PathVariable Long celadorId) {
+         CeladorDashboardDTO dashboard = celadorService.getCeladorDashboard(celadorId);
+         return ResponseEntity.ok(dashboard);
      }
 
 

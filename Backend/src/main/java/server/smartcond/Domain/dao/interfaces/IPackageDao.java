@@ -15,4 +15,7 @@ public interface IPackageDao {
 
     Optional<PackageEntity> findById(Long id);
     PackageEntity update(PackageEntity packageEntity);
+
+    List<PackageEntity> findLatestPackagesByApartment(Long apartmentId, int limit);
+
 }

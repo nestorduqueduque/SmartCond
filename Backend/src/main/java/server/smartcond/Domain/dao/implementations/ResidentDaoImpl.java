@@ -27,7 +27,7 @@ public class ResidentDaoImpl implements IResidentDao {
 
     @Override
     public Optional<UserEntity> findById(Long id) {
-        return Optional.empty();
+        return Optional.ofNullable(this.em.find(UserEntity.class, id));
     }
 
     @Override
