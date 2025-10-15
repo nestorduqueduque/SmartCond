@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import server.smartcond.Domain.Dto.request.CeladorRequestDTO;
 import server.smartcond.Domain.Dto.request.NoticeRequestDTO;
 import server.smartcond.Domain.Dto.request.ResidentRequestDTO;
+import server.smartcond.Domain.Dto.response.AdminDashboardDTO;
 import server.smartcond.Domain.Dto.response.CeladorResponseDTO;
 import server.smartcond.Domain.Dto.response.NoticeResponseDTO;
 import server.smartcond.Domain.Dto.response.ResidentResponseDTO;
@@ -70,9 +71,9 @@ public class AdminController {
 
 
     @Operation(summary = "Post a Notice")
-    @PostMapping("/create-notice")
-    public ResponseEntity<NoticeResponseDTO> create(@RequestBody NoticeRequestDTO noticeRequestDTO) {
-        return ResponseEntity.ok(adminService.createNotice(noticeRequestDTO));
+    @PostMapping("/{authorId}/create-notice")
+    public ResponseEntity<NoticeResponseDTO> create(@PathVariable Long authorId,@RequestBody NoticeRequestDTO noticeRequestDTO) {
+        return ResponseEntity.ok(adminService.createNotice(authorId, noticeRequestDTO));
     }
 
     @Operation(summary = "Get all Notices")
@@ -81,6 +82,13 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getAllNotice());
     }
 
+    //Dashboard
+    @Operation(summary = "DashboardAdmin")
+    @GetMapping("/{adminId}")
+    public ResponseEntity<AdminDashboardDTO> getAdminDashboard(@PathVariable Long adminId) {
+        AdminDashboardDTO dashboard = adminService.getAdminDashboard(adminId);
+        return ResponseEntity.ok(dashboard);
+    }
 
     }
 

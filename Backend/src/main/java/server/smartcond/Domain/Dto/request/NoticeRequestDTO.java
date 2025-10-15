@@ -11,5 +11,4 @@ import lombok.NoArgsConstructor;
 public class NoticeRequestDTO {
     private String title;
     private String content;
-    private Long authorId;
 }

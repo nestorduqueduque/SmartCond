@@ -2,6 +2,7 @@ package server.smartcond.Domain.dao.implementations;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import server.smartcond.Domain.Entities.NoticeEntity;
@@ -32,5 +33,13 @@ public class NoticeDaoImpl implements INoticeDao {
     public List<NoticeEntity> findAll() {
         return em.createQuery("SELECT c FROM NoticeEntity c ORDER BY c.createdAt DESC", NoticeEntity.class)
                 .getResultList();
+    }
+
+    @Override
+    public List<NoticeEntity> findLatestNotices() {
+        String jpql = "SELECT n FROM NoticeEntity n ORDER BY n.createdAt DESC";
+        TypedQuery<NoticeEntity> query = em.createQuery(jpql, NoticeEntity.class);
+        query.setMaxResults(3);
+        return query.getResultList();
     }
 }

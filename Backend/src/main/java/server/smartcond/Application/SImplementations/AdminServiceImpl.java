@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import server.smartcond.Domain.Dto.request.CeladorRequestDTO;
 import server.smartcond.Domain.Dto.request.NoticeRequestDTO;
 import server.smartcond.Domain.Dto.request.ResidentRequestDTO;
+import server.smartcond.Domain.Dto.response.AdminDashboardDTO;
 import server.smartcond.Domain.Dto.response.CeladorResponseDTO;
 import server.smartcond.Domain.Dto.response.NoticeResponseDTO;
 import server.smartcond.Domain.Dto.response.ResidentResponseDTO;
@@ -136,8 +137,8 @@ public class AdminServiceImpl implements IAdminService {
 
     //Notices
         @Override
-        public NoticeResponseDTO createNotice(NoticeRequestDTO dto) {
-            UserEntity author =  adminDao.findAdminById(dto.getAuthorId())
+        public NoticeResponseDTO createNotice(Long authorID,NoticeRequestDTO dto) {
+            UserEntity author =  adminDao.findAdminById(authorID)
                     .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
             NoticeEntity entity = new NoticeEntity();
             entity.setTitle(dto.getTitle());
@@ -160,6 +161,22 @@ public class AdminServiceImpl implements IAdminService {
         public NoticeResponseDTO findNoticeById(Long id) {
             return null;
         }
+
+    //Dashboard
+    @Override
+    public AdminDashboardDTO getAdminDashboard(Long id) {
+        ModelMapper modelMapper = new ModelMapper();
+        UserEntity author =  adminDao.findAdminById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        List<NoticeEntity> lastNotices = noticeDao.findLatestNotices();
+        List<NoticeResponseDTO> noticeResponseDTOS = lastNotices.stream()
+                .map(notice -> modelMapper.map(notice, NoticeResponseDTO.class)).collect(Collectors.toList());
+
+        AdminDashboardDTO dashboardDTO = new AdminDashboardDTO();
+        dashboardDTO.setAdminName(author.getName());
+        dashboardDTO.setLatestNotices(noticeResponseDTOS);
+        return dashboardDTO;
+    }
 
     private ResidentResponseDTO toResidentResponse(UserEntity userEntity) {
         ResidentResponseDTO dto = new ResidentResponseDTO();

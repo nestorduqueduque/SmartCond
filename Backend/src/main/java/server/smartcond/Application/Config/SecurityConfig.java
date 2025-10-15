@@ -31,9 +31,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(csrf -> csrf.disable())
+                .cors(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(http -> {
+                    http.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     http.requestMatchers("/auth/**").permitAll();
                     http.requestMatchers("/admin/**").hasRole("ADMIN");
                     http.requestMatchers("/celador/**").hasRole("CELADOR");

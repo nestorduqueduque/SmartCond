@@ -15,4 +15,6 @@ public interface IAdminDao {
 
     UserEntity updateUserAdmin(UserEntity userEntity);
 
+
+
 }

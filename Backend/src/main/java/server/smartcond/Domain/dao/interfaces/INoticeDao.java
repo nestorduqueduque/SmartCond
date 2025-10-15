@@ -11,4 +11,6 @@ public interface INoticeDao {
 
     Optional<NoticeEntity> findById(Long id);
     List<NoticeEntity> findAll();
+
+    List<NoticeEntity> findLatestNotices();
 }
