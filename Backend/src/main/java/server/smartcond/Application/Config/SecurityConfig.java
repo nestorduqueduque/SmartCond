@@ -1,6 +1,7 @@
 package server.smartcond.Application.Config;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,15 +18,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import server.smartcond.Application.Config.filter.JwtTokenValidator;
 import server.smartcond.Application.SImplementations.UserDetailServiceImpl;
+import server.smartcond.Domain.Utils.Jwtutils;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
-
-
+    @Autowired
+    private Jwtutils jwtutils;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -35,12 +39,13 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(http -> http
-                        .requestMatchers("/view/**").permitAll()         // vistas Thymeleaf
-                        .requestMatchers("/auth/**").permitAll()         // login
-                        .requestMatchers("/admin/**").permitAll()        // pruebas admin
-                        .requestMatchers("/celador/**").permitAll()      // pruebas celador
-                        .anyRequest().permitAll()                        // ⚠️ temporal para desarrollo
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/celador/**").hasRole("CELADOR")
+                        .requestMatchers("/resident/**").hasRole("RESIDENT")
+                        .anyRequest().permitAll()
                 )
+                .addFilterBefore(new JwtTokenValidator(jwtutils), BasicAuthenticationFilter.class)
                 .build();
     }
 
