@@ -32,6 +32,12 @@ public class ViewController {
         return "registro-vehiculo";
     }
 
+    @GetMapping("panel-vehicles")
+    public String panelVehicles() {
+        return "panel-vehicles";
+    }
+
+
     @GetMapping("/create-notice")
     public String createNotice() {
         return "create-notice";
@@ -52,8 +58,18 @@ public class ViewController {
         return "register-visitor";
     }
 
+    @GetMapping("/panel-visitors")
+    public String panelVisitors() {
+        return "panel-visitors";
+    }
+
     @GetMapping("/register-package")
     public String showRegisterPackage() {
         return "register-package";
+    }
+
+    @GetMapping("/package-panel")
+    public String viewPackagePanel() {
+        return "package-panel";
     }
 }

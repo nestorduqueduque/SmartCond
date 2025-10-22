@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Encomiendas</title>
+</head>
+<body>
+<h2>Panel de Encomiendas</h2>
+<h3 id="greeting"></h3>
+
+<!-- Botones de acciones -->
+<div>
+    <button onclick="loadNotDelivered()">Ver no entregadas</button>
+    <button onclick="showSearchByApartment()">Buscar por apartamento</button>
+    <button onclick="goBack()">Volver al Dashboard</button>
+    <button onclick="logout()">Cerrar Sesión</button>
+</div>
+
+<!-- Buscar por apartamento -->
+<div id="searchContainer" style="margin-top:10px; display:none;">
+    <input type="number" id="apartmentNumber" placeholder="Número de apartamento">
+    <button onclick="searchByApartment()">Buscar</button>
+</div>
+
+<!-- Tabla de resultados -->
+<table border="1" style="margin-top:15px; border-collapse:collapse;">
+    <thead>
+    <tr>
+        <th>Apartamento</th>
+        <th>Descripción</th>
+        <th>Fecha de Recepción</th>
+        <th>Estado</th>
+        <th>Acción / Fecha de Entrega</th>
+    </tr>
+    </thead>
+    <tbody id="packageTableBody"></tbody>
+</table>
+
+<script>
+    const celadorName = localStorage.getItem('celadorName');
+    document.getElementById('greeting').innerText = `Hola, ${celadorName}`;
+
+    // 🔹 Mostrar/Ocultar el buscador
+    function showSearchByApartment() {
+        const searchDiv = document.getElementById('searchContainer');
+        searchDiv.style.display = searchDiv.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // 🔹 Buscar paquetes por número de apartamento
+    async function searchByApartment() {
+        const number = document.getElementById('apartmentNumber').value;
+        if (!number) {
+            alert("Ingrese un número de apartamento.");
+            return;
+        }
+        try {
+            const response = await fetch(`/celador/find-package-apartment/${number}`);
+            if (!response.ok) throw new Error("Error en la búsqueda");
+            const data = await response.json();
+            renderPackages(data);
+        } catch (error) {
+            alert("Error al buscar paquetes por apartamento.");
+        }
+    }
+
+    // 🔹 Cargar paquetes no entregados
+    async function loadNotDelivered() {
+        try {
+            const response = await fetch('/celador/find-package-not-delivered');
+            if (!response.ok) throw new Error("Error al obtener paquetes no entregados");
+            const data = await response.json();
+            renderPackages(data);
+        } catch (error) {
+            alert("Error al cargar las encomiendas no entregadas.");
+        }
+    }
+
+    // 🔹 Marcar paquete como entregado
+    async function markAsDelivered(id) {
+        if (!confirm("¿Marcar este paquete como entregado?")) return;
+        try {
+            const response = await fetch(`/celador/package-delivered/${id}`, {
+                method: 'PUT'
+            });
+            if (!response.ok) throw new Error("Error al marcar entregado");
+            alert("Paquete marcado como entregado correctamente.");
+            loadNotDelivered();
+        } catch (error) {
+            alert("Error al actualizar el estado del paquete.");
+        }
+    }
+
+    // 🔹 Renderizar tabla de paquetes
+    function renderPackages(packages) {
+        const tableBody = document.getElementById('packageTableBody');
+        tableBody.innerHTML = '';
+
+        if (!packages || packages.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="5">No hay encomiendas para mostrar.</td></tr>';
+            return;
+        }
+
+        packages.forEach(pkg => {
+            const row = document.createElement('tr');
+
+            const statusText = pkg.status === 'RECEIVED' ? 'Pendiente' : 'Entregado';
+            const actionCell = pkg.status === 'RECEIVED'
+                ? `<button onclick="markAsDelivered(${pkg.id})">Entregar</button>`
+                : `${pkg.deliveredAt || '---'}`;
+
+            row.innerHTML = `
+                <td>${pkg.apartment ?? '---'}</td>
+                <td>${pkg.description}</td>
+                <td>${pkg.receivedAt || '---'}</td>
+                <td>${statusText}</td>
+                <td>${actionCell}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    // 🔹 Botón volver al dashboard
+    function goBack() {
+        const celadorId = localStorage.getItem('celadorId');
+        window.location.href = `/view/dashboard-celador?celadorId=${celadorId}`;
+    }
+
+    // 🔹 Cerrar sesión
+    function logout() {
+        localStorage.clear();
+        window.location.href = '/view/login';
+    }
+
+    // Cargar por defecto las no entregadas al abrir
+    loadNotDelivered();
+</script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Vehículos</title>
+</head>
+<body>
+<h2>Panel de Vehículos por Apartamento</h2>
+
+<div>
+    <label for="apartmentNumber">Número de Apartamento:</label>
+    <input type="number" id="apartmentNumber" placeholder="Ej: 554">
+    <button onclick="loadVehicles()">Buscar</button>
+    <button onclick="goBack()">Volver al Dashboard</button>
+</div>
+
+<h3>Vehículos Registrados</h3>
+<table border="1" id="vehiclesTable">
+    <thead>
+    <tr>
+        <th>Apartamento</th>
+        <th>Placa</th>
+        <th>Tipo</th>
+        <th>Marca</th>
+        <th>Modelo</th>
+    </tr>
+    </thead>
+    <tbody id="vehiclesBody">
+    <tr><td colspan="5">Ingrese un número de apartamento para ver los vehículos.</td></tr>
+    </tbody>
+</table>
+
+<script>
+    async function loadVehicles() {
+      const apartmentNumber = document.getElementById('apartmentNumber').value;
+      const body = document.getElementById('vehiclesBody');
+      body.innerHTML = '';
+
+      if (!apartmentNumber) {
+        body.innerHTML = '<tr><td colspan="5">Por favor, ingrese el número de apartamento.</td></tr>';
+        return;
+      }
+
+      try {
+        const response = await fetch(`/celador/find-vehicles-apartment/${apartmentNumber}`);
+        if (!response.ok) {
+          body.innerHTML = '<tr><td colspan="5">Error al obtener los vehículos.</td></tr>';
+          return;
+        }
+
+        const data = await response.json();
+
+        if (data.length === 0) {
+          body.innerHTML = `<tr><td colspan="5">No hay vehículos registrados para el apartamento ${apartmentNumber}.</td></tr>`;
+          return;
+        }
+
+        data.forEach(vehicle => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${vehicle.apartment}</td>
+            <td>${vehicle.plate}</td>
+            <td>${vehicle.type}</td>
+            <td>${vehicle.brand}</td>
+            <td>${vehicle.model}</td>
+          `;
+          body.appendChild(row);
+        });
+      } catch (error) {
+        body.innerHTML = '<tr><td colspan="5">Error al conectar con el servidor.</td></tr>';
+      }
+    }
+
+    function goBack() {
+      const celadorId = localStorage.getItem('celadorId');
+      window.location.href = `/view/dashboard-celador?celadorId=${celadorId}`;
+    }
+  </script>
+</body>
+</html>

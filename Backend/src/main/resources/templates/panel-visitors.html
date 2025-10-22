@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Visitantes</title>
+</head>
+<body>
+<h2>Panel de Visitantes</h2>
+
+<div>
+    <label for="apartmentNumber">Número de Apartamento:</label>
+    <input type="number" id="apartmentNumber" placeholder="Ej: 554">
+    <button onclick="loadVisitors()">Buscar</button>
+    <button onclick="goBack()">Volver al Dashboard</button>
+</div>
+
+<h3>Visitantes Registrados</h3>
+<table border="1" id="visitorsTable">
+    <thead>
+    <tr>
+        <th>Apartamento</th>
+        <th>Nombre</th>
+        <th>Documento</th>
+        <th>Motivo</th>
+        <th>Hora de Ingreso</th>
+    </tr>
+    </thead>
+    <tbody id="visitorsBody">
+    <tr><td colspan="5">Ingrese un número de apartamento para ver los visitantes.</td></tr>
+    </tbody>
+</table>
+
+<script>
+    async function loadVisitors() {
+      const apartmentNumber = document.getElementById('apartmentNumber').value;
+      const body = document.getElementById('visitorsBody');
+      body.innerHTML = '';
+
+      if (!apartmentNumber) {
+        body.innerHTML = '<tr><td colspan="5">Por favor, ingrese el número de apartamento.</td></tr>';
+        return;
+      }
+
+      try {
+        const response = await fetch(`/celador/find-visitors-apartment/${apartmentNumber}`);
+        if (!response.ok) {
+          body.innerHTML = '<tr><td colspan="5">Error al obtener los visitantes.</td></tr>';
+          return;
+        }
+
+        const data = await response.json();
+
+        if (data.length === 0) {
+          body.innerHTML = `<tr><td colspan="5">No hay visitantes registrados para el apartamento ${apartmentNumber}.</td></tr>`;
+          return;
+        }
+
+        data.forEach(visitor => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${visitor.apartment}</td>
+            <td>${visitor.name}</td>
+            <td>${visitor.document}</td>
+            <td>${visitor.reason}</td>
+            <td>${visitor.entryTime || '---'}</td>
+          `;
+          body.appendChild(row);
+        });
+      } catch (error) {
+        body.innerHTML = '<tr><td colspan="5">Error al conectar con el servidor.</td></tr>';
+      }
+    }
+
+    function goBack() {
+      const celadorId = localStorage.getItem('celadorId');
+      window.location.href = `/view/dashboard-celador?celadorId=${celadorId}`;
+    }
+  </script>
+</body>
+</html>

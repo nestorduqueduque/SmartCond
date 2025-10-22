@@ -15,8 +15,20 @@
         <button onclick="goToRegisterPackage()">Registrar Encomienda</button>
     </div>
     <div>
+        <button onclick="goToPackagePanel()">Panel de Encomiendas</button>
+    </div>
+    <div>
+        <button onclick="goToVisitorsPanel()">Ver Visitantes</button>
+    </div>
+
+    <div>
         <button onclick="logout()">Cerrar Sesión</button>
     </div>
+
+       <div>
+        <button onclick="goToVehiclesPanel()">Ver Vehículos</button>
+    </div>
+
 
 </div>
 
@@ -75,6 +87,27 @@ async function loadDashboard() {
     const celadorId = localStorage.getItem('celadorId');
     window.location.href = `/view/register-package?celadorId=${celadorId}`;
   }
+
+  function goToPackagePanel() {
+    const celadorId = localStorage.getItem('celadorId');
+    if (!celadorId) {
+      window.location.href = '/view/login';
+      return;
+    }
+    window.location.href = `/view/package-panel?celadorId=${celadorId}`;
+  }
+
+  function goToVisitorsPanel() {
+  const celadorId = localStorage.getItem('celadorId');
+  window.location.href = `/view/panel-visitors?celadorId=${celadorId}`;
+}
+function goToVehiclesPanel() {
+  const celadorId = localStorage.getItem('celadorId');
+  window.location.href = `/view/panel-vehicles?celadorId=${celadorId}`;
+}
+
+
+
 
   // ✅ Cerrar sesión
   function logout() {

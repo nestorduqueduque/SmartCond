@@ -3,14 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Dashboard del Residente</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        h3 { border-bottom: 2px solid #ccc; padding-bottom: 5px; margin-top: 20px; }
-        ul { list-style-type: none; padding: 0; }
-        li { border: 1px solid #eee; margin-bottom: 10px; padding: 10px; border-radius: 4px; }
-        .notice-title { color: #0056b3; }
-        .package-item { font-style: italic; }
-    </style>
 </head>
 <body>
 <h2 id="greeting">Cargando...</h2>
@@ -20,22 +12,47 @@
     <p id="apartmentInfo">Cargando información...</p>
 </div>
 
----
+<hr>
 
+<!-- 🔹 Tabla de visitantes -->
 <div>
-    <h3>Últimos Visitantes</h3>
-    <ul id="visitorsContainer">Cargando visitantes...</ul>
+    <h2>Últimos Visitantes</h2>
+    <table border="1" style="width: 100%; border-collapse: collapse;">
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Motivo</th>
+            <th>Fecha de Ingreso</th>
+        </tr>
+        </thead>
+        <tbody id="visitorTable">
+        <tr><td colspan="3">Cargando visitantes...</td></tr>
+        </tbody>
+    </table>
 </div>
 
----
+<hr>
 
+<!-- 🔹 Tabla de encomiendas -->
 <div>
     <h3>Últimas Encomiendas</h3>
-    <ul id="packagesContainer">Cargando encomiendas...</ul>
+    <table border="1" id="packagesTable" style="width: 100%; border-collapse: collapse;">
+        <thead>
+        <tr>
+            <th>Fecha de Recepción</th>
+            <th>Descripción</th>
+            <th>Estado</th>
+        </tr>
+        </thead>
+        <tbody id="packagesBody">
+        <tr><td colspan="3">Cargando encomiendas...</td></tr>
+        </tbody>
+    </table>
 </div>
 
----
+<hr>
 
+<!-- 🔹 Comunicados -->
 <div>
     <h3>Últimos Comunicados</h3>
     <ul id="noticesContainer">Cargando comunicados...</ul>
@@ -44,111 +61,136 @@
 <button onclick="logout()">Cerrar sesión</button>
 
 <script>
-        /**
-         * Carga los datos del residente y actualiza la interfaz del dashboard.
-         */
-        async function loadDashboard() {
-            const residentId = localStorage.getItem('residentId');
-            const residentName = localStorage.getItem('residentName');
-            const greetingElement = document.getElementById('greeting');
-            const apartmentInfoElement = document.getElementById('apartmentInfo');
+  async function loadDashboard() {
+    const residentId = localStorage.getItem('residentId');
+    const residentName = localStorage.getItem('residentName');
+    const greetingElement = document.getElementById('greeting');
+    const apartmentInfoElement = document.getElementById('apartmentInfo');
 
-            // 1. Verificar sesión
-            if (!residentId) {
-                window.location.href = '/view/login';
-                return;
-            }
+    if (!residentId) {
+      window.location.href = '/view/login';
+      return;
+    }
 
-            greetingElement.innerText = `Hola, ${residentName}`;
+    greetingElement.innerText = `Hola, ${residentName}`;
 
-            try {
-                // Asume que el endpoint es /resident/{id} y maneja la autenticación si es necesaria
-                const response = await fetch(`/resident/${residentId}`);
+    try {
+      const response = await fetch(`/resident/${residentId}`);
+      if (!response.ok) {
+        const errorText = await response.text();
+        apartmentInfoElement.innerText = `Error ${response.status}: No se pudo cargar el dashboard.`;
+        console.error("Error del servidor:", errorText);
+        return;
+      }
 
-                // 2. Manejar respuesta no exitosa (ej: 404, 500, o si falta auth)
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    apartmentInfoElement.innerText = `Error ${response.status}: No se pudo cargar el dashboard. ¿Falta autenticación?`;
-                    console.error("Error del servidor:", errorText);
-                    return;
-                }
+      const data = await response.json();
 
-                const data = await response.json();
+      // 🔹 Información del apartamento
+      const apartment = data.apartment;
+      let aptInfo = 'No se encontró información del apartamento.';
+      if (apartment) {
+        const towerNum = (apartment.tower && apartment.tower.number) ? apartment.tower.number : 'N/A';
+        aptInfo = `Torre: ${towerNum}, Apartamento: ${apartment.number}`;
+        localStorage.setItem("apartmentNumber", apartment.number); // Guardar número
+      }
+      apartmentInfoElement.innerText = aptInfo;
 
-                // 3. Renderizar la Información del Apartamento (Robusto contra datos nulos)
-                const apartment = data.apartment;
-                let aptInfo = 'No se encontró información del apartamento.';
+      // 🔹 Últimos visitantes
+      if (apartment && apartment.number) {
+        await cargarUltimosVisitantes(apartment.number);
+      }
 
-                if (apartment) {
-                    // Acceso seguro: si apartment.tower no existe, usa 'N/A'
-                    const towerNum = (apartment.tower && apartment.tower.number) ? apartment.tower.number : 'N/A';
-                    aptInfo = `Torre: ${towerNum}, Apartamento: ${apartment.number}`;
-                }
-                apartmentInfoElement.innerText = aptInfo;
+      // 🔹 Últimas encomiendas
+      const packagesBody = document.getElementById('packagesBody');
+      packagesBody.innerHTML = '';
+      if (data.latestPackages && data.latestPackages.length > 0) {
+        data.latestPackages.forEach(pkg => {
+          const estado = pkg.status === 'RECEIVED' ? 'Por recoger' : 'Entregado';
+          const fechaRecepcion = pkg.receivedAt ? pkg.receivedAt : '---';
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${fechaRecepcion}</td>
+            <td>${pkg.description}</td>
+            <td>${estado}</td>
+          `;
+          packagesBody.appendChild(row);
+        });
+      } else {
+        packagesBody.innerHTML = `<tr><td colspan="3">No hay encomiendas recientes.</td></tr>`;
+      }
 
-                // 4. Renderizar Visitantes
-                renderList(
-                    'visitorsContainer',
-                    data.latestVisitors,
-                    visitor => `<strong>${visitor.name}</strong> - ${visitor.reason}`,
-                    'No hay visitantes recientes.'
-                );
+      // 🔹 Comunicados
+      renderList(
+        'noticesContainer',
+        data.latestNotices,
+        notice => `<h4>${notice.title}</h4><p>${notice.content}</p>`,
+        'No hay comunicados recientes.'
+      );
 
-                // 5. Renderizar Encomiendas
-                renderList(
-                    'packagesContainer',
-                    data.latestPackages,
-                    pkg => `<span class="package-item">${pkg.description}</span>`,
-                    'No hay encomiendas recientes.'
-                );
+    } catch (error) {
+      apartmentInfoElement.innerText = 'Error al conectar con el servidor.';
+      console.error("Error de conexión/parseo:", error);
+    }
+  }
 
-                // 6. Renderizar Comunicados
-                renderList(
-                    'noticesContainer',
-                    data.latestNotices,
-                    notice => `<h4 class="notice-title">${notice.title}</h4><p>${notice.content}</p>`,
-                    'No hay comunicados recientes.'
-                );
+  // Carga correcta de visitantes
+  async function cargarUltimosVisitantes(apartmentNumber) {
+    try {
+      const response = await fetch(`/celador/find-visitors-apartment/${apartmentNumber}`);
+      if (!response.ok) {
+        console.error("Error al cargar visitantes:", response.statusText);
+        return;
+      }
 
-            } catch (error) {
-                apartmentInfoElement.innerText = 'Error al conectar con el servidor. Revise la consola para más detalles.';
-                console.error("Error de conexión/parseo:", error);
-            }
-        }
+      const data = await response.json();
+      const tableBody = document.getElementById("visitorTable");
+      tableBody.innerHTML = "";
 
-        /**
-         * Función genérica para renderizar una lista de datos en un contenedor <ul>.
-         * @param {string} containerId - El ID del elemento <ul>.
-         * @param {Array<Object>} items - La lista de datos.
-         * @param {function(Object): string} itemMapper - Función para generar el HTML de cada elemento.
-         * @param {string} emptyMessage - Mensaje si la lista está vacía.
-         */
-        function renderList(containerId, items, itemMapper, emptyMessage) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = '';
+      if (!data || data.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="3">No hay visitantes registrados.</td></tr>`;
+        return;
+      }
 
-            if (items && items.length > 0) {
-                items.forEach(item => {
-                    const li = document.createElement('li');
-                    li.innerHTML = itemMapper(item);
-                    container.appendChild(li);
-                });
-            } else {
-                container.innerHTML = `<p>${emptyMessage}</p>`;
-            }
-        }
+      data.forEach(visitor => {
+        const fechaIngreso = visitor.entryTime
+          ? new Date(visitor.entryTime).toLocaleString("es-CO")
+          : "---";
 
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${visitor.name}</td>
+          <td>${visitor.reason}</td>
+          <td>${fechaIngreso}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    } catch (error) {
+      console.error("Error al cargar visitantes:", error);
+    }
+  }
 
-        /**
-         * Limpia el localStorage y redirige al login.
-         */
-        function logout() {
-            localStorage.clear();
-            window.location.href = '/view/login';
-        }
+  function renderList(containerId, items, itemMapper, emptyMessage) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
 
-        // Inicia la carga del dashboard al cargar la página
-        loadDashboard();
-    </script>
+    if (items && items.length > 0) {
+      items.forEach(item => {
+        const li = document.createElement('li');
+        li.innerHTML = itemMapper(item);
+        container.appendChild(li);
+      });
+    } else {
+      container.innerHTML = `<p>${emptyMessage}</p>`;
+    }
+  }
+
+  function logout() {
+    localStorage.clear();
+    window.location.href = '/view/login';
+  }
+
+  document.addEventListener("DOMContentLoaded", loadDashboard);
+</script>
+
 </body>
 </html>
