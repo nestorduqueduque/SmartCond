@@ -5,11 +5,16 @@ meta {
 }
 
 get {
-  url: 
+  url: http://localhost:8080/admin/dashboard-data
   body: none
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJORVNUT1ItRFVRVUUtREVWRUxPUEVSIiwic3ViIjoibmVzdG9yZHVxdWVkdXF1ZUBnbWFpbC5jb20iLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTc2MjUzNTAyNSwiZXhwIjoxNzYyNTM2ODI1LCJqdGkiOiJlMGE3NGI5NS0xMThjLTRmMGQtOTA4OS00MDIxNWVmZWZiNGYiLCJuYmYiOjE3NjI1MzUwMjV9.8Ti1qhLKl7oQzym248WKTACs4qN2dN63XwoiWh81z-s
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

@@ -149,6 +149,21 @@ public class AdminServiceImpl implements IAdminService {
             return toNoticeResponse(entity);
         }
 
+    @Override
+    public NoticeResponseDTO createNoticeByUsername(String username, NoticeRequestDTO dto) {
+        ModelMapper modelMapper = new ModelMapper();
+        UserEntity author =  userDao.findByEmail(username)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        author.setName(author.getName());
+        NoticeEntity entity = new NoticeEntity();
+        entity.setTitle(dto.getTitle());
+        entity.setContent(dto.getContent());
+        entity.setCreatedAt(LocalDateTime.now(ZoneId.of("America/Bogota")));
+        entity.setAuthor(author);
+        noticeDao.save(entity);
+        return toNoticeResponse(entity);
+    }
+
         @Override
         public List<NoticeResponseDTO> getAllNotice() {
             return this.noticeDao.findAll()
@@ -162,6 +177,9 @@ public class AdminServiceImpl implements IAdminService {
             return null;
         }
 
+
+
+
     //Dashboard
     @Override
     public AdminDashboardDTO getAdminDashboard(Long id) {
@@ -172,6 +190,20 @@ public class AdminServiceImpl implements IAdminService {
         List<NoticeResponseDTO> noticeResponseDTOS = lastNotices.stream()
                 .map(notice -> modelMapper.map(notice, NoticeResponseDTO.class)).collect(Collectors.toList());
 
+        AdminDashboardDTO dashboardDTO = new AdminDashboardDTO();
+        dashboardDTO.setAdminName(author.getName());
+        dashboardDTO.setLatestNotices(noticeResponseDTOS);
+        return dashboardDTO;
+    }
+
+    @Override
+    public AdminDashboardDTO getAdminDashboardUsername(String username) {
+        ModelMapper modelMapper = new ModelMapper();
+        UserEntity author = userDao.findByEmail(username)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        List<NoticeEntity> lastNotices = noticeDao.findLatestNotices();
+        List<NoticeResponseDTO> noticeResponseDTOS = lastNotices.stream()
+                .map(notice -> modelMapper.map(notice, NoticeResponseDTO.class)).collect(Collectors.toList());
         AdminDashboardDTO dashboardDTO = new AdminDashboardDTO();
         dashboardDTO.setAdminName(author.getName());
         dashboardDTO.setLatestNotices(noticeResponseDTOS);

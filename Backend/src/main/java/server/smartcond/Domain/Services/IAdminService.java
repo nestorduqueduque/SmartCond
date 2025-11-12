@@ -28,8 +28,12 @@ public interface IAdminService {
     List<NoticeResponseDTO> getAllNotice();
     NoticeResponseDTO findNoticeById(Long id);
 
+    NoticeResponseDTO createNoticeByUsername(String username, NoticeRequestDTO dto);
+
     //Dashboard
     AdminDashboardDTO getAdminDashboard(Long id);
+
+    AdminDashboardDTO getAdminDashboardUsername(String username);
 
 
 }

@@ -7,7 +7,11 @@ meta {
 get {
   url: http://localhost:8080/admin/find-all-notices
   body: none
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJORVNUT1ItRFVRVUUtREVWRUxPUEVSIiwic3ViIjoibmVzdG9yZHVxdWVkdXF1ZUBnbWFpbC5jb20iLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTc2MTE0ODY4MywiZXhwIjoxNzYxMTUwNDgzLCJqdGkiOiJlY2JjNTQwZi1iZTUxLTRmODktOWUxYy02MWM0MjVkYmI2YjAiLCJuYmYiOjE3NjExNDg2ODN9.mg_MHtUczXv5F4dRtx6FdveuCqDJqaTXXZUBmbASvQY
 }
 
 settings {

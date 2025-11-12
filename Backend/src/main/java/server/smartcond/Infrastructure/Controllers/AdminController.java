@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import server.smartcond.Domain.Dto.request.CeladorRequestDTO;
 import server.smartcond.Domain.Dto.request.NoticeRequestDTO;
@@ -70,10 +71,20 @@ public class AdminController {
     }
 
 
+//    @Operation(summary = "Post a Notice")
+//    @PostMapping("/{authorId}/create-notice")
+//    public ResponseEntity<NoticeResponseDTO> create(@PathVariable Long authorId,@RequestBody NoticeRequestDTO noticeRequestDTO) {
+//        return ResponseEntity.ok(adminService.createNotice(authorId, noticeRequestDTO));
+//    }
+
     @Operation(summary = "Post a Notice")
-    @PostMapping("/{authorId}/create-notice")
-    public ResponseEntity<NoticeResponseDTO> create(@PathVariable Long authorId,@RequestBody NoticeRequestDTO noticeRequestDTO) {
-        return ResponseEntity.ok(adminService.createNotice(authorId, noticeRequestDTO));
+    @PostMapping("/create-notice")
+    public ResponseEntity<NoticeResponseDTO> createNotice(
+            @AuthenticationPrincipal String username,
+            @RequestBody NoticeRequestDTO noticeRequestDTO) {
+
+        NoticeResponseDTO response = adminService.createNoticeByUsername(username, noticeRequestDTO);
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "Get all Notices")
@@ -83,12 +94,20 @@ public class AdminController {
     }
 
     //Dashboard
-    @Operation(summary = "DashboardAdmin")
-    @GetMapping("/{adminId}")
-    public ResponseEntity<AdminDashboardDTO> getAdminDashboard(@PathVariable Long adminId) {
-        AdminDashboardDTO dashboard = adminService.getAdminDashboard(adminId);
-        return ResponseEntity.ok(dashboard);
+//    @Operation(summary = "DashboardAdmin")
+//    @GetMapping("/{adminId}")
+//    public ResponseEntity<AdminDashboardDTO> getAdminDashboard(@PathVariable Long adminId) {
+//        AdminDashboardDTO dashboard = adminService.getAdminDashboard(adminId);
+//        return ResponseEntity.ok(dashboard);
+//    }
+
+    @Operation(summary = "Dashboard")
+    @GetMapping("/dashboard-data")
+    public  ResponseEntity<AdminDashboardDTO> getAdminDashboard(@AuthenticationPrincipal String username){
+        AdminDashboardDTO dashboardDTO = adminService.getAdminDashboardUsername(username);
+        return ResponseEntity.ok(dashboardDTO);
     }
+
 
     }
 
