@@ -1,0 +1,924 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #ffffff;
+    color: #1a1a1a;
+}
+
+/* ============================= */
+/* LOGIN PAGE */
+/* ============================= */
+.container {
+    min-height: 100vh;
+    display: flex;
+}
+
+/* Left side - Image section */
+.image-section {
+    display: none;
+    position: relative;
+}
+
+.background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(45, 111, 63, 0.69);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.brand-title {
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: normal;
+}
+
+/* Right side - Form section */
+.form-section {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    background-color: #F0EDED;
+}
+
+/* ====== FORMULARIOS ====== */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    background-color: #dedede;
+    border-radius: 8px;
+    padding: 24px;
+    max-width: 1043px;
+    width: 100%;
+}
+
+/* Modificador: formulario de registro */
+.form--registro {
+    background-color: #dedede; /* lo puedes cambiar por otro si quieres */
+}
+
+/* Elementos */
+.form__row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form__row--grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.form__row--date {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+}
+
+.form__label {
+    color: #5D4F4F;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    margin-bottom: 8px;
+}
+
+.form__input {
+    width: 100%;
+    height: 24px;
+    padding: 0 16px;
+    border-radius: 4px;
+    border: none;
+    background-color: rgba(95, 158, 113, 0.68);
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    outline: none;
+}
+
+.form__input::placeholder {
+    color: white;
+}
+
+.form__input:focus {
+    box-shadow: 0 0 0 2px #44965A;
+}
+
+.form__input--center {
+    text-align: center;
+}
+
+.form__submit {
+    width: 100%;
+    height: 54px;
+    background-color: #2F6E41;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    transition: background-color 0.3s;
+    margin-top: 24px;
+}
+
+.form__submit:hover {
+    background-color: #44965A;
+}
+
+.form__submit:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #44965A;
+}
+
+
+.form-container {
+    width: 100%;
+    max-width: 501px;
+}
+
+/* Mobile branding */
+.mobile-branding {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.mobile-brand-title {
+    color: #2D6F3F;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+}
+
+/* Login form */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.form-title-login {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 32px;
+    line-height: normal;
+    color: #2D6F3F;
+    letter-spacing: -0.32px;
+}
+
+/* Field groups */
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.field-label {
+    display: block;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: normal;
+    color: black;
+}
+
+.input-container {
+    position: relative;
+}
+
+.input-field {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 20px;
+    line-height: normal;
+    padding-bottom: 8px;
+    color: #5D4F4F;
+}
+
+.input-field::placeholder {
+    color: #5D4F4F;
+}
+
+.input-underline {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: black;
+}
+
+/* Checkbox */
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.checkbox-wrapper {
+    position: relative;
+}
+
+.checkbox-input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.checkbox-custom {
+    width: 12px;
+    height: 12px;
+    border: 1px solid #5D4F4F;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.checkbox-check {
+    width: 8px;
+    height: 8px;
+    background-color: #5D4F4F;
+    border-radius: 2px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.checkbox-text {
+    margin-left: 12px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    line-height: normal;
+    color: #313030;
+    font-weight: 275;
+}
+
+/* Button */
+.button-container {
+    padding-top: 24px;
+}
+
+.login-button {
+    width: 100%;
+    max-width: 249px;
+    height: 52px;
+    margin: 0 auto;
+    display: block;
+    background-color: #2D6F3F;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: normal;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 5px 6px 2px 0 rgba(0, 0, 0, 0.25), 2px 3px 2px 0 rgba(0, 0, 0, 0.25);
+}
+
+.login-button:hover {
+    background-color: rgba(45, 111, 63, 0.9);
+}
+
+.login-button:active {
+    transform: scale(0.95);
+}
+
+/* Forgot password */
+.forgot-password-container {
+    text-align: center;
+    padding-top: 32px;
+}
+
+.forgot-password-link {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: normal;
+    color: #313030;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.forgot-password-link:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Login */
+@media (min-width: 1024px) {
+    .image-section {
+        display: flex;
+        width: 45.6%;
+    }
+
+    .form-section {
+        width: 54.4%;
+    }
+
+    .mobile-branding {
+        display: none;
+    }
+}
+
+/* ============================= */
+/* DASHBOARD */
+/* ============================= */
+.dashboard-container {
+    min-height: 100vh;
+    background-color: #f0eded;
+    display: flex;
+}
+
+/* Left Sidebar */
+.sidebar {
+    width: 303px;
+    background-color: #44965a;
+    position: relative;
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .sidebar {
+        display: block;
+    }
+}
+
+.sidebar-header {
+    width: 100%;
+    height: 147px;
+    background-color: #233e2b;
+    position: relative;
+    box-shadow: 0 5px 3.8px 0 rgba(57, 135, 78, 1);
+}
+
+/* Hamburger Menu */
+.hamburger-menu {
+    position: absolute;
+    left: 42px;
+    top: 52px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.hamburger-line {
+    width: 35px;
+    height: 6px;
+    background-color: white;
+    border-radius: 4px;
+}
+
+.hamburger-line:nth-child(2),
+.hamburger-line:nth-child(3) {
+    height: 5px;
+}
+
+/* Logo */
+.logo {
+    position: absolute;
+    left: 88px;
+    top: 52px;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 40px;
+    font-weight: 700;
+}
+
+/* Sidebar Content */
+.sidebar-content {
+    padding: 78px 24px 24px 24px;
+}
+
+.admin-title {
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    margin-bottom: 48px;
+}
+
+.nav-items {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.nav-icon {
+    width: 20px;
+    height: 20px;
+    border: 1px solid white;
+    border-radius: 50%;
+}
+
+.nav-text {
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.nav-divider {
+    width: 218px;
+    height: 1px;
+    background-color: white;
+    margin: 16px 0;
+    margin-left: -24px;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.top-header {
+    height: 106px;
+    background-color: #f0eded;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+}
+
+@media (min-width: 1024px) {
+    .top-header {
+        padding: 0 24px;
+    }
+}
+
+/* Mobile Menu */
+.mobile-menu-btn {
+    padding: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: block;
+}
+
+@media (min-width: 1024px) {
+    .mobile-menu-btn {
+        display: none;
+    }
+}
+
+.mobile-menu-line {
+    width: 24px;
+    height: 4px;
+    background-color: #5d4f4f;
+    border-radius: 2px;
+    margin: 2px 0;
+}
+
+/* Back Button */
+.back-btn {
+    padding: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .back-btn {
+        display: block;
+    }
+}
+
+/* Search */
+.search-container {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    max-width: 800px;
+    margin: 0 16px;
+}
+
+.search-input {
+    flex: 1;
+    height: 39px;
+    background-color: #f0eded;
+    border: 2px solid rgba(47, 110, 65, 0.93);
+    border-radius: 19.5px;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+}
+
+.search-placeholder {
+    color: #5d4f4f;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.search-btn {
+    width: 77px;
+    height: 39px;
+    background-color: #2f6e41;
+    border: none;
+    border-radius: 0 23px 23px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    gap: 4px;
+}
+
+/* Header Actions */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+@media (min-width: 1024px) {
+    .header-actions {
+        gap: 16px;
+    }
+}
+
+.exit-btn {
+    width: 140px;
+    height: 39px;
+    border: 1px solid rgba(47, 110, 65, 0.93);
+    border-radius: 23px;
+    background: white;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+@media (min-width: 640px) {
+    .exit-btn {
+        display: flex;
+    }
+}
+
+@media (min-width: 1024px) {
+    .exit-btn {
+        width: 176px;
+    }
+}
+
+.exit-btn span {
+    color: #2f6e41;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.profile-photo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #a3a3a3;
+    background-size: cover;
+    background-position: center;
+}
+
+@media (min-width: 1024px) {
+    .profile-photo {
+        width: 66px;
+        height: 67px;
+    }
+}
+
+/* Content Sections */
+.content-sections {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 16px;
+}
+
+@media (min-width: 1280px) {
+    .content-sections {
+        flex-direction: row;
+        padding: 24px;
+    }
+}
+
+/* Left Content */
+.left-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Section */
+.section {
+    background-color: #dedede;
+    border-radius: 8px;
+    padding: 24px;
+}
+
+.section-title {
+    color: #5d4f4f;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+
+.section-subtitle {
+    color: #5d4f4f;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    margin-bottom: 24px;
+}
+
+.section-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Form Row */
+.form-row {
+    background-color: white;
+    border-radius: 4px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+@media (min-width: 640px) {
+    .form-row {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+}
+
+.form-label {
+    color: #5d4f4f;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.create-btn {
+    background-color: #5f9e71;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+/* Communications */
+.communications {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.communication-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.communication-content {
+    flex: 1;
+}
+
+.communication-title {
+    color: #5d4f4f;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.communication-desc {
+    color: #5d4f4f;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+}
+
+.communication-date {
+    color: #5d4f4f;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    white-space: nowrap;
+}
+
+/* Right Sidebar */
+.right-sidebar {
+    width: 100%;
+    background-color: #2f6e41;
+    border-radius: 8px;
+    padding: 24px;
+}
+
+@media (min-width: 1280px) {
+    .right-sidebar {
+        width: 268px;
+    }
+}
+
+.form-title-dashboard {
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+
+.form-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Form Group */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-label-box {
+    background-color: #44965a;
+    border-radius: 4px;
+    padding: 8px 12px;
+}
+
+.form-label-text {
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.form-input-box {
+    background-color: #44965a;
+    border-radius: 4px;
+    padding: 8px 12px;
+}
+
+.form-textarea-box {
+    background-color: #44965a;
+    border-radius: 4px;
+    padding: 37px 12px;
+}
+
+.form-select-box {
+    background-color: #44965a;
+    border-radius: 4px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.form-placeholder {
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+.dropdown-arrow {
+    transform: rotate(-90deg);
+}
+
+.dropdown-options {
+    background-color: white;
+    border-radius: 4px;
+    padding: 24px 12px;
+}
+
+.dropdown-option {
+    color: #5d4f4f;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    margin-bottom: 4px;
+}
+
+.dropdown-option:last-child {
+    margin-bottom: 0;
+}
+
+/* Publish Button */
+.publish-btn {
+    width: 100%;
+    background-color: #44965a;
+    border-radius: 4px;
+    padding: 12px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.publish-btn span {
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* Hover */
+.create-btn:hover {
+    background-color: #4a8a61
+}
+.form-input-field {
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+}
+
+/* Estilos para el nuevo textarea */
+.form-textarea-field {
+  width: 100%;
+  height: 80px; /* Ajusta según sea necesario */
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  resize: vertical; /* Permite al usuario ajustar la altura */
+}
+
+/* Estilos para los placeholders en los nuevos inputs */
+.form-input-field::placeholder,
+.form-textarea-field::placeholder {
+  color: white;
+  opacity: 0.7; /* El placeholder es un poco más sutil */
+}
+
+/* Estilo del botón al deshabilitarse (si los campos están vacíos) */
+.publish-btn:disabled {
+  background-color: #5f9e71; /* Un color más opaco */
+  cursor: not-allowed;
+}
