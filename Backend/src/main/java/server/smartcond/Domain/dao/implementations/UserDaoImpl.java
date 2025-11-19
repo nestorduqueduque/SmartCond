@@ -28,4 +28,18 @@ public class UserDaoImpl implements IUserDao {
         }
     }
 
+    @Override
+    public Optional<UserEntity> findByDocument(Long document) {
+        try {
+            UserEntity user = em.createQuery(
+                            "SELECT u FROM UserEntity u WHERE u.document = :document", UserEntity.class)
+                    .setParameter("document", document)
+                    .getSingleResult();
+
+            return Optional.of(user);
+        } catch (jakarta.persistence.NoResultException e) {
+            return Optional.empty();
+        }
+    }
+
 }

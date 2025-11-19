@@ -7,17 +7,22 @@ meta {
 post {
   url: http://localhost:8080/admin/create-notice
   body: json
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJORVNUT1ItRFVRVUUtREVWRUxPUEVSIiwic3ViIjoibmVzdG9yZHVxdWVkdXF1ZUBnbWFpbC5jb20iLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTc2Mjc4NzI4OSwiZXhwIjoxNzYyNzg5MDg5LCJqdGkiOiI2YTEwMWFhNy0zMzM5LTQ0MTEtYWM5MS01NTM3ZGJlYTc3Y2UiLCJuYmYiOjE3NjI3ODcyODl9.SaF7FaVkh145H9XlqlpKh97C5xP3IbDvYF1be87KuiQ
 }
 
 body:json {
   {
     "title": "Mantenimiento de ascensores",
-    "content": "Se informa que el día lunes se realizará mantenimiento en los ascensores de la Torre 3.",
-    "authorId": 18
+    "content": "Se informa que el día lunes se realizará mantenimiento en los ascensores de la Torre 3."
   }
+  
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

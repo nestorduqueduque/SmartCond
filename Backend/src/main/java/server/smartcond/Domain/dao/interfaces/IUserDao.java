@@ -7,4 +7,5 @@ import java.util.Optional;
 public interface IUserDao {
 
     Optional<UserEntity> findByEmail(String email);
-}
+    Optional<UserEntity> findByDocument(Long document);
+ }

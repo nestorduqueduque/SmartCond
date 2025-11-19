@@ -32,6 +32,5 @@ public interface ICeladorService {
     //Dashboard
     CeladorDashboardDTO getCeladorDashboard(Long id);
 
-
-
+    CeladorDashboardDTO getCeladorDashboardByUsername(String username);
 }

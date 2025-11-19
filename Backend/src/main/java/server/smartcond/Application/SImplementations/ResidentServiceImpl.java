@@ -114,4 +114,36 @@ public class ResidentServiceImpl implements IResidentService {
 
     }
 
-}
+    @Override
+    public ResidentDashboardDTO getResidentDashboardByUsername(String username) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.typeMap(PackageEntity.class, PackageResponseDTO.class).addMappings(mapper -> {
+            mapper.map(src -> src.getApartment().getId(), PackageResponseDTO::setApartment);
+        });
+
+        modelMapper.typeMap(VisitorEntity.class, VisitorResponseDTO.class).addMappings(mapper -> {
+            mapper.map(src -> src.getApartment().getId(), VisitorResponseDTO::setApartment);
+        });
+        UserEntity author = userDao.findByEmail(username)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        Long apartmentId = author.getApartment().getId();
+        List<NoticeEntity> lastNotices = noticeDao.findLatestNotices();
+        List<NoticeResponseDTO> noticeResponseDTOS = lastNotices.stream()
+                .map(notice -> modelMapper.map(notice, NoticeResponseDTO.class)).collect(Collectors.toList());
+        List<VisitorEntity> lastVisitors = visitorDao.findLatestVisitorsByApartment(apartmentId, 4);
+        List<VisitorResponseDTO> visitorResponseDTOS = lastVisitors.stream()
+                .map(visitor -> modelMapper.map(visitor, VisitorResponseDTO.class)).collect(Collectors.toList());
+        List<PackageEntity> lastPackages = packageDao.findLatestPackagesByApartment(apartmentId, 4);
+        List<PackageResponseDTO>  packageResponseDTOS = lastPackages.stream()
+                .map(packages -> modelMapper.map(packages, PackageResponseDTO.class )).collect(Collectors.toList());
+        ApartmentInfoResponseDTO apartmentDTO = modelMapper.map(author.getApartment(), ApartmentInfoResponseDTO.class);
+
+        ResidentDashboardDTO dashboardDTO = new ResidentDashboardDTO();
+        dashboardDTO.setResidentName(author.getName());
+        dashboardDTO.setApartment(apartmentDTO);
+        dashboardDTO.setLatestPackages(packageResponseDTOS);
+        dashboardDTO.setLatestVisitors(visitorResponseDTOS);
+        dashboardDTO.setLatestNotices(noticeResponseDTOS);
+        return dashboardDTO;
+    }
+ }

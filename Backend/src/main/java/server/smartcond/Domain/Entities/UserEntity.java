@@ -27,7 +27,7 @@ public class UserEntity {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column
+    @Column(unique = true)
     private Long document;
 
     @Column(unique = true)

@@ -4,8 +4,10 @@ package server.smartcond.Application.SImplementations;
 import jakarta.persistence.EntityExistsException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import server.smartcond.Domain.Dto.request.CeladorRequestDTO;
 import server.smartcond.Domain.Dto.request.NoticeRequestDTO;
 import server.smartcond.Domain.Dto.request.ResidentRequestDTO;
@@ -73,24 +75,37 @@ public class AdminServiceImpl implements IAdminService {
     @Override
     public CeladorResponseDTO createCelador(CeladorRequestDTO celadorRequestDTO) {
         try {
-            var emailExists = userDao.findByEmail(celadorRequestDTO.getEmail());
+                     var emailExists = userDao.findByEmail(celadorRequestDTO.getEmail());
             if (emailExists.isPresent()) {
-                throw new EntityExistsException("El email ya está en uso");}
+                throw new EntityExistsException("El email ya está en uso");
+            }
+
+            var documentExists = userDao.findByDocument(celadorRequestDTO.getDocument());
+            if (documentExists.isPresent()) {
+                throw new EntityExistsException("El documento ya está en uso");
+            }
             ModelMapper modelMapper = new ModelMapper();
             UserEntity userEntity = modelMapper.map(celadorRequestDTO, UserEntity.class);
+
             String encodedPassword = passwordEncoder.encode(celadorRequestDTO.getPassword());
             userEntity.setPassword(encodedPassword);
+
             userEntity.setEnabled(true);
             userEntity.setAccountNoExpired(true);
             userEntity.setAccountNoLocked(true);
             userEntity.setCredentialNoExpired(true);
             userEntity.setRole(RoleEnum.CELADOR);
+
             celadorDao.saveUserCelador(userEntity);
-            CeladorResponseDTO responseDTO = modelMapper.map(userEntity, CeladorResponseDTO.class);
-            return responseDTO;
+
+            return modelMapper.map(userEntity, CeladorResponseDTO.class);
+
+        } catch (EntityExistsException e) {
+             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 
         } catch (Exception e) {
-            throw new UnsupportedOperationException("Error al guardar Usuario");
+            System.err.println("Error interno: " + e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al guardar Usuario");
         }
     }
     @Override
@@ -103,27 +118,47 @@ public class AdminServiceImpl implements IAdminService {
     @Override
     public ResidentResponseDTO createResident(ResidentRequestDTO residentRequestDTO) {
         try {
-            var emailExists = userDao.findByEmail(residentRequestDTO.getEmail());
+                       var emailExists = userDao.findByEmail(residentRequestDTO.getEmail());
             if (emailExists.isPresent()) {
-                throw new EntityExistsException("El email ya está en uso");}
+                throw new EntityExistsException("El email ya está en uso");
+            }
+
+            var documentExists = userDao.findByDocument(residentRequestDTO.getDocument());
+            if (documentExists.isPresent()) {
+                throw new EntityExistsException("El documento ya está en uso");
+            }
+            ApartmentEntity apartmentEntity = apartmentDao.findByNumber(residentRequestDTO.getApartment())
+                    .orElseThrow(() -> new RuntimeException("Apartamento No Encontrado " + residentRequestDTO.getApartment()));
+
             ModelMapper modelMapper = new ModelMapper();
             UserEntity userEntity = modelMapper.map(residentRequestDTO, UserEntity.class);
-            ApartmentEntity apartmentEntity = apartmentDao.findByNumber(residentRequestDTO.getApartment()).
-                    orElseThrow(() -> new RuntimeException("Apartamento No Encontrado " + residentRequestDTO.getApartment()));
+
             String encodedPassword = passwordEncoder.encode(residentRequestDTO.getPassword());
             userEntity.setPassword(encodedPassword);
+
             userEntity.setApartment(apartmentEntity);
             userEntity.setEnabled(true);
             userEntity.setAccountNoExpired(true);
             userEntity.setAccountNoLocked(true);
             userEntity.setCredentialNoExpired(true);
             userEntity.setRole(RoleEnum.RESIDENT);
+
             residentDao.saveUserResident(userEntity);
+
             ResidentResponseDTO responseDTO = toResidentResponse(userEntity);
             return responseDTO;
 
+        } catch (EntityExistsException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+
+        } catch (RuntimeException e) {
+            if (e.getMessage().contains("Apartamento No Encontrado")) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+            }
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error inesperado: " + e.getMessage());
+
         } catch (Exception e) {
-            throw new UnsupportedOperationException("Error al guardar Usuario");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al guardar Usuario");
         }
     }
 

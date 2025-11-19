@@ -39,6 +39,9 @@ public class CeladorServiceImpl implements ICeladorService {
     @Autowired
     INoticeDao noticeDao;
 
+    @Autowired
+    IUserDao userDao;
+
     @Override
     public VehicleResponseDTO createVehicle(VehicleRequestDTO vehicleRequestDto) {
         try {
@@ -163,6 +166,21 @@ public class CeladorServiceImpl implements ICeladorService {
         return dashboardDTO;
 
     }
+
+    @Override
+    public CeladorDashboardDTO getCeladorDashboardByUsername(String username) {
+        ModelMapper modelMapper = new ModelMapper();
+        UserEntity author =  userDao.findByEmail(username)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        List<NoticeEntity> lastNotices = noticeDao.findLatestNotices();
+        List<NoticeResponseDTO> noticeResponseDTOS = lastNotices.stream()
+                .map(notice -> modelMapper.map(notice, NoticeResponseDTO.class)).collect(Collectors.toList());
+        CeladorDashboardDTO dashboardDTO = new CeladorDashboardDTO();
+        dashboardDTO.setCeladorName(author.getName());
+        dashboardDTO.setLatestNotices(noticeResponseDTOS);
+        return dashboardDTO;
+    }
+
     //Methods
     private VehicleResponseDTO toVehicleResponse(VehicleEntity vehicleEntity) {
         VehicleResponseDTO dto = new VehicleResponseDTO();
