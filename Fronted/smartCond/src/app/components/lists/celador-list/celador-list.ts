@@ -25,7 +25,7 @@ export class CeladorList {
 
   ngOnInit() {
     this.loadCeladores();
-  }
+  } 
 
   loadCeladores(): void {
     this.isLoading = true;
@@ -33,7 +33,7 @@ export class CeladorList {
     this.adminUserService.getAllCeladors().subscribe({
       next: (resp) => {
         this.celadores = resp;
-        this.filteredCeladores = resp;  // <-- copia inicial
+        this.filteredCeladores = resp;
         this.isLoading = false;
         this.cdr.markForCheck();
       },
@@ -44,7 +44,6 @@ export class CeladorList {
     });
   }
 
-  // 🔍 LÓGICA DE FILTRADO
   filterCeladores() {
     const term = this.searchTerm.toLowerCase().trim();
 

@@ -11,6 +11,8 @@ import { PackageRegister } from './components/registers/package-register/package
 import { VisitorRegister } from './components/registers/visitor-register/visitor-register';
 import { CeladorList } from './components/lists/celador-list/celador-list';
 import { CeladorUpdate } from './components/lists/celador-update/celador-update';
+import { ResidentUpdate } from './components/lists/resident-update/resident-update';
+import { ResidentList } from './components/lists/resident-list/resident-list';
 
 export const routes: Routes = [
 
@@ -44,7 +46,9 @@ export const routes: Routes = [
   { path: 'registro-vehiculo', component: VehicleRegister, canActivate: [authGuard] },
   { path: 'listar-celadores', component: CeladorList, canActivate: [authGuard] },
   { path: 'editar-celadores/:id', component: CeladorUpdate, canActivate: [authGuard] },
-  
+  { path: 'editar-residentes/:id', component: ResidentUpdate, canActivate: [authGuard] },
+  { path: 'listar-residentes', component: ResidentList, canActivate: [authGuard] },
+
   //Celador Dashboard
   { path: 'registro-paquete', component: PackageRegister, canActivate: [authGuard] },
   { path: 'registro-visitante', component: VisitorRegister, canActivate: [authGuard] },

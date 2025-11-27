@@ -10,6 +10,17 @@ export interface Apartment {
   tower: ApartmentTower;
 }
 
+export interface ResidentResponseDTO {
+  id: number;
+  name: string;
+  lastName: string;
+  document: number;
+  email: string;
+  phoneNumber: number;
+  apartment: number;
+  status?: string;
+}
+
 // Interfaces de Contenido
 export interface ResidentPackage {
   id: number;

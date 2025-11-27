@@ -65,13 +65,11 @@ export class CeladorUpdate {
           document: data.document,
           email: data.email,
           phoneNumber: data.phoneNumber,
-          direction: data.direction ?? '',   // seguridad extra
+          direction: data.direction ?? '',
           password: ''
         });
 
         this.isLoadingData = false;
-
-        // evitar problemas con Angular 20 y zoneless
         this.cdr.detectChanges();
       },
       error: (err) => {

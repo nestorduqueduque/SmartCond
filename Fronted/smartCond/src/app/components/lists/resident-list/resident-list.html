@@ -7,7 +7,7 @@
           <path d="M24 2L4 17.3826L24 31" stroke="#5D4F4F" stroke-width="4" stroke-linecap="round"/>
         </svg>
       </button>
-      <h2 style="color: #2f6e41; margin-left: 10px;">Gestión de Celadores</h2>
+      <h2 style="color: #2f6e41; margin-left: 10px;">Gestión de Residentes</h2>
     </div>
 
     <div class="content-sections">
@@ -15,15 +15,15 @@
         <div class="section">
 
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h3 class="section-title">Listado de Celadores</h3>
-            <button class="create-btn" [routerLink]="['/registro-celador']">Crear cuenta</button>
+            <h3 class="section-title">Listado de Residentes</h3>
+            <button class="create-btn" [routerLink]="['/registro-residente']">Crear cuenta</button>
           </div>
 
           <input
             type="text"
             placeholder="Buscar por nombre, documento, email o teléfono..."
             [(ngModel)]="searchTerm"
-            (input)="filterCeladores()"
+            (input)="filterResidents()"
             class="search-input"
             style="width: 100%; margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 8px;"
           />
@@ -41,6 +41,7 @@
                   <th>Documento</th>
                   <th>Email</th>
                   <th>Teléfono</th>
+                  <th>Apartamento</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
@@ -48,19 +49,20 @@
               <tbody>
 
                 <!-- 🔥 AHORA ITERA SOBRE filteredCeladores -->
-                <tr *ngFor="let celador of filteredCeladores">
-                  <td>{{ celador.name }} {{ celador.lastName }}</td>
-                  <td>{{ celador.document }}</td>
-                  <td>{{ celador.email }}</td>
-                  <td>{{ celador.phoneNumber }}</td>
+                <tr *ngFor="let resident of filteredResidents">
+                  <td>{{ resident.name }} {{ resident.lastName }}</td>
+                  <td>{{ resident.document }}</td>
+                  <td>{{ resident.email }}</td>
+                  <td>{{ resident.phoneNumber }}</td>
+                  <td>{{ resident.apartment }}</td>
 
                   <td style="display: flex; gap: 10px;">
-                    <button [routerLink]="['/editar-celadores', celador.id]" class="action-btn edit-btn" title="Editar">✏️</button>
-                    <button (click)="onDelete(celador.id)" class="action-btn delete-btn" title="Eliminar">🗑️</button>
+                    <button [routerLink]="['/editar-residentes', resident.id]" class="action-btn edit-btn" title="Editar">✏️</button>
+                    <button (click)="onDelete(resident.id)" class="action-btn delete-btn" title="Eliminar">🗑️</button>
                   </td>
                 </tr>
 
-                <tr *ngIf="filteredCeladores.length === 0">
+                <tr *ngIf="filteredResidents.length === 0">
                   <td colspan="5" style="text-align: center;">No se encontraron resultados.</td>
                 </tr>
 
