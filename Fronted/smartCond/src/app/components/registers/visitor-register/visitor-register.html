@@ -1,0 +1,80 @@
+<div class="dashboard-container">
+
+    <div class="main-content">
+        <div class="top-header">
+            <button class="back-btn" (click)="goBack()" style="border: none; background: transparent; cursor: pointer;">
+                <svg width="26" height="33" viewBox="0 0 26 33" fill="none">
+                    <path d="M24 2L4 17.3826L24 31" stroke="#5D4F4F" stroke-width="4" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="content-sections">
+
+            <div class="left-content">
+                <div class="section">
+                    <h3 class="section-title">Registro de Visitante</h3>
+
+                    <div class="section-content">
+
+                        <form [formGroup]="visitorForm" (ngSubmit)="onSubmit()" class="form form--registro">
+
+                            <div class="form__row">
+                                <label class="form__label">Nombre Completo</label>
+                                <input
+                                    type="text"
+                                    formControlName="name"
+                                    placeholder="Ej: Pedro Pérez"
+                                    class="form__input"
+                                >
+                            </div>
+
+                            <div class="form__row form__row--grid">
+                                <div class="form__row">
+                                    <label class="form__label">Documento de Identidad</label>
+                                    <input
+                                        type="number"
+                                        formControlName="document"
+                                        placeholder="Ej: 12345678"
+                                        class="form__input"
+                                    >
+                                </div>
+
+                                <div class="form__row">
+                                    <label class="form__label">Apartamento de Visita</label>
+                                    <input
+                                        type="number"
+                                        formControlName="apartment"
+                                        placeholder="Ej: 301"
+                                        class="form__input"
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="form__row">
+                                <label class="form__label">Motivo de la Visita</label>
+                                <input
+                                    type="text"
+                                    formControlName="reason"
+                                    placeholder="Ej: Visita familiar, Domicilio, etc."
+                                    class="form__input"
+                                >
+                            </div>
+
+                            <button
+                                type="submit"
+                                class="form__submit"
+                                [disabled]="visitorForm.invalid || isSubmitting"
+                                [style.opacity]="visitorForm.invalid ? '0.6' : '1'">
+                                {{ isSubmitting ? 'Registrando...' : 'Registrar Visitante' }}
+                            </button>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-sidebar" style="background: transparent;"></div>
+        </div>
+    </div>
+</div>

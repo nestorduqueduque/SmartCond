@@ -1,1 +1,93 @@
-<p>celador-dashboard works!</p>
+<div class="dashboard-container">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">AdmiCon</div>
+    </div>
+
+    <div class="sidebar-content">
+      <h2 class="admin-title">Hola {{ celadorName }}</h2>
+
+      <div class="nav-items">
+        <div class="nav-item">
+          <span class="nav-text">Perfil</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="top-header">
+      <button class="back-btn">
+        <svg width="26" height="33" viewBox="0 0 26 33" fill="none">
+          <path d="M24 2L4 17.3826L24 31" stroke="#5D4F4F" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <div class="header-actions">
+        <button class="exit-btn" (click)="authService.logout()">
+          <span>Salir</span>
+        </button>
+        <div class="profile-photo"></div>
+      </div>
+    </div>
+
+    <!-- ESTADOS DE CARGA -->
+    <div *ngIf="isLoading" style="padding: 24px; text-align: center;">
+    </div>
+
+    <div *ngIf="error" style="padding: 24px; color: red; text-align: center;">
+      <p>Error: {{ error }}</p>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="content-sections" *ngIf="!isLoading && !error">
+
+      <!-- IZQUIERDA -->
+      <div class="left-content">
+        <!-- GESTIÓN DE USUARIOS -->
+        <div class="section">
+          <h3 class="section-title">Gestión de usuarios</h3>
+          <div class="section-content">
+            <div class="form-row">
+              <span class="form-label">Registro de visitante</span>
+              <button class="create-btn" [routerLink]="['/registro-visitante']">Registrar</button>
+            </div>
+            <div class="form-row">
+              <span class="form-label">Registrar vehículo</span>
+              <button class="create-btn" [routerLink]="['/registro-vehiculo']">Registrar</button>
+            </div>
+            <div class="form-row">
+              <span class="form-label">Registrar Paquete</span>
+              <button class="create-btn" [routerLink]="['/registro-paquete']">Registrar</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- COMUNICADOS -->
+        <div class="section">
+          <h3 class="section-title">Comunicados</h3>
+          <p class="section-subtitle">Recientes</p>
+
+          <div class="communications">
+            <div *ngIf="latestNotices.length === 0">
+              <p>No hay comunicados recientes para mostrar.</p>
+            </div>
+
+            <div class="communication-item" *ngFor="let notice of latestNotices">
+              <div class="communication-content">
+                <h4 class="communication-title">{{ notice.title }}</h4>
+                <p class="communication-desc">{{ notice.content }}</p>
+              </div>
+              <span class="communication-date">{{ notice.createdAt | date:'short' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="right-sidebar">
+
+      </div>
+    </div>
+  </div>
+</div>

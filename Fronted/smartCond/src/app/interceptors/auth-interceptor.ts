@@ -4,14 +4,14 @@ import { Auth } from '../services/auth';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(Auth);
-  const token = auth.getToken(); // Esto ya es seguro para SSR gracias a tu servicio
+  const token = auth.getToken();
 
-  // 1. Ignorar la petición de login
+
   if (req.url.includes('/auth/login')) {
     return next(req);
   }
 
-  // 2. Adjuntar token para otras peticiones
+
   if (token) {
     const cloned = req.clone({
       setHeaders: { Authorization: `Bearer ${token}` }

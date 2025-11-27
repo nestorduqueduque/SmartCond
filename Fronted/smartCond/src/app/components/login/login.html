@@ -1,31 +1,87 @@
-<div>
-  <h2>Iniciar Sesión</h2>
-
-  <form (ngSubmit)="onSubmit()">
-    <div>
-      <label for="username">Usuario:</label>
-      <input
-        type="text"
-        id="username"
-        name="username"
-        [(ngModel)]="credentials.email"
-        required>
+<div class="container login-page">
+  <div class="image-section">
+    <img
+      src="/images/conjunto residencial.jpg"
+      alt="Building facade"
+      class="background-image"
+      fetchpriority="high"
+    />
+    <div class="overlay">
+      <h1 class="brand-title">AdmiCon</h1>
     </div>
+  </div>
 
-    <div>
-      <label for="password">Contraseña:</label>
-      <input
-        type="password"
-        id="password"
-        name="password"
-        [(ngModel)]="credentials.password"
-        required>
+  <div class="form-section">
+    <div class="form-container">
+
+      <div class="mobile-branding">
+        <h1 class="mobile-brand-title">AdmiCon</h1>
+      </div>
+
+      <form class="login-form" (ngSubmit)="onSubmit()" #loginForm="ngForm">
+
+        <h2 class="form-title-login">Inicio de sesión</h2> <div class="field-group">
+          <label class="field-label" for="email">Email</label>
+          <div class="input-container">
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="input-field"
+              placeholder="correo@correo.com"
+              [(ngModel)]="credentials.email"
+              required
+            />
+            <div class="input-underline"></div>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="password">Contraseña</label>
+          <div class="input-container">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="input-field"
+              placeholder="Introduce tu contraseña"
+              [(ngModel)]="credentials.password"
+              required
+            />
+            <div class="input-underline"></div>
+          </div>
+        </div>
+
+        <div class="checkbox-container">
+          <div class="checkbox-wrapper">
+            <input type="checkbox" id="remember" name="remember" class="checkbox-input"/>
+            <label for="remember" class="checkbox-label">
+              <div class="checkbox-custom">
+                <div class="checkbox-check"></div>
+              </div>
+              <span class="checkbox-text">Recordarme</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="button-container">
+          <button
+            type="submit"
+            class="login-button"
+            [disabled]="!loginForm.valid">
+            Ingresar
+          </button>
+        </div>
+
+        <div *ngIf="errorMessage" style="color: #d32f2f; margin-top: 16px; text-align: center; font-family: 'Poppins', sans-serif; font-size: 14px;">
+          {{ errorMessage }}
+        </div>
+
+        <div class="forgot-password-container">
+          <button type="button" class="forgot-password-link">Recuperar contraseña</button>
+        </div>
+
+      </form>
     </div>
-
-    <button type="submit">Entrar</button>
-
-    <div *ngIf="errorMessage" style="color: red; margin-top: 10px;">
-      {{ errorMessage }}
-    </div>
-  </form>
+  </div>
 </div>

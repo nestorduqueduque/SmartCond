@@ -26,12 +26,12 @@ export class AdminDashboard implements OnInit {
 
   @ViewChild('noticeForm') noticeForm!: NgForm;
 
-  // 🧭 Propiedades del dashboard
+
   adminName: string = '';
   latestNotices: Notice[] = [];
   newNotice: NoticeRequestDTO = { title: '', content: '' };
 
-  // 🔁 Estados UI
+
   isLoading = true;
   isSubmitting = false;
   error: string | null = null;
@@ -42,9 +42,7 @@ export class AdminDashboard implements OnInit {
     this.loadDashboardData();
   }
 
-  /**
-   * 🔹 Carga inicial del dashboard
-   */
+
   private loadDashboardData(): void {
     this.isLoading = true;
     this.error = null;

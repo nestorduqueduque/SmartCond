@@ -1,1 +1,127 @@
-<p>resident-dashboard works!</p>
+<div class="dashboard-container">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">AdmiCon</div>
+    </div>
+
+    <div class="sidebar-content">
+      <h2 class="admin-title">Hola {{ residentName }}</h2>
+
+      <div class="nav-items">
+        <div class="nav-item">
+          <span class="nav-text">Perfil</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="top-header">
+      <button class="back-btn">
+        <svg width="26" height="33" viewBox="0 0 26 33" fill="none">
+          <path d="M24 2L4 17.3826L24 31" stroke="#5D4F4F" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <div class="header-actions">
+        <button class="exit-btn" (click)="authService.logout()">
+          <span>Salir</span>
+        </button>
+        <div class="profile-photo"></div>
+      </div>
+    </div>
+
+    <!-- ESTADOS DE CARGA -->
+    <div *ngIf="isLoading" style="padding: 24px; text-align: center;">
+    </div>
+
+    <div *ngIf="error" style="padding: 24px; color: red; text-align: center;">
+      <p>Error: {{ error }}</p>
+    </div>
+
+
+    <div class="content-sections" *ngIf="!isLoading && !error">
+
+
+      <div class="left-content">
+        <div class="section">
+            <h3 class="section-title">Paquetes Recibidos Recientes</h3>
+            <div class="section-content">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Descripción</th>
+                    <th>Estado</th>
+                    <th>Recibido</th>
+                    <th>Entregado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let pkg of latestPackages">
+                    <td>{{ pkg.description }}</td>
+                    <td>
+                      <span [ngClass]="{'status-delivered': pkg.status === 'DELIVERED', 'status-received': pkg.status !== 'DELIVERED'}">
+                        {{ pkg.status === 'DELIVERED' ? 'ENTREGADO' : 'PENDIENTE' }}
+                      </span>
+                    </td>
+                    <td>{{ pkg.receivedAt | date: 'dd/MMM/yy HH:mm' }}</td>
+                    <td>{{ pkg.deliveredAt ? (pkg.deliveredAt | date: 'dd/MMM/yy HH:mm') : 'Pendiente' }}</td>
+                  </tr>
+                  <tr *ngIf="latestPackages.length === 0">
+                    <td colspan="4" style="text-align: center;">No hay paquetes recientes registrados.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3 class="section-title">Últimos Ingresos de Visitantes</h3>
+            <div class="section-content">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Documento</th>
+                    <th>Motivo</th>
+                    <th>Hora Ingreso</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let visitor of latestVisitors">
+                    <td>{{ visitor.name }}</td>
+                    <td>{{ visitor.document }}</td>
+                    <td>{{ visitor.reason }}</td>
+                    <td>{{ visitor.entryTime | date: 'dd/MMM/yy HH:mm' }}</td>
+                  </tr>
+                  <tr *ngIf="latestVisitors.length === 0">
+                    <td colspan="4" style="text-align: center;">No hay registros de visitantes recientes.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+
+        <div class="section">
+          <h3 class="section-title">Comunicados Recientes</h3>
+
+          <div class="communications">
+            <div *ngIf="latestNotices.length === 0">
+              <p>No hay comunicados recientes para mostrar.</p>
+            </div>
+
+            <div class="communication-item" *ngFor="let notice of latestNotices">
+              <div class="communication-content">
+                <h4 class="communication-title">{{ notice.title }}</h4>
+                <p class="communication-desc">{{ notice.content }}</p>
+              </div>
+              <span class="communication-date">{{ notice.createdAt | date:'short' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms'; 
+import { FormsModule } from '@angular/forms';
 import { Auth } from '../../services/auth';
 import { CommonModule } from '@angular/common';
 
@@ -29,9 +29,16 @@ export class Login {
         console.log('Login exitoso');
       },
       error: (err) => {
+        console.error("Error en el login", err);
 
-        console.error('Error en el login', err);
-        this.errorMessage = 'Usuario o contraseña incorrectos.';
+        if (err.status === 400) {
+          // si tu backend envía mensaje en body
+          this.errorMessage = err.error?.message || "Credenciales incorrectas";
+        } else if (err.status === 0) {
+          this.errorMessage = "No hay conexión con el servidor";
+        } else {
+          this.errorMessage = "Error desconocido. Intenta de nuevo.";
+        }
       }
     });
   }

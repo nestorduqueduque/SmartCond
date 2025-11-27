@@ -24,12 +24,15 @@ body {
 .image-section {
     display: none;
     position: relative;
+    background-color: #2D3A30;
+    overflow: hidden;
 }
 
 .background-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
 }
 
 .overlay {
@@ -640,12 +643,15 @@ body {
     flex-direction: column;
     gap: 24px;
     padding: 16px;
+    align-items: center;
+    justify-content: center;
 }
 
 @media (min-width: 1280px) {
     .content-sections {
         flex-direction: row;
         padding: 24px;
+        justify-content: center;
     }
 }
 
@@ -921,4 +927,114 @@ body {
 .publish-btn:disabled {
   background-color: #5f9e71; /* Un color más opaco */
   cursor: not-allowed;
+}
+
+/*Estilos de Tablas*/
+.dashboard-title {
+    color: #2f6e41; /* Verde oscuro */
+    margin-bottom: 5px;
+}
+
+.dashboard-subtitle {
+    color: #5d4f4f; /* Gris/Marrón suave */
+    margin-bottom: 20px;
+    font-size: 1.1em;
+}
+
+/* Estilos para Tablas */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 0.9em;
+}
+
+.data-table th, .data-table td {
+    border: 1px solid #ccc;
+    padding: 10px 8px;
+    text-align: left;
+}
+
+.data-table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    color: #333;
+}
+
+.data-table tbody tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+/* Estilos de Estado Condicional */
+.status-delivered {
+    font-weight: bold;
+    color: #2e7d32; /* Verde fuerte */
+}
+
+.status-received {
+    font-weight: bold;
+    color: #ff9800; /* Naranja/Amarillo (Pendiente) */
+}
+
+/* Estilos para Avisos (News List) */
+.news-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.notice-item {
+    padding-bottom: 10px;
+}
+
+.notice-title {
+    margin: 0;
+    color: #333;
+    font-size: 1.1em;
+}
+
+.notice-content {
+    margin: 5px 0;
+    color: #666;
+}
+
+.notice-info {
+    display: block;
+    color: #999;
+    font-size: 0.8em;
+}
+
+.action-btn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 5px;
+    transition: transform 0.2s;
+}
+
+.action-btn:hover {
+    transform: scale(1.2);
+}
+
+.edit-btn:hover {
+    color: #2196F3;
+}
+
+.delete-btn:hover {
+    color: #F44336;
+}
+
+/* Reutilizamos los estilos de tabla que te pasé en la respuesta anterior (.data-table, th, td) */
+
+
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
 }

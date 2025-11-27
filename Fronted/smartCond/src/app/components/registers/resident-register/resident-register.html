@@ -1,0 +1,68 @@
+<div class="dashboard-container">
+    <div class="main-content">
+        <div class="top-header">
+            <button class="back-btn" (click)="goBack()" style="border: none; background: transparent; cursor: pointer;">
+                <svg width="26" height="33" viewBox="0 0 26 33" fill="none">
+                    <path d="M24 2L4 17.3826L24 31" stroke="#5D4F4F" stroke-width="4" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="content-sections">
+            <div class="left-content">
+                <div class="section">
+                    <h3 class="section-title">Registro de Residente</h3>
+                    <div class="section-content">
+
+                        <form [formGroup]="residentForm" (ngSubmit)="onSubmit()" class="form form--registro">
+
+                            <div class="form__row">
+                                <label class="form__label">Nombres</label>
+                                <input type="text" formControlName="name" placeholder="Nombres" class="form__input">
+                            </div>
+
+                            <div class="form__row">
+                                <label class="form__label">Apellidos</label>
+                                <input type="text" formControlName="lastName" placeholder="Apellidos" class="form__input">
+                            </div>
+
+                            <div class="form__row">
+                                <label class="form__label">Documento de Identidad</label>
+                                <input type="number" formControlName="document" placeholder="Documento" class="form__input">
+                            </div>
+
+                            <div class="form__row form__row--grid">
+                                <div class="form__row">
+                                    <label class="form__label">Correo Electrónico</label>
+                                    <input type="email" formControlName="email" placeholder="correo" class="form__input">
+                                </div>
+                                <div class="form__row">
+                                    <label class="form__label">Celular</label>
+                                    <input type="number" formControlName="phoneNumber" placeholder="telefono" class="form__input">
+                                </div>
+                            </div>
+
+                            <div class="form__row">
+                                <label class="form__label">Apartamento</label>
+                                <input type="text" formControlName="apartment" placeholder="Numero de Apartamento" class="form__input">
+                            </div>
+
+                            <div class="form__row">
+                                <label class="form__label">Contraseña</label>
+                                <input type="password" formControlName="password" placeholder="contraseña" class="form__input">
+                            </div>
+
+                            <button type="submit" class="form__submit" [disabled]="residentForm.invalid || isSubmitting"
+                                    [style.opacity]="residentForm.invalid ? '0.6' : '1'">
+                                {{ isSubmitting ? 'Registrando...' : 'Registrar Residente' }}
+                            </button>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-sidebar" style="background: transparent;"></div>
+        </div>
+    </div>
+</div>

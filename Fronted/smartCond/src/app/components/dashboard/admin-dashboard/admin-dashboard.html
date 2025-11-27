@@ -2,22 +2,13 @@
   <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="sidebar-header">
-      <div class="hamburger-menu">
-        <div class="hamburger-line"></div>
-        <div class="hamburger-line"></div>
-        <div class="hamburger-line"></div>
-      </div>
       <div class="logo">AdmiCon</div>
     </div>
 
     <div class="sidebar-content">
-      <h2 class="admin-title">{{ adminName }}</h2>
+      <h2 class="admin-title">Hola {{ adminName }}</h2>
 
       <div class="nav-items">
-        <div class="nav-item">
-          <span class="nav-text">Inicio</span>
-        </div>
-        <div class="nav-divider"></div>
         <div class="nav-item">
           <span class="nav-text">Perfil</span>
         </div>
@@ -25,30 +16,13 @@
     </div>
   </div>
 
-  <!-- MAIN CONTENT -->
   <div class="main-content">
-
-    <!-- HEADER -->
     <div class="top-header">
-      <button class="mobile-menu-btn">
-        <div class="mobile-menu-line"></div>
-        <div class="mobile-menu-line"></div>
-        <div class="mobile-menu-line"></div>
-      </button>
-
       <button class="back-btn">
         <svg width="26" height="33" viewBox="0 0 26 33" fill="none">
           <path d="M24 2L4 17.3826L24 31" stroke="#5D4F4F" stroke-width="4" stroke-linecap="round"/>
         </svg>
       </button>
-
-      <div class="search-container">
-        <div class="search-input">
-          <span class="search-placeholder">BUSCAR</span>
-        </div>
-        <button class="search-btn"></button>
-      </div>
-
       <div class="header-actions">
         <button class="exit-btn" (click)="authService.logout()">
           <span>Salir</span>
@@ -85,6 +59,10 @@
             <div class="form-row">
               <span class="form-label">Registro de vehículo</span>
               <button class="create-btn" [routerLink]="['/registro-vehiculo']">Crear cuenta</button>
+            </div>
+            <div class="form-row">
+              <span class="form-label">Panel de Celadores</span>
+              <button class="create-btn" [routerLink]="['/listar-celadores']">Listar</button>
             </div>
           </div>
         </div>
@@ -142,8 +120,7 @@
                   placeholder="Descripción"
                   name="content"
                   [(ngModel)]="newNotice.content"
-                  required>
-                </textarea>
+                  required></textarea>
               </div>
             </div>
 
