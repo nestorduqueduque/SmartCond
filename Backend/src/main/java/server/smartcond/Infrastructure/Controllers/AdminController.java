@@ -38,6 +38,7 @@ public class AdminController {
 
 
     @Operation(summary = "Get Celadors by Id")
+    @GetMapping("/find-celador-byID/{id}")
     public ResponseEntity<CeladorResponseDTO> findById(@PathVariable Long id){
         return new ResponseEntity<>(this.adminService.finById(id), HttpStatus.OK);
     }
@@ -49,6 +50,12 @@ public class AdminController {
         return new ResponseEntity<>(this.adminService.updateCelador(celadorRequestDTO, id), HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Eliminar Celador (Soft Delete)")
+    @DeleteMapping("/delete-celador/{id}")
+    public ResponseEntity<Void> deleteCelador(@PathVariable Long id) {
+        this.adminService.deleteCelador(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
     @Operation(summary = "Create Celador")
     @PostMapping("/create-celador")
         public ResponseEntity<CeladorResponseDTO> createCelador(@RequestBody CeladorRequestDTO celadorRequestDTO){
@@ -62,12 +69,25 @@ public class AdminController {
     public ResponseEntity<ResidentResponseDTO> createResident(@RequestBody ResidentRequestDTO residentRequestDTO){
         return new ResponseEntity<>(this.adminService.createResident(residentRequestDTO), HttpStatus.CREATED);
     }
-
-
     @Operation(summary = "Get all Residents")
     @GetMapping("/find-all-resident")
     public ResponseEntity<List<ResidentResponseDTO>> findAllResidents(){
         return new ResponseEntity<>(this.adminService.findAllResidents(), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Actualizar Residente por ID")
+    @PutMapping("/update-resident/{id}")
+    public ResponseEntity<ResidentResponseDTO> updateResident(@RequestBody ResidentRequestDTO residentRequestDTO, @PathVariable Long id) {
+        ResidentResponseDTO updatedResident = this.adminService.updateResident(residentRequestDTO, id);
+        return new ResponseEntity<>(updatedResident, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Eliminar Residente (Soft Delete)")
+    @DeleteMapping("/delete-resident/{id}")
+    public ResponseEntity<Void> deleteResident(@PathVariable Long id) {
+        // Llama al método de Soft Delete de Residente
+        this.adminService.deleteResident(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204: Éxito
     }
 
 

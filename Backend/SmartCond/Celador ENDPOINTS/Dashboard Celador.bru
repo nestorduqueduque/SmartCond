@@ -5,11 +5,16 @@ meta {
 }
 
 get {
-  url: 
+  url: http://localhost:8080/celador/dashboard-data-celador
   body: none
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJORVNUT1ItRFVRVUUtREVWRUxPUEVSIiwic3ViIjoibmVzdG9yZHVxdWVjZWxhZG9yQGdtYWlsLmNvbSIsInJvbGVzIjpbIlJPTEVfQ0VMQURPUiJdLCJpYXQiOjE3NjM1NjQ3NDUsImV4cCI6MTc2MzU2NjU0NSwianRpIjoiM2MxYzJlZDQtMzkxZC00NDU0LThhMmMtOWI3ZTc1MjNhOTg0IiwibmJmIjoxNzYzNTY0NzQ1fQ.NXkw8kxi3yJHAXtbtP7U8NXYBWp7cibbeZ5SZqg2gxo
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

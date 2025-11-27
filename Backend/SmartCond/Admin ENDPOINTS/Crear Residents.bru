@@ -7,27 +7,27 @@ meta {
 post {
   url: http://localhost:8080/admin/create-resident
   body: json
-  auth: basic
+  auth: bearer
 }
 
-auth:basic {
-  username: nestorduqueduque@gmail.com
-  password: 1807NestorDuque
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJORVNUT1ItRFVRVUUtREVWRUxPUEVSIiwic3ViIjoibmVzdG9yZHVxdWVkdXF1ZUBnbWFpbC5jb20iLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTc2MzU2NTgxNSwiZXhwIjoxNzYzNTY3NjE1LCJqdGkiOiI5NTAwNTY3MC1lZTg4LTRjMTUtOWMzYS1jZDJlMTZiMTkwYTgiLCJuYmYiOjE3NjM1NjU4MTV9.mWstQVTJTWo0BE6piMV-EoXkHpSlMFEADASYME4Oz5k
 }
 
 body:json {
   {
     "name": "Nestor Residente",
     "lastName": "Duque Residente",
-    "document": 123456789,
-    "email": "nestorduqueresidente@gmail.com",
+    "document": 123456788,
+    "email": "nestorduqueresidenteapiprueap@gmail.com",
     "password": "1807NestorDuque",
     "phoneNumber": 3004567890,
-    "apartment": 554
+    "apartment": 301
   }
   
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

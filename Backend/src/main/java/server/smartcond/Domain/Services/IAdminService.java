@@ -19,9 +19,14 @@ public interface IAdminService {
     CeladorResponseDTO createCelador(CeladorRequestDTO celadorRequestDTO);
     CeladorResponseDTO updateCelador(CeladorRequestDTO celadorRequestDTO, Long id);
 
+    void deleteCelador(Long id);
+
     //Resident Method
     ResidentResponseDTO createResident(ResidentRequestDTO residentRequestDTO);
     List<ResidentResponseDTO> findAllResidents();
+
+    ResidentResponseDTO updateResident(ResidentRequestDTO residentRequestDTO, Long id);
+    void deleteResident(Long id);
 
     //Notices
     NoticeResponseDTO createNotice(Long authorId, NoticeRequestDTO dto);

@@ -7,20 +7,19 @@ meta {
 post {
   url: http://localhost:8080/admin/create-celador
   body: json
-  auth: basic
+  auth: bearer
 }
 
-auth:basic {
-  username: nestorduqueduque@gmail.com
-  password: 1807NestorDuque
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJORVNUT1ItRFVRVUUtREVWRUxPUEVSIiwic3ViIjoibmVzdG9yZHVxdWVkdXF1ZUBnbWFpbC5jb20iLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTc2MzU2NTExNywiZXhwIjoxNzYzNTY2OTE3LCJqdGkiOiI0ZTgwMGY4Yi1iNzk5LTQ1NTctOWQ0Yy1hYWI1MWY5ODU3NTgiLCJuYmYiOjE3NjM1NjUxMTd9.sF8-N8lqaQqBvaDoCdRiPqSvnxtdCdbg4oj-ArmU7_I
 }
 
 body:json {
   {
     "name": "Nestor Celador",
     "lastName": "Duque Celador",
-    "document": 1785963,
-    "email": "nestorduquecelador@gmail.com",
+    "document": 17859679,
+    "email": "nestorduqueceladorapiprueba4444@gmail.com",
     "password": "1807NestorDuque",
     "phoneNumber": 345447557,
     "direction": "Calle 45 #67-89"
@@ -30,4 +29,5 @@ body:json {
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

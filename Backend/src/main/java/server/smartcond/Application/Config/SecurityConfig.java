@@ -41,7 +41,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(http -> http
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/celador/**").hasRole("CELADOR")
+                        .requestMatchers("/celador/**").hasAnyRole("CELADOR", "ADMIN")
                         .requestMatchers("/resident/**").hasRole("RESIDENT")
                         .anyRequest().permitAll()
                 )

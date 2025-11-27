@@ -7,9 +7,14 @@ meta {
 get {
   url: http://localhost:8080/celador/find-all-vehicles
   body: none
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJORVNUT1ItRFVRVUUtREVWRUxPUEVSIiwic3ViIjoibmVzdG9yZHVxdWVjZWxhZG9yQGdtYWlsLmNvbSIsInJvbGVzIjpbIlJPTEVfQ0VMQURPUiJdLCJpYXQiOjE3NjQwNzc4NzYsImV4cCI6MTc2NDA3OTY3NiwianRpIjoiMWIxMzJkY2YtOTBmNy00YTk5LThlYmQtNmU3MzE3MjI1MjRiIiwibmJmIjoxNzY0MDc3ODc2fQ.qZbON_aVbvwB6cWmpWtRoMYqK9gtjrUs1Opmc6jmLqc
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

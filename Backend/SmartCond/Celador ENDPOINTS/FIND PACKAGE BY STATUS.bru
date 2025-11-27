@@ -7,9 +7,14 @@ meta {
 get {
   url: http://localhost:8080/celador/find-package-not-delivered
   body: none
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJORVNUT1ItRFVRVUUtREVWRUxPUEVSIiwic3ViIjoibmVzdG9yZHVxdWVjZWxhZG9yYXBpcHJ1ZWJhQGdtYWlsLmNvbSIsInJvbGVzIjpbIlJPTEVfQ0VMQURPUiJdLCJpYXQiOjE3NjM1NjM0MDAsImV4cCI6MTc2MzU2NTIwMCwianRpIjoiMmU4N2YzMWMtY2FiOC00OTNlLTg4ZDgtNDlhYTYzMGI1YTNjIiwibmJmIjoxNzYzNTYzNDAwfQ.qKGVjnnUnwZEFSKvnOV7ch-8xP2uPIm6UU5vhMmrYaM
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }
