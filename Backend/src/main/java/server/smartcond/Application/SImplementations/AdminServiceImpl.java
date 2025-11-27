@@ -60,7 +60,7 @@ public class AdminServiceImpl implements IAdminService {
     }
 
     @Override
-    public CeladorResponseDTO finById(Long id) {
+    public CeladorResponseDTO finCeladorById(Long id) {
         this.celadorDao.findById(id);
         Optional<UserEntity> userEntity = this.celadorDao.findById(id);
         if(userEntity.isPresent()){
@@ -75,7 +75,7 @@ public class AdminServiceImpl implements IAdminService {
     @Override
     public CeladorResponseDTO createCelador(CeladorRequestDTO celadorRequestDTO) {
         try {
-                     var emailExists = userDao.findByEmail(celadorRequestDTO.getEmail());
+            var emailExists = userDao.findByEmail(celadorRequestDTO.getEmail());
             if (emailExists.isPresent()) {
                 throw new EntityExistsException("El email ya está en uso");
             }
@@ -109,33 +109,41 @@ public class AdminServiceImpl implements IAdminService {
         }
     }
     @Override
-    public CeladorResponseDTO updateCelador(CeladorRequestDTO celadorRequestDTO, Long id) {
-        Optional<UserEntity> optionalUser = celadorDao.findById(id);
-        if (optionalUser.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Celador no encontrado con ID: " + id);
-        }
-        UserEntity celador = optionalUser.get();
+    public CeladorResponseDTO updateCelador(CeladorRequestDTO dto, Long id) {
 
-             celador.setName(celadorRequestDTO.getName());
-        celador.setLastName(celadorRequestDTO.getLastName());
-        celador.setDocument(celadorRequestDTO.getDocument());
-        celador.setEmail(celadorRequestDTO.getEmail());
-        celador.setPhoneNumber(celadorRequestDTO.getPhoneNumber());
-        celador.setDirection(celadorRequestDTO.getDirection());
+        UserEntity celador = celadorDao.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Celador no encontrado"));
 
-        if (celadorRequestDTO.getPassword() != null && !celadorRequestDTO.getPassword().isEmpty()) {
-            String encodedPassword = passwordEncoder.encode(celadorRequestDTO.getPassword());
-            celador.setPassword(encodedPassword);
+        // --- VALIDAR EMAIL ---
+        if (!celador.getEmail().equals(dto.getEmail())) {
+            var emailExists = userDao.findByEmail(dto.getEmail());
+            if (emailExists.isPresent() && !emailExists.get().getId().equals(id)) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "El email ya está en uso");
+            }
         }
 
-        try {
-            celadorDao.saveUserCelador(celador);
-            ModelMapper modelMapper = new ModelMapper();
-            return modelMapper.map(celador, CeladorResponseDTO.class);
-
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al actualizar Celador");
+        // --- VALIDAR DOCUMENTO ---
+        if (!celador.getDocument().equals(dto.getDocument())) {
+            var documentExists = userDao.findByDocument(dto.getDocument());
+            if (documentExists.isPresent() && !documentExists.get().getId().equals(id)) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "El documento ya está en uso");
+            }
         }
+
+        // --- ACTUALIZAR CAMPOS ---
+        celador.setName(dto.getName());
+        celador.setLastName(dto.getLastName());
+        celador.setDocument(dto.getDocument());
+        celador.setEmail(dto.getEmail());
+        celador.setPhoneNumber(dto.getPhoneNumber());
+        celador.setDirection(dto.getDirection());
+
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+            celador.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
+
+        celadorDao.saveUserCelador(celador);
+        return new ModelMapper().map(celador, CeladorResponseDTO.class);
     }
 
     @Override
@@ -152,7 +160,7 @@ public class AdminServiceImpl implements IAdminService {
     @Override
     public ResidentResponseDTO createResident(ResidentRequestDTO residentRequestDTO) {
         try {
-                       var emailExists = userDao.findByEmail(residentRequestDTO.getEmail());
+            var emailExists = userDao.findByEmail(residentRequestDTO.getEmail());
             if (emailExists.isPresent()) {
                 throw new EntityExistsException("El email ya está en uso");
             }
@@ -206,32 +214,46 @@ public class AdminServiceImpl implements IAdminService {
     }
 
     @Override
-    public ResidentResponseDTO updateResident(ResidentRequestDTO residentRequestDTO, Long id) {
+    public ResidentResponseDTO updateResident(ResidentRequestDTO dto, Long id) {
+
         UserEntity resident = residentDao.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Residente no encontrado"));
 
-        if (residentRequestDTO.getApartment() != null) {
-            ApartmentEntity apartmentEntity = apartmentDao.findByNumber(residentRequestDTO.getApartment())
+        // --- VALIDAR EMAIL ---
+        if (!resident.getEmail().equals(dto.getEmail())) {
+            var emailExists = userDao.findByEmail(dto.getEmail());
+            if (emailExists.isPresent() && !emailExists.get().getId().equals(id)) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "El email ya está en uso");
+            }
+        }
+
+        // --- VALIDAR DOCUMENTO ---
+        if (!resident.getDocument().equals(dto.getDocument())) {
+            var documentExists = userDao.findByDocument(dto.getDocument());
+            if (documentExists.isPresent() && !documentExists.get().getId().equals(id)) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "El documento ya está en uso");
+            }
+        }
+
+        // Cambiar apartamento si viene en el DTO
+        if (dto.getApartment() != null) {
+            ApartmentEntity apt = apartmentDao.findByNumber(dto.getApartment())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Apartamento no encontrado"));
-            resident.setApartment(apartmentEntity);
+            resident.setApartment(apt);
         }
 
-        resident.setName(residentRequestDTO.getName());
-        resident.setLastName(residentRequestDTO.getLastName());
-        resident.setDocument(residentRequestDTO.getDocument());
-        resident.setEmail(residentRequestDTO.getEmail());
-        resident.setPhoneNumber(residentRequestDTO.getPhoneNumber());
+        resident.setName(dto.getName());
+        resident.setLastName(dto.getLastName());
+        resident.setDocument(dto.getDocument());
+        resident.setEmail(dto.getEmail());
+        resident.setPhoneNumber(dto.getPhoneNumber());
 
-        if (residentRequestDTO.getPassword() != null && !residentRequestDTO.getPassword().isEmpty()) {
-            resident.setPassword(passwordEncoder.encode(residentRequestDTO.getPassword()));
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+            resident.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
 
-        try {
-            residentDao.saveUserResident(resident);
-            return toResidentResponse(resident);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al actualizar Residente");
-        }
+        residentDao.saveUserResident(resident);
+        return toResidentResponse(resident);
     }
 
     @Override
@@ -241,6 +263,16 @@ public class AdminServiceImpl implements IAdminService {
         resident.setEnabled(false);
         residentDao.saveUserResident(resident);
 
+    }
+
+    @Override
+    public ResidentResponseDTO findResidentById(Long id) {
+        Optional<UserEntity> userEntity = residentDao.findById(id);
+        if (userEntity.isPresent()) {
+            return toResidentResponse(userEntity.get());
+        } else {
+            return new ResidentResponseDTO();
+        }
     }
 
     //Notices

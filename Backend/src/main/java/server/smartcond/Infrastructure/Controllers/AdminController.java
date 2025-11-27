@@ -39,8 +39,8 @@ public class AdminController {
 
     @Operation(summary = "Get Celadors by Id")
     @GetMapping("/find-celador-byID/{id}")
-    public ResponseEntity<CeladorResponseDTO> findById(@PathVariable Long id){
-        return new ResponseEntity<>(this.adminService.finById(id), HttpStatus.OK);
+    public ResponseEntity<CeladorResponseDTO> findCeladorById(@PathVariable Long id){
+        return new ResponseEntity<>(this.adminService.finCeladorById(id), HttpStatus.OK);
     }
 
 
@@ -63,6 +63,12 @@ public class AdminController {
         }
 
 
+
+    @Operation(summary = "Get Residents by Id")
+    @GetMapping("/find-resident-byID/{id}")
+    public ResponseEntity<ResidentResponseDTO> findResidentById(@PathVariable Long id){
+        return new ResponseEntity<>(this.adminService.findResidentById(id), HttpStatus.OK);
+    }
 
     @Operation(summary = "Create Resident")
     @PostMapping("/create-resident")
