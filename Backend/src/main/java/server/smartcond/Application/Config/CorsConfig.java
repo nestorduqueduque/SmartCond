@@ -14,7 +14,7 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 String frontendOrigin = "http://localhost:4200";
                 String frontendOrigin2 = "http://localhost:4000";
-                String frontendOrigin3 = "https://smartcond.up.railway.app/";
+                String frontendOrigin3 = "https://smartcond.up.railway.app";
 
                 registry.addMapping("/**")
                         .allowedOrigins(frontendOrigin, frontendOrigin2, frontendOrigin3)
