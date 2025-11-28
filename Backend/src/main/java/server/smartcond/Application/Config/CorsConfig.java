@@ -16,7 +16,7 @@ public class CorsConfig {
                 String frontendOrigin2 = "http://localhost:4000";
 
                 registry.addMapping("/**")
-                        .allowedOrigins(frontendOrigin)
+                        .allowedOrigins(frontendOrigin, frontendOrigin2)
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
