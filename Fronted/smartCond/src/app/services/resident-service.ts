@@ -8,7 +8,7 @@ import { ResidentDashboardDTO } from '../components/dashboard/resident-dashboard
 })
 export class ResidentService {
     private http = inject(HttpClient);
-    private apiUrl = 'http://localhost:8080/resident';
+    private apiUrl = 'https://smartcond-production.up.railway.app/resident';
 
     getResidentDashboardData(): Observable<any> {
         return this.http.get<ResidentDashboardDTO>(`${this.apiUrl}/dashboard-data-resident`);

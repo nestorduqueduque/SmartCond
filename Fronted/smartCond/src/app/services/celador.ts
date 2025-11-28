@@ -9,7 +9,7 @@ import { VehicleResponseDTO, VisitorRequestDTO, VisitorResponseDTO, PackageReque
 })
 export class Celador {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/celador';
+  private apiUrl = 'https://smartcond-production.up.railway.app/celador';
 
 
   getCeladorDashboardData(): Observable<any> {
