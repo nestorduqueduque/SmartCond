@@ -21,7 +21,7 @@ public interface IAdminService {
 
     void deleteCelador(Long id);
 
-    //Resident Method
+    //Residents Methods
     ResidentResponseDTO createResident(ResidentRequestDTO residentRequestDTO);
     List<ResidentResponseDTO> findAllResidents();
 
@@ -33,8 +33,10 @@ public interface IAdminService {
     NoticeResponseDTO createNotice(Long authorId, NoticeRequestDTO dto);
     List<NoticeResponseDTO> getAllNotice();
     NoticeResponseDTO findNoticeById(Long id);
-
     NoticeResponseDTO createNoticeByUsername(String username, NoticeRequestDTO dto);
+    void  deleteNotice(Long id);
+    NoticeResponseDTO updateNotice(Long id, NoticeRequestDTO dto);
+
 
     //Dashboard
     AdminDashboardDTO getAdminDashboard(Long id);

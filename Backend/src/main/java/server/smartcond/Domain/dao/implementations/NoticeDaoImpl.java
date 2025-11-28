@@ -42,4 +42,21 @@ public class NoticeDaoImpl implements INoticeDao {
         query.setMaxResults(3);
         return query.getResultList();
     }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        NoticeEntity notice = em.find(NoticeEntity.class, id);
+        if (notice != null) {
+            em.remove(notice);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void updateNotice(NoticeEntity notice) {
+        em.merge(notice);
+    }
+
+
 }

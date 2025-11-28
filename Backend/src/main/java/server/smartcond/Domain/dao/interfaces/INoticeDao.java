@@ -8,9 +8,13 @@ import java.util.Optional;
 public interface INoticeDao {
 
     void save(NoticeEntity notice);
-
     Optional<NoticeEntity> findById(Long id);
     List<NoticeEntity> findAll();
 
     List<NoticeEntity> findLatestNotices();
+    void deleteById(Long id);
+
+    void updateNotice(NoticeEntity notice);
+
+
 }

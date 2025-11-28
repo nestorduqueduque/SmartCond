@@ -1,0 +1,20 @@
+meta {
+  name: Eliminar Residente
+  type: http
+  seq: 6
+}
+
+delete {
+  url: http://localhost:8080/admin/delete-resident/6
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJORVNUT1ItRFVRVUUtREVWRUxPUEVSIiwic3ViIjoibmVzdG9yZHVxdWVkdXF1ZUBnbWFpbC5jb20iLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTc2NDIwMjYxMCwiZXhwIjoxNzY0MjA0NDEwLCJqdGkiOiI4YTllYTA5ZS04ZDljLTRkZGYtYTFlYS02YWFhOGQ4MDk1NjYiLCJuYmYiOjE3NjQyMDI2MTB9.FOaJlmXIB2YgfwmzCjmdvktXXyUOdbWG-hKFiEVQGys
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

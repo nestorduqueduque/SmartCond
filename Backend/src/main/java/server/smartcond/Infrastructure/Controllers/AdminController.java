@@ -91,9 +91,8 @@ public class AdminController {
     @Operation(summary = "Eliminar Residente (Soft Delete)")
     @DeleteMapping("/delete-resident/{id}")
     public ResponseEntity<Void> deleteResident(@PathVariable Long id) {
-        // Llama al método de Soft Delete de Residente
         this.adminService.deleteResident(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204: Éxito
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 
@@ -102,7 +101,6 @@ public class AdminController {
 //    public ResponseEntity<NoticeResponseDTO> create(@PathVariable Long authorId,@RequestBody NoticeRequestDTO noticeRequestDTO) {
 //        return ResponseEntity.ok(adminService.createNotice(authorId, noticeRequestDTO));
 //    }
-
     @Operation(summary = "Post a Notice")
     @PostMapping("/create-notice")
     public ResponseEntity<NoticeResponseDTO> createNotice(
@@ -118,6 +116,30 @@ public class AdminController {
     public ResponseEntity<List<NoticeResponseDTO>> getAll() {
         return ResponseEntity.ok(adminService.getAllNotice());
     }
+
+
+    @Operation(summary = "Get Notices by Id")
+    @GetMapping("/find-notice-byID/{id}")
+    public ResponseEntity<NoticeResponseDTO> findnoticeById(@PathVariable Long id){
+        return new ResponseEntity<>(this.adminService.findNoticeById(id), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Eliminar Notice")
+    @DeleteMapping("/delete-notice/{id}")
+    public ResponseEntity<Void> deleteNotice(@PathVariable Long id) {
+        this.adminService.deleteNotice(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @Operation(summary = "Actualizar Notice por ID")
+    @PutMapping("/update-notice/{id}")
+    public ResponseEntity<NoticeResponseDTO> updateNotice(
+            @RequestBody NoticeRequestDTO dto,
+            @PathVariable Long id) {
+        NoticeResponseDTO updatedNotice = this.adminService.updateNotice(id, dto);
+        return new ResponseEntity<>(updatedNotice, HttpStatus.OK);
+    }
+
 
     //Dashboard
 //    @Operation(summary = "DashboardAdmin")

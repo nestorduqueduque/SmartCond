@@ -2,6 +2,7 @@ package server.smartcond.Application.SImplementations;
 
 
 import jakarta.persistence.EntityExistsException;
+import org.aspectj.weaver.ast.Not;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -219,7 +220,6 @@ public class AdminServiceImpl implements IAdminService {
         UserEntity resident = residentDao.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Residente no encontrado"));
 
-        // --- VALIDAR EMAIL ---
         if (!resident.getEmail().equals(dto.getEmail())) {
             var emailExists = userDao.findByEmail(dto.getEmail());
             if (emailExists.isPresent() && !emailExists.get().getId().equals(id)) {
@@ -227,7 +227,7 @@ public class AdminServiceImpl implements IAdminService {
             }
         }
 
-        // --- VALIDAR DOCUMENTO ---
+
         if (!resident.getDocument().equals(dto.getDocument())) {
             var documentExists = userDao.findByDocument(dto.getDocument());
             if (documentExists.isPresent() && !documentExists.get().getId().equals(id)) {
@@ -235,7 +235,7 @@ public class AdminServiceImpl implements IAdminService {
             }
         }
 
-        // Cambiar apartamento si viene en el DTO
+
         if (dto.getApartment() != null) {
             ApartmentEntity apt = apartmentDao.findByNumber(dto.getApartment())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Apartamento no encontrado"));
@@ -304,7 +304,39 @@ public class AdminServiceImpl implements IAdminService {
         return toNoticeResponse(entity);
     }
 
-        @Override
+    @Override
+    public void deleteNotice(Long id) {
+        noticeDao.findById(id)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Aviso no encontrado"));
+        try {
+            noticeDao.deleteById(id);
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error al eliminar el aviso"
+            );
+        }
+    }
+
+    @Override
+    public NoticeResponseDTO updateNotice(Long id, NoticeRequestDTO dto) {
+        NoticeEntity notice = noticeDao.findById(id)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Aviso no encontrado"));
+        notice.setTitle(dto.getTitle());
+        notice.setContent(dto.getContent());
+        try {
+            noticeDao.updateNotice(notice);
+            return toNoticeResponse(notice);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error al actualizar el aviso");
+        }
+    }
+
+
+    @Override
         public List<NoticeResponseDTO> getAllNotice() {
             return this.noticeDao.findAll()
                     .stream()
@@ -314,10 +346,13 @@ public class AdminServiceImpl implements IAdminService {
 
         @Override
         public NoticeResponseDTO findNoticeById(Long id) {
-            return null;
+            Optional<NoticeEntity> notice = noticeDao.findById(id);
+            if (notice.isPresent()) {
+                return toNoticeResponse(notice.get());
+            } else {
+                return new NoticeResponseDTO();
+            }
         }
-
-
 
 
     //Dashboard

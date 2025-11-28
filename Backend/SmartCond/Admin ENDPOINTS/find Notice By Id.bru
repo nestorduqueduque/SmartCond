@@ -1,0 +1,20 @@
+meta {
+  name: find Notice By Id
+  type: http
+  seq: 11
+}
+
+get {
+  url: http://localhost:8080/admin/find-notice-byID/30
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJORVNUT1ItRFVRVUUtREVWRUxPUEVSIiwic3ViIjoibmVzdG9yZHVxdWVkdXF1ZUBnbWFpbC5jb20iLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTc2NDMzNTc4NCwiZXhwIjoxNzY0MzM3NTg0LCJqdGkiOiI5YTI3MjZkZi0xZmZjLTQ3ZTYtOGViOC1hYTM3Y2VjODljOTEiLCJuYmYiOjE3NjQzMzU3ODR9.QfQwwvwJX7umPP6UZlUoiUBAQK12T55zQ_o8zjaCrUk
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

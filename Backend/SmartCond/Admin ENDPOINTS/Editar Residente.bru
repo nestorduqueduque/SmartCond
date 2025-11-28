@@ -5,11 +5,27 @@ meta {
 }
 
 put {
-  url: http://localhost:8080/admin/update-resident/
-  body: none
-  auth: inherit
+  url: http://localhost:8080/admin/update-resident/22
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJORVNUT1ItRFVRVUUtREVWRUxPUEVSIiwic3ViIjoibmVzdG9yZHVxdWVkdXF1ZUBnbWFpbC5jb20iLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTc2NDI0ODc3NSwiZXhwIjoxNzY0MjUwNTc1LCJqdGkiOiI4ZWE4ZTY4Yi0xNzg3LTQ3Y2EtOWM3MC1mMDMzNzUwZjFkM2EiLCJuYmYiOjE3NjQyNDg3NzV9.rGEIxIMqjLnGBkERmXo9o4wYtItoFSap9WLq7fq09_s
+}
+
+body:json {
+  {
+      "name": "Maria Fernanda",
+      "lastName": "López Rojas",
+      "document": 1090526165,
+      "email": "clarexiscol@gmail.com",
+      "phoneNumber": 3201112233,
+      "apartment": 554
+  }
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }
