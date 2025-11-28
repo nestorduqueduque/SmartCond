@@ -13,6 +13,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 String frontendOrigin = "http://localhost:4200";
+                String frontendOrigin2 = "http://localhost:4000";
 
                 registry.addMapping("/**")
                         .allowedOrigins(frontendOrigin)
