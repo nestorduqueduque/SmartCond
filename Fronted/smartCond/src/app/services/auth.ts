@@ -9,7 +9,7 @@ import { jwtDecode } from 'jwt-decode';
   providedIn: 'root'
 })
 export class Auth {
-  private apiUrl = 'http://localhost:8080/auth';
+  private apiUrl = 'https://smartcond-production.up.railway.app/auth';
   private tokenKey = 'authToken';
   private isBrowser: boolean;
   private _initialized = false;

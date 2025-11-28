@@ -10,7 +10,7 @@ import { ResidentResponseDTO } from '../components/dashboard/resident-dashboard/
 })
 export class RegisterService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/admin';
+  private apiUrl = 'https://smartcond-production.up.railway.app/admin';
 
 
   //Celador

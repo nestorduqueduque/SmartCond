@@ -11,7 +11,7 @@ export class DashboardService {
 
   private http = inject(HttpClient);
 
-  private apiUrl = 'http://localhost:8080/admin';
+  private apiUrl = 'https://smartcond-production.up.railway.app/admin';
 
   constructor() { }
 
