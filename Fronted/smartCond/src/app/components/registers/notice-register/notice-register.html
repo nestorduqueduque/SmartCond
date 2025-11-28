@@ -1,0 +1,61 @@
+<div class="dashboard-container">
+  <div class="main-content">
+
+    <div class="top-header">
+      <button class="back-btn"
+              (click)="goBack()"
+              style="border: none; background: transparent; cursor: pointer;">
+        <svg width="26" height="33" viewBox="0 0 26 33" fill="none">
+          <path d="M24 2L4 17.3826L24 31"
+                stroke="#5D4F4F"
+                stroke-width="4"
+                stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <h2 style="color: #2f6e41; margin-left: 10px;">Crear Aviso</h2>
+    </div>
+
+    <div class="content-sections">
+      <div class="left-content">
+        <div class="section">
+
+          <h3 class="section-title">Registrar Nuevo Aviso</h3>
+
+          <form [formGroup]="noticeForm"
+                (ngSubmit)="onSubmit()"
+                class="form form--registro">
+
+            <!-- TÍTULO -->
+            <div class="form__row">
+              <label class="form__label">Título del aviso</label>
+              <input type="text"
+                    class="form__input"
+                    formControlName="title" />
+            </div>
+
+            <!-- CONTENIDO -->
+            <div class="form__row">
+              <label class="form__label">Contenido</label>
+              <textarea class="form__input"
+                        style="height: 140px; resize: vertical;"
+                        formControlName="content"></textarea>
+            </div>
+
+            <!-- BOTÓN -->
+            <button type="submit"
+                    class="form__submit"
+                    [disabled]="noticeForm.invalid || isSubmitting"
+                    [style.opacity]="noticeForm.invalid ? '0.6' : '1'">
+              {{ isSubmitting ? 'Publicando...' : 'Publicar Aviso' }}
+            </button>
+
+          </form>
+
+        </div>
+      </div>
+
+      <div class="right-sidebar" style="background: transparent"></div>
+    </div>
+  </div>
+</div>

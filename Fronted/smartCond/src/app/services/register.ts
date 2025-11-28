@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CeladorRequestDTO, ResidentRequestDTO } from '../components/dashboard/admin-dashboard/admin-dashboard.interface';
+import { CeladorRequestDTO, NoticeRequestDTO, ResidentRequestDTO } from '../components/dashboard/admin-dashboard/admin-dashboard.interface';
 import { CeladorResponseDTO } from '../components/dashboard/celador-dashboard/celador-dashboard.interface';
 import { ResidentResponseDTO } from '../components/dashboard/resident-dashboard/resident-dashboard.interface';
 
@@ -53,6 +53,26 @@ export class RegisterService {
 
   deleteResident(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/delete-resident/${id}`);
+  }
+
+  //Notices
+  createNotice(noticeData: NoticeRequestDTO): Observable<any> {
+      return this.http.post(`${this.apiUrl}/create-notice`, noticeData);
+  }
+  getAllNotices(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/find-all-notices`);
+}
+
+  getNoticeById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/find-notice-byID/${id}`);
+  }
+
+  updateNotice(id: number, data: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/update-notice/${id}`, data);
+  }
+
+  deleteNotice(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/delete-notice/${id}`);
   }
 
 

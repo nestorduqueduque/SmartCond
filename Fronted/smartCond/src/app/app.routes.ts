@@ -13,6 +13,9 @@ import { CeladorList } from './components/lists/celador-list/celador-list';
 import { CeladorUpdate } from './components/lists/celador-update/celador-update';
 import { ResidentUpdate } from './components/lists/resident-update/resident-update';
 import { ResidentList } from './components/lists/resident-list/resident-list';
+import { NoticeList } from './components/lists/notice-list/notice-list';
+import { NoticeUpdate } from './components/lists/notice-update/notice-update';
+import { NoticeRegister } from './components/registers/notice-register/notice-register';
 
 export const routes: Routes = [
 
@@ -48,6 +51,9 @@ export const routes: Routes = [
   { path: 'editar-celadores/:id', component: CeladorUpdate, canActivate: [authGuard] },
   { path: 'editar-residentes/:id', component: ResidentUpdate, canActivate: [authGuard] },
   { path: 'listar-residentes', component: ResidentList, canActivate: [authGuard] },
+  { path: 'listar-noticias', component: NoticeList, canActivate: [authGuard] },
+  { path: 'editar-noticias/:id', component: NoticeUpdate, canActivate: [authGuard] },
+  { path: 'registro-noticias', component: NoticeRegister, canActivate: [authGuard] },
 
   //Celador Dashboard
   { path: 'registro-paquete', component: PackageRegister, canActivate: [authGuard] },

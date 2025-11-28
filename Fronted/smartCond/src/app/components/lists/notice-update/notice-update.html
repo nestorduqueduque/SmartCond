@@ -1,0 +1,51 @@
+<div class="dashboard-container">
+  <div class="main-content">
+
+    <div class="top-header">
+      <button class="back-btn" (click)="goBack()" style="border: none; background: transparent; cursor: pointer;">
+        <svg width="26" height="33" viewBox="0 0 26 33" fill="none">
+          <path d="M24 2L4 17.3826L24 31" stroke="#5D4F4F" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- LOADING -->
+    <div *ngIf="isLoadingData" class="loading-container">
+      <p class="loading-text">Cargando datos...</p>
+    </div>
+
+    <!-- FORMULARIO -->
+    <div *ngIf="!isLoadingData" class="content-sections">
+
+      <div class="left-content">
+        <div class="section">
+          <h3 class="section-title">Editar Aviso</h3>
+
+          <form [formGroup]="noticeForm" (ngSubmit)="onSubmit()" class="form form--registro">
+
+            <div class="form__row">
+              <label class="form__label">Título</label>
+              <input type="text" formControlName="title" class="form__input" />
+            </div>
+
+            <div class="form__row">
+              <label class="form__label">Contenido</label>
+              <textarea formControlName="content" rows="6" class="form__input"></textarea>
+            </div>
+
+            <button type="submit"
+                    class="form__submit"
+                    [disabled]="noticeForm.invalid || isSubmitting"
+                    [style.opacity]="noticeForm.invalid ? '0.6' : '1'">
+              {{ isSubmitting ? 'Actualizando...' : 'Actualizar Aviso' }}
+            </button>
+
+          </form>
+        </div>
+      </div>
+
+      <div class="right-sidebar" style="background: transparent"></div>
+    </div>
+
+  </div>
+</div>
