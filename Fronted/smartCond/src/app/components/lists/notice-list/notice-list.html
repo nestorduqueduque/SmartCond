@@ -1,6 +1,7 @@
 <div class="dashboard-container">
   <div class="main-content">
 
+    <!-- HEADER -->
     <div class="top-header">
       <button class="back-btn" (click)="goBack()" style="border: none; background: transparent; cursor: pointer;">
         <svg width="26" height="33" viewBox="0 0 26 33" fill="none">
@@ -14,11 +15,13 @@
       <div class="left-content" style="width: 100%;">
         <div class="section">
 
+          <!-- TÍTULO + BOTÓN -->
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h3 class="section-title">Listado de Avisos</h3>
             <button class="create-btn" [routerLink]="['/registro-noticias']">Crear Aviso</button>
           </div>
 
+          <!-- INPUT BUSCAR -->
           <input
             type="text"
             placeholder="Buscar por título, autor o contenido..."
@@ -30,11 +33,13 @@
 
           <div class="section-content">
 
+            <!-- LOADING -->
             <div *ngIf="isLoading" style="text-align: center; padding: 20px;">
               <p>Cargando avisos...</p>
             </div>
 
-            <table class="data-table" *ngIf="!isLoading">
+            <!-- DESKTOP TABLE -->
+            <table class="data-table desktop-only" *ngIf="!isLoading">
               <thead>
                 <tr>
                   <th>Título</th>
@@ -53,8 +58,14 @@
                   <td>{{ notice.createdAt | date:'short' }}</td>
 
                   <td style="display: flex; gap: 10px;">
-                    <button [routerLink]="['/editar-noticias', notice.id]" class="action-btn edit-btn">✏️</button>
-                    <button (click)="onDelete(notice.id)" class="action-btn delete-btn">🗑️</button>
+                    <button
+                      [routerLink]="['/editar-noticias', notice.id]"
+                      class="action-btn edit-btn">✏️
+                    </button>
+                    <button
+                      (click)="onDelete(notice.id)"
+                      class="action-btn delete-btn">🗑️
+                    </button>
                   </td>
                 </tr>
 
@@ -63,6 +74,33 @@
                 </tr>
               </tbody>
             </table>
+
+            <!-- MOBILE STACKED CARDS -->
+            <div class="mobile-only">
+
+              <div class="card" *ngFor="let notice of filteredNotices">
+                <div class="card-row"><strong>Título:</strong> {{ notice.title }}</div>
+                <div class="card-row"><strong>Contenido:</strong> {{ notice.content }}</div>
+                <div class="card-row"><strong>Autor:</strong> {{ notice.authorName }}</div>
+                <div class="card-row"><strong>Fecha:</strong> {{ notice.createdAt | date:'short' }}</div>
+
+                <div class="card-actions">
+                  <button
+                    [routerLink]="['/editar-noticias', notice.id]"
+                    class="action-btn edit-btn">✏️
+                  </button>
+                  <button
+                    (click)="onDelete(notice.id)"
+                    class="action-btn delete-btn">🗑️
+                  </button>
+                </div>
+              </div>
+
+              <div *ngIf="filteredNotices.length === 0" style="text-align: center; padding: 20px;">
+                No se encontraron resultados.
+              </div>
+
+            </div>
 
           </div>
         </div>

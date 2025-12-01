@@ -59,6 +59,7 @@ export interface VehicleResponseDTO {
   brand: string;
   model: string;
   apartment: number;
+  registeredAt: string,
 }
 
 

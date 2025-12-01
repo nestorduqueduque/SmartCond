@@ -1,0 +1,96 @@
+<div class="dashboard-container">
+  <div class="main-content">
+
+    <!-- HEADER -->
+    <div class="top-header">
+      <button class="back-btn" (click)="goBack()" style="border: none; background: transparent; cursor: pointer;">
+        <svg width="26" height="33" viewBox="0 0 26 33" fill="none">
+          <path d="M24 2L4 17.3826L24 31" stroke="#5D4F4F" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <h2 style="color: #2f6e41; margin-left: 10px;">Vehículos de Visitantes</h2>
+    </div>
+
+    <div class="content-sections">
+      <div class="left-content" style="width: 100%;">
+        <div class="section">
+
+          <!-- TITLE + BUTTON -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3 class="section-title">Listado de Vehículos Visitantes</h3>
+            <button class="create-btn" [routerLink]="['/registro-vehiculo-visitante']">Registrar Vehículo Visitante</button>
+          </div>
+
+          <!-- SEARCH -->
+          <input
+            type="text"
+            placeholder="Buscar por placa, marca, modelo o apartamento..."
+            [(ngModel)]="searchTerm"
+            (input)="filterVehicles()"
+            class="search-input"
+            style="width: 100%; margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 8px;"
+          />
+
+          <div class="section-content">
+
+            <!-- LOADING -->
+            <div *ngIf="isLoading" style="text-align: center; padding: 20px;">
+              <p>Cargando vehículos...</p>
+            </div>
+
+            <!-- TABLE STACKED VERSION -->
+            <table class="data-table desktop-only" *ngIf="!isLoading">
+              <thead>
+                <tr>
+                  <th>Placa</th>
+                  <th>Tipo</th>
+                  <th>Marca</th>
+                  <th>Modelo</th>
+                  <th>Apartamento</th>
+                  <th>Fecha Registro</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr *ngFor="let vehicle of filteredVehicles">
+                  <td>{{ vehicle.plate }}</td>
+                  <td>{{ getVehicleTypeName(vehicle.type) }}</td>
+                  <td>{{ vehicle.brand }}</td>
+                  <td>{{ vehicle.model }}</td>
+                  <td>{{ vehicle.apartment }}</td>
+                  <td>{{ vehicle.registeredAt | date:'short' }}</td>
+                </tr>
+
+                <tr *ngIf="filteredVehicles.length === 0">
+                  <td colspan="6" style="text-align: center;">No se encontraron resultados.</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- STACKED CARDS (Mobile) -->
+            <div class="mobile-only">
+
+              <div class="card" *ngFor="let vehicle of filteredVehicles">
+
+                <div class="card-row"><strong>Placa:</strong> {{ vehicle.plate }}</div>
+                <div class="card-row"><strong>Tipo:</strong> {{ getVehicleTypeName(vehicle.type) }}</div>
+                <div class="card-row"><strong>Marca:</strong> {{ vehicle.brand }}</div>
+                <div class="card-row"><strong>Modelo:</strong> {{ vehicle.model }}</div>
+                <div class="card-row"><strong>Apartamento:</strong> {{ vehicle.apartment }}</div>
+                <div class="card-row"><strong>Registro:</strong> {{ vehicle.registeredAt | date:'short' }}</div>
+
+              </div>
+
+              <div *ngIf="filteredVehicles.length === 0" style="text-align: center; padding: 20px;">
+                No se encontraron resultados.
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

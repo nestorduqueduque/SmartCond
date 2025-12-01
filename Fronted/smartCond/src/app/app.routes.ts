@@ -16,6 +16,11 @@ import { ResidentList } from './components/lists/resident-list/resident-list';
 import { NoticeList } from './components/lists/notice-list/notice-list';
 import { NoticeUpdate } from './components/lists/notice-update/notice-update';
 import { NoticeRegister } from './components/registers/notice-register/notice-register';
+import { PackageList } from './components/lists/package-list/package-list';
+import { VisitorList } from './components/lists/visitor-list/visitor-list';
+import { VehicleResidentList } from './components/lists/vehicle-resident-list/vehicle-resident-list';
+import { VehicleVisitorList } from './components/lists/vehicle-visitor-list/vehicle-visitor-list';
+import { VehicleVisitorRegister } from './components/registers/vehicle-visitor-register/vehicle-visitor-register';
 
 export const routes: Routes = [
 
@@ -58,6 +63,11 @@ export const routes: Routes = [
   //Celador Dashboard
   { path: 'registro-paquete', component: PackageRegister, canActivate: [authGuard] },
   { path: 'registro-visitante', component: VisitorRegister, canActivate: [authGuard] },
+  { path: 'listar-paquetes', component: PackageList, canActivate: [authGuard] },
+  { path: 'listar-visitantes', component: VisitorList, canActivate: [authGuard] },
+  { path: 'listar-vehiculos-residentes', component: VehicleResidentList, canActivate: [authGuard] },
+  { path: 'listar-vehiculos-visitantes', component: VehicleVisitorList, canActivate: [authGuard] },
+  { path: 'registro-vehiculo-visitante', component: VehicleVisitorRegister, canActivate: [authGuard] },
 
   // Redirecciones
   { path: '', redirectTo: '/login', pathMatch: 'full' },

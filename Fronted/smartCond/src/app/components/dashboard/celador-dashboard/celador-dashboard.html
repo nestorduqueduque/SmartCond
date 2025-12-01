@@ -18,11 +18,11 @@
 
   <div class="main-content">
     <div class="top-header">
-      <button class="back-btn">
-        <svg width="26" height="33" viewBox="0 0 26 33" fill="none">
-          <path d="M24 2L4 17.3826L24 31" stroke="#5D4F4F" stroke-width="4" stroke-linecap="round"/>
-        </svg>
-      </button>
+      <button class="back-btn" (click)="authService.logout()">
+      <svg width="26" height="33" viewBox="0 0 26 33" fill="none">
+        <path d="M24 2L4 17.3826L24 31" stroke="#5D4F4F" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+    </button>
       <div class="header-actions">
         <button class="exit-btn" (click)="authService.logout()">
           <span>Salir</span>
@@ -53,12 +53,32 @@
               <button class="create-btn" [routerLink]="['/registro-visitante']">Registrar</button>
             </div>
             <div class="form-row">
-              <span class="form-label">Registrar vehículo</span>
+              <span class="form-label">Registrar vehículo Residente</span>
               <button class="create-btn" [routerLink]="['/registro-vehiculo']">Registrar</button>
+            </div>
+            <div class="form-row">
+              <span class="form-label">Registrar vehículo Visitante</span>
+              <button class="create-btn" [routerLink]="['/registro-vehiculo-visitante']">Registrar</button>
             </div>
             <div class="form-row">
               <span class="form-label">Registrar Paquete</span>
               <button class="create-btn" [routerLink]="['/registro-paquete']">Registrar</button>
+            </div>
+            <div class="form-row">
+              <span class="form-label">Panel de Paquetes</span>
+              <button class="create-btn" [routerLink]="['/listar-paquetes']">Listar</button>
+            </div>
+            <div class="form-row">
+              <span class="form-label">Panel de Visitantes</span>
+              <button class="create-btn" [routerLink]="['/listar-visitantes']">Listar</button>
+            </div>
+            <div class="form-row">
+              <span class="form-label">Panel de Vehiculos Residentes</span>
+              <button class="create-btn" [routerLink]="['/listar-vehiculos-residentes']">Listar</button>
+            </div>
+            <div class="form-row">
+              <span class="form-label">Panel de Vehiculos Visitantes</span>
+              <button class="create-btn" [routerLink]="['/listar-vehiculos-visitantes']">Listar</button>
             </div>
           </div>
         </div>
@@ -82,11 +102,6 @@
             </div>
           </div>
         </div>
-      </div>
-
-
-      <div class="right-sidebar">
-
       </div>
     </div>
   </div>

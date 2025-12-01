@@ -20,6 +20,39 @@ body {
     display: flex;
 }
 
+/* CONTENEDOR HEADER */
+.top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+}
+
+/* CONTENEDOR DEL BOTÓN DE SALIR */
+.header-actions {
+  display: flex;
+  align-items: center;
+}
+
+/* BOTÓN SALIR */
+.exit-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #2f6e41;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.exit-btn:hover {
+  background-color: #255c36;
+}
+
 /* Left side - Image section */
 .image-section {
     display: none;
@@ -521,62 +554,34 @@ body {
     margin: 2px 0;
 }
 
-/* Back Button */
 .back-btn {
-    padding: 8px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    display: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  width: 40px;
+  height: 40px;
 }
 
-@media (min-width: 1024px) {
-    .back-btn {
-        display: block;
-    }
+/* Para que el SVG nunca desaparezca */
+.back-btn svg {
+  width: 24px;
+  height: 24px;
 }
 
-/* Search */
-.search-container {
-    display: flex;
-    align-items: center;
-    flex: 1;
-    max-width: 800px;
-    margin: 0 16px;
+/* RESPONSIVE: en pantallas pequeñas aumentamos la zona clickeable */
+@media (max-width: 480px) {
+  .back-btn {
+    width: 50px;
+    height: 50px;
+    padding: 10px;
+  }
 }
 
-.search-input {
-    flex: 1;
-    height: 39px;
-    background-color: #f0eded;
-    border: 2px solid rgba(47, 110, 65, 0.93);
-    border-radius: 19.5px;
-    display: flex;
-    align-items: center;
-    padding: 0 24px;
-}
 
-.search-placeholder {
-    color: #5d4f4f;
-    font-family: 'Poppins', sans-serif;
-    font-size: 16px;
-    font-weight: 300;
-}
-
-.search-btn {
-    width: 77px;
-    height: 39px;
-    background-color: #2f6e41;
-    border: none;
-    border-radius: 0 23px 23px 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    gap: 4px;
-}
-
-/* Header Actions */
 .header-actions {
     display: flex;
     align-items: center;
@@ -620,21 +625,6 @@ body {
     font-weight: 700;
 }
 
-.profile-photo {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: #a3a3a3;
-    background-size: cover;
-    background-position: center;
-}
-
-@media (min-width: 1024px) {
-    .profile-photo {
-        width: 66px;
-        height: 67px;
-    }
-}
 
 /* Content Sections */
 .content-sections {
@@ -942,6 +932,10 @@ body {
 }
 
 /* Estilos para Tablas */
+/* ==========================
+  ESTILOS ORIGINALES DE TU TABLA
+   ========================== */
+
 .data-table {
     width: 100%;
     border-collapse: collapse;
@@ -949,7 +943,8 @@ body {
     font-size: 0.9em;
 }
 
-.data-table th, .data-table td {
+.data-table th,
+.data-table td {
     border: 1px solid #ccc;
     padding: 10px 8px;
     text-align: left;
@@ -963,6 +958,105 @@ body {
 
 .data-table tbody tr:nth-child(even) {
     background-color: #fafafa;
+}
+
+/* ==========================
+  ESTILOS RESPONSIVE (STACK VERSION)
+   ========================== */
+
+@media screen and (max-width: 768px) {
+
+  /* La tabla deja de comportarse como tabla */
+  .data-table,
+  .data-table thead,
+  .data-table tbody,
+  .data-table th,
+  .data-table td,
+  .data-table tr {
+      display: block;
+      width: 100%;
+  }
+
+  /* Ocultamos encabezados en móvil */
+  .data-table thead {
+      display: none;
+  }
+
+  /* Cada fila será una “tarjeta” apilada */
+  .data-table tr {
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 12px;
+      background: #ffffff;
+    }
+
+  /* Cada celda toma formato etiqueta + valor */
+  .data-table td {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 5px;
+      border: none;
+      border-bottom: 1px solid #eee;
+      font-size: 0.95em;
+  }
+
+  /* Quita la última línea inferior */
+  .data-table td:last-child {
+      border-bottom: none;
+  }
+
+  /* Inserta el nombre de la columna como etiqueta */
+  .data-table td::before {
+      content: attr(data-label);
+      font-weight: bold;
+      color: #333;
+      flex: 1;
+      margin-right: 10px;
+  }
+
+  /* Botones dentro de tarjetas */
+  .data-table .action-btn {
+      padding: 6px 10px;
+      font-size: 0.9em;
+  }
+}
+
+/* Ocultar cards en escritorio */
+.mobile-only {
+  display: none;
+}
+
+/* Stacked cards */
+.card {
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.card-row {
+  margin-bottom: 8px;
+  font-size: 0.9em;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Responsive modo móvil */
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none;
+  }
+  .mobile-only {
+    display: block;
+  }
 }
 
 /* Estilos de Estado Condicional */
@@ -1025,7 +1119,11 @@ body {
     color: #F44336;
 }
 
-/* Reutilizamos los estilos de tabla que te pasé en la respuesta anterior (.data-table, th, td) */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
 
 
 
@@ -1036,5 +1134,5 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 input[type=number] {
-    -moz-appearance: textfield;
+  -moz-appearance: textfield;
 }

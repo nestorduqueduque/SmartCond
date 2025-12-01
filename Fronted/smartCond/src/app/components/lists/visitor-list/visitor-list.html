@@ -1,0 +1,93 @@
+<div class="dashboard-container">
+  <div class="main-content">
+
+    <!-- HEADER -->
+    <div class="top-header">
+      <button class="back-btn" (click)="goBack()" style="border: none; background: transparent; cursor: pointer;">
+        <svg width="26" height="33" viewBox="0 0 26 33" fill="none">
+          <path d="M24 2L4 17.3826L24 31" stroke="#5D4F4F" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <h2 style="color: #2f6e41; margin-left: 10px;">Gestión de Visitantes</h2>
+    </div>
+
+    <div class="content-sections">
+      <div class="left-content" style="width: 100%;">
+        <div class="section">
+
+          <!-- TITLE + BUTTON -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3 class="section-title">Listado de Visitantes</h3>
+            <button class="create-btn" [routerLink]="['/registro-visitante']">Registrar visitante</button>
+          </div>
+
+          <!-- SEARCH -->
+          <input
+            type="text"
+            placeholder="Buscar por nombre, documento, motivo o apartamento..."
+            [(ngModel)]="searchTerm"
+            (input)="filterVisitors()"
+            class="search-input"
+            style="width: 100%; margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 8px;"
+          />
+
+          <div class="section-content">
+
+            <!-- LOADING -->
+            <div *ngIf="isLoading" style="text-align: center; padding: 20px;">
+              <p>Cargando lista de visitantes...</p>
+            </div>
+
+            <!-- TABLE RESPONSIVE -->
+            <div class="table-responsive">
+              <table class="data-table desktop-only" *ngIf="!isLoading">
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Documento</th>
+                    <th>Motivo</th>
+                    <th>Fecha/Hora Ingreso</th>
+                    <th>Apartamento</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr *ngFor="let visitor of filteredVisitors">
+                    <td>{{ visitor.name }}</td>
+                    <td>{{ visitor.document }}</td>
+                    <td>{{ visitor.reason }}</td>
+                    <td>{{ visitor.entryTime }}</td>
+                    <td>{{ visitor.apartment }}</td>
+                  </tr>
+
+                  <tr *ngIf="filteredVisitors.length === 0">
+                    <td colspan="5" style="text-align: center;">No se encontraron visitantes.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- STACKED CARDS VERSION (auto visible en móvil) -->
+            <div class="mobile-only">
+              <div *ngFor="let visitor of filteredVisitors" class="card">
+
+                <div class="card-row"><strong>Nombre:</strong> {{ visitor.name }}</div>
+                <div class="card-row"><strong>Documento:</strong> {{ visitor.document }}</div>
+                <div class="card-row"><strong>Motivo:</strong> {{ visitor.reason }}</div>
+                <div class="card-row"><strong>Fecha/Hora Ingreso:</strong> {{ visitor.entryTime }}</div>
+                <div class="card-row"><strong>Apartamento:</strong> {{ visitor.apartment }}</div>
+
+              </div>
+
+              <div *ngIf="filteredVisitors.length === 0" class="card" style="text-align:center;">
+                No se encontraron visitantes.
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

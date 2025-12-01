@@ -90,7 +90,4 @@ export class VehicleRegister {
   goBack(): void {
   this.navigateToDashboard();
   }
-
-
-
 }

@@ -1,0 +1,135 @@
+<div class="dashboard-container">
+  <div class="main-content">
+
+    <!-- Header -->
+    <div class="top-header">
+      <button class="back-btn" (click)="goBack()" style="border: none; background: transparent; cursor: pointer;">
+        <svg width="26" height="33" viewBox="0 0 26 33" fill="none">
+          <path d="M24 2L4 17.3826L24 31" stroke="#5D4F4F" stroke-width="4" stroke-linecap="round" />
+        </svg>
+      </button>
+      <h2 style="color: #2f6e41; margin-left: 10px;">Gestión de Paquetes</h2>
+    </div>
+
+    <!-- Contenido -->
+    <div class="content-sections">
+      <div class="left-content" style="width: 100%;">
+        <div class="section">
+
+          <!-- Título + Botón -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3 class="section-title">Listado de Paquetes</h3>
+            <button class="create-btn" (click)="goCreate()">Registrar Paquete</button>
+          </div>
+
+          <!-- Buscador -->
+          <input
+            type="text"
+            placeholder="Buscar por descripción, apartamento o estado..."
+            [(ngModel)]="searchTerm"
+            (input)="filterPackages()"
+            class="search-input"
+            style="width: 100%; margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 8px;"
+          />
+
+          <div class="section-content">
+
+            <!-- Cargando -->
+            <div *ngIf="isLoading" style="text-align: center; padding: 20px;">
+              <p>Cargando paquetes...</p>
+            </div>
+
+            <!-- VISTA ESCRITORIO: TABLA -->
+            <div class="table-responsive desktop-only">
+              <table class="data-table" *ngIf="!isLoading">
+                <thead>
+                  <tr>
+                    <th>Descripción</th>
+                    <th>Recibido</th>
+                    <th>Entregado</th>
+                    <th>Estado</th>
+                    <th>Apartamento</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr *ngFor="let pkg of filteredPackages">
+                    <td>{{ pkg.description }}</td>
+                    <td>{{ pkg.receivedAt }}</td>
+                    <td>{{ pkg.deliveredAt ? pkg.deliveredAt : '—' }}</td>
+
+                    <td>
+                      <span [ngStyle]="{
+                        'color': pkg.status === 'DELIVERED' ? '#2f6e41' : '#b87d2a',
+                        'font-weight': 'bold'
+                      }">
+                        {{ translateStatus(pkg.status) }}
+                      </span>
+                    </td>
+
+                    <td>{{ pkg.apartment }}</td>
+
+                    <td style="display: flex; gap: 10px;">
+                      <button
+                        *ngIf="pkg.status === 'RECEIVED'"
+                        class="action-btn edit-btn"
+                        (click)="markAsDelivered(pkg.id)">
+                        📦✔️
+                      </button>
+                      <span *ngIf="pkg.status === 'DELIVERED'" class="status-delivered">------</span>
+                    </td>
+                  </tr>
+
+                  <tr *ngIf="filteredPackages.length === 0">
+                    <td colspan="6" style="text-align: center;">No se encontraron resultados.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- VISTA MÓVIL: STACKED CARDS -->
+            <div *ngFor="let pkg of filteredPackages" class="card mobile-only">
+              <div class="card-row"><strong>Descripción:</strong> {{ pkg.description }}</div>
+              <div class="card-row"><strong>Recibido:</strong> {{ pkg.receivedAt }}</div>
+              <div class="card-row"><strong>Entregado:</strong> {{ pkg.deliveredAt ? pkg.deliveredAt : '—' }}</div>
+
+              <div class="card-row">
+                <strong>Estado:</strong>
+                <span [ngStyle]="{
+                  'color': pkg.status === 'DELIVERED' ? '#2f6e41' : '#b87d2a',
+                  'font-weight': 'bold'
+                }">
+                  {{ translateStatus(pkg.status) }}
+                </span>
+              </div>
+
+              <div class="card-row"><strong>Apartamento:</strong> {{ pkg.apartment }}</div>
+
+              <!-- Acciones -->
+              <div class="card-actions">
+                <button
+                  *ngIf="pkg.status === 'RECEIVED'"
+                  class="action-btn edit-btn"
+                  (click)="markAsDelivered(pkg.id)">
+                  📦✔️
+                </button>
+
+                <span *ngIf="pkg.status === 'DELIVERED'" class="status-delivered">
+                  Entregado ✔️
+                </span>
+              </div>
+            </div>
+
+            <!-- Si no hay resultados -->
+            <p *ngIf="!isLoading && filteredPackages.length === 0" class="mobile-only" style="text-align:center;">
+              No se encontraron resultados.
+            </p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

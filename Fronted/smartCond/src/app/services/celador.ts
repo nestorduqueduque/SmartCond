@@ -12,13 +12,20 @@ export class Celador {
   private apiUrl = 'https://smartcond-production.up.railway.app/celador';
 
 
+
   getCeladorDashboardData(): Observable<any> {
     return this.http.get<CeladorDashboardDTO>(`${this.apiUrl}/dashboard-data-celador`);
   }
 
+  //Vehicles
+
   createVehicle(vehicle: VehicleRequestDTO): Observable<any> {
       return this.http.post(`${this.apiUrl}/create-vehicle`, vehicle);
     }
+
+  createVisitorVehicle(vehicle: VehicleRequestDTO): Observable<any> {
+    return this.http.post(`${this.apiUrl}/create-vehicle-visitor`, vehicle);
+  }
 
   findAllVehicles(): Observable<VehicleResponseDTO[]> {
     return this.http.get<VehicleResponseDTO[]>(`${this.apiUrl}/find-all-vehicles`);
@@ -27,6 +34,23 @@ export class Celador {
   findVehiclesByApartment(apartmentNumber: number): Observable<any[]> {
     return this.http.get<VehicleResponseDTO[]>(`${this.apiUrl}/find-vehicles-apartment/${apartmentNumber}`);
   }
+
+  findResidentVehicles(): Observable<VehicleResponseDTO[]> {
+    return this.http.get<VehicleResponseDTO[]>(`${this.apiUrl}/find-resident-vehicles`);
+  }
+
+  findVisitorVehicles(): Observable<VehicleResponseDTO[]> {
+    return this.http.get<VehicleResponseDTO[]>(`${this.apiUrl}/find-visitor-vehicles`);
+  }
+
+  findVehicleById(id: number): Observable<VehicleResponseDTO> {
+    return this.http.get<VehicleResponseDTO>(`${this.apiUrl}/find-vehicle-id/${id}`);
+  }
+
+  deleteVehicle(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/delete-vehicle/${id}`);
+  }
+
 
   //VISITANTES (VISITORS)
 
@@ -39,8 +63,17 @@ export class Celador {
     return this.http.get<VisitorResponseDTO[]>(`${this.apiUrl}/find-visitors-apartment/${apartmentNumber}`);
   }
 
+  findAllVisitors(): Observable<any[]> {
+    return this.http.get<VisitorResponseDTO[]>(`${this.apiUrl}/find-all-visitor`);
+  }
+
+
+
   //PAQUETERÍA (PACKAGES)
 
+  findAllPackages(): Observable<any[]> {
+    return this.http.get<PackageResponseDTO[]>(`${this.apiUrl}/find-all-package`);
+  }
 
   createPackage(pkg: PackageRequestDTO): Observable<any> {
     return this.http.post<PackageResponseDTO>(`${this.apiUrl}/create-package`, pkg);
