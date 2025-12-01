@@ -1,0 +1,20 @@
+meta {
+  name: FIND ALL PACKAGES
+  type: http
+  seq: 7
+}
+
+get {
+  url: http://localhost:8080/celador/find-all-package
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJORVNUT1ItRFVRVUUtREVWRUxPUEVSIiwic3ViIjoibmVzdG9yZHVxdWVjZWxhZG9yQGdtYWlsLmNvbSIsInJvbGVzIjpbIlJPTEVfQ0VMQURPUiJdLCJpYXQiOjE3NjQ1OTYwODksImV4cCI6MTc2NDU5Nzg4OSwianRpIjoiOTExM2E2YTYtM2Q0ZC00MWVjLTgzMWEtZGJjNmY2OWRiMjU1IiwibmJmIjoxNzY0NTk2MDg5fQ.kWY5mozF-3_dAPwffBAoPHBlTbjqwMnqvWkRVMLla6Y
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

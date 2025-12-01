@@ -2,7 +2,9 @@ package server.smartcond.Infrastructure.Controllers;
 
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,14 +31,40 @@ public class CeladorController {
         return new ResponseEntity<>(this.celadorService.createVehicle(vehicleRequestDto), HttpStatus.CREATED);
     }
 
+    @PostMapping("/create-vehicle-visitor")
+    public ResponseEntity<VehicleResponseDTO> createVehicleVisitor(@RequestBody VehicleRequestDTO vehicleRequestDto) {
+        return new ResponseEntity<>(this.celadorService.createVisitorVehicle(vehicleRequestDto), HttpStatus.CREATED);
+    }
+
     @GetMapping("/find-all-vehicles")
     public ResponseEntity<List<VehicleResponseDTO>> findAllVehicles() {
         return new ResponseEntity<>(this.celadorService.findAllVehicles(), HttpStatus.OK);
     }
 
+    @GetMapping("/find-vehicle-id/{id}")
+    public ResponseEntity<List<VehicleResponseDTO>> findVehicleById(@PathVariable Long id){
+        return new ResponseEntity<>(this.celadorService.findVehicleByID(id), HttpStatus.OK);
+    }
+    @GetMapping("/find-resident-vehicles")
+    public ResponseEntity<List<VehicleResponseDTO>> findResidentVehicles() {
+        return new ResponseEntity<>(this.celadorService.findResidentsVehicles(), HttpStatus.OK);
+    }
+
+    @GetMapping("/find-visitor-vehicles")
+    public ResponseEntity<List<VehicleResponseDTO>> findVisitorVehicles() {
+        return new ResponseEntity<>(this.celadorService.findVisitorsVehicles(), HttpStatus.OK);
+    }
+
     @GetMapping("/find-vehicles-apartment/{number}")
     public ResponseEntity<List<VehicleResponseDTO>> findAllVehiclesByApartment(@PathVariable Integer number){
         return new ResponseEntity<>(this.celadorService.findVehiclesByApartmentNumber(number), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Eliminar Vehicle")
+    @DeleteMapping("/delete-vehicle/{id}")
+    public ResponseEntity<Void> deleteVehicle(@PathVariable Long id) {
+        this.celadorService.deleteVehicle(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     //Visitors
@@ -50,6 +78,11 @@ public class CeladorController {
         return new ResponseEntity<>(this.celadorService.findVisitorByApartment(number), HttpStatus.OK );
     }
 
+    @GetMapping("/find-all-visitor")
+    public ResponseEntity<List<VisitorResponseDTO>> findAllVisitors(){
+        return new ResponseEntity<>(this.celadorService.findAllVisitors(), HttpStatus.OK );
+    }
+
     //Packages
 
     @PostMapping("/create-package")
@@ -60,6 +93,11 @@ public class CeladorController {
     @GetMapping("/find-package-apartment/{number}")
     public ResponseEntity<List<PackageResponseDTO>> findPackageByApartment(@PathVariable Integer number){
         return new ResponseEntity<>(this.celadorService.findByApartment(number), HttpStatus.OK);
+    }
+
+    @GetMapping("/find-all-package")
+    public ResponseEntity<List<PackageResponseDTO>> findAllPackages(){
+        return new ResponseEntity<>(this.celadorService.findAllPackage(), HttpStatus.OK);
     }
 
     @GetMapping("/find-package-not-delivered")

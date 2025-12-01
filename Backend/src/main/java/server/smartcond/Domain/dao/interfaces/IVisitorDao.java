@@ -8,7 +8,7 @@ public interface IVisitorDao {
 
     VisitorEntity saveVisitor(VisitorEntity visitor);
     List<VisitorEntity> findByApartmentNumber(Integer number);
-
+    List<VisitorEntity> findAllVisitors();
     List<VisitorEntity> findLatestVisitorsByApartment(Long apartmentId, int limit);
 
 

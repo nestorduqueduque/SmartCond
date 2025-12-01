@@ -1,15 +1,28 @@
 meta {
-  name: Editar Notice 
+  name: Editar Notice
   type: http
-  seq: 12
+  seq: 13
 }
 
 put {
-  url: update-notice/{id}
-  body: none
-  auth: inherit
+  url: http://localhost:8080/admin/update-notice/34
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJORVNUT1ItRFVRVUUtREVWRUxPUEVSIiwic3ViIjoibmVzdG9yZHVxdWVkdXF1ZUBnbWFpbC5jb20iLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTc2NDMzNzgzOSwiZXhwIjoxNzY0MzM5NjM5LCJqdGkiOiJiNzI2ZDgzYy04YWMwLTQ3YTgtOWExZi02NGZmZDlkNDEwZDMiLCJuYmYiOjE3NjQzMzc4Mzl9.UxKwI0aqZfOfonZ-92d85EATDUFWMgQfkr-4F8_xtGU
+}
+
+body:json {
+  {
+    "title": "Mantenimiento de ascensores",
+    "content": "Se informa que el día lunes se realizará mantenimiento en los ascensores de la Torre 3."
+  }
+  
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

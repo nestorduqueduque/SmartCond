@@ -3,8 +3,9 @@ package server.smartcond.Application.SImplementations;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import server.smartcond.Domain.Dto.request.PackageRequestDTO;
 import server.smartcond.Domain.Dto.request.VehicleRequestDTO;
 
@@ -15,12 +16,12 @@ import server.smartcond.Domain.Entities.*;
 import server.smartcond.Domain.Services.ICeladorService;
 
 import server.smartcond.Domain.Utils.PackageStatus;
+import server.smartcond.Domain.Utils.VehicleOwnerType;
 import server.smartcond.Domain.dao.interfaces.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -38,7 +39,6 @@ public class CeladorServiceImpl implements ICeladorService {
     ICeladorDao celadorDao;
     @Autowired
     INoticeDao noticeDao;
-
     @Autowired
     IUserDao userDao;
 
@@ -50,14 +50,36 @@ public class CeladorServiceImpl implements ICeladorService {
             ApartmentEntity apartmentEntity = apartmentDao.findByNumber(vehicleRequestDto.getApartment()).
                     orElseThrow(() -> new RuntimeException("Apartamento No Encontrado " + vehicleRequestDto.getApartment()));
             vehicleEntity.setApartment(apartmentEntity);
+            vehicleEntity.setVehicleOwnerType(VehicleOwnerType.RESIDENT);
+            vehicleEntity.setRegisteredAt(LocalDateTime.now(ZoneId.of("America/Bogota")));;
             vehicleDao.saveVehicleEntity(vehicleEntity);
             VehicleResponseDTO responseDto = toVehicleResponse(vehicleEntity);
             return responseDto;
 
         } catch (Exception e) {
-            throw new UnsupportedOperationException("Error al guardar Vehiculo");
+            throw new RuntimeException("Error al guardar Vehículo: " + e.getMessage(), e);
         }
     }
+
+    @Override
+    public VehicleResponseDTO createVisitorVehicle(VehicleRequestDTO vehicleRequestDto) {
+        try {
+            ModelMapper modelMapper = new ModelMapper();
+            VehicleEntity vehicleEntity = modelMapper.map(vehicleRequestDto, VehicleEntity.class);
+            ApartmentEntity apartmentEntity = apartmentDao.findByNumber(vehicleRequestDto.getApartment()).
+                    orElseThrow(() -> new RuntimeException("Apartamento No Encontrado " + vehicleRequestDto.getApartment()));
+            vehicleEntity.setApartment(apartmentEntity);
+            vehicleEntity.setVehicleOwnerType(VehicleOwnerType.VISITOR);
+            vehicleEntity.setRegisteredAt(LocalDateTime.now(ZoneId.of("America/Bogota")));;
+            vehicleDao.saveVehicleEntity(vehicleEntity);
+            VehicleResponseDTO responseDto = toVehicleResponse(vehicleEntity);
+            return responseDto;
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error al guardar Vehículo: " + e.getMessage(), e);
+        }
+    }
+
 
     @Override
     public List<VehicleResponseDTO> findAllVehicles() {
@@ -68,8 +90,45 @@ public class CeladorServiceImpl implements ICeladorService {
     }
 
     @Override
+    public List<VehicleResponseDTO> findVisitorsVehicles() {
+        return this.vehicleDao.findVisitorAll()
+                .stream()
+                .map(this::toVehicleResponse)
+                .collect(Collectors.toList());
+    }
+    @Override
+    public List<VehicleResponseDTO> findResidentsVehicles() {
+        return this.vehicleDao.findResidentAll()
+                .stream()
+                .map(this::toVehicleResponse)
+                .collect(Collectors.toList());
+    }
+    @Override
     public List<VehicleResponseDTO> findVehiclesByApartmentNumber(Integer number) {
         return this.vehicleDao.findByApartmentNumber(number)
+                .stream()
+                .map(this::toVehicleResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteVehicle(Long id) {
+        vehicleDao.findById(id)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehiculo no encontrado"));
+        try {
+            vehicleDao.deleteById(id);
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error al eliminar el vehiculo"
+            );
+        }
+    }
+
+    @Override
+    public List<VehicleResponseDTO> findVehicleByID(Long id) {
+        return this.vehicleDao.findById(id)
                 .stream()
                 .map(this::toVehicleResponse)
                 .collect(Collectors.toList());
@@ -104,12 +163,27 @@ public class CeladorServiceImpl implements ICeladorService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<VisitorResponseDTO> findAllVisitors() {
+        return visitorDao.findAllVisitors()
+                .stream()
+                .map(this::toVisitorResponse)
+                .collect(Collectors.toList());
+    }
 
     //Packages
 
     @Override
     public List<PackageResponseDTO> findPackageNotDelivered() {
         return packageDao.findByStatusNoDelivered()
+                .stream()
+                .map(this::toPackageResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PackageResponseDTO> findAllPackage() {
+        return packageDao.findAllPackages()
                 .stream()
                 .map(this::toPackageResponse)
                 .collect(Collectors.toList());
@@ -190,6 +264,8 @@ public class CeladorServiceImpl implements ICeladorService {
         dto.setBrand(vehicleEntity.getBrand());
         dto.setModel(vehicleEntity.getModel());
         dto.setApartment(vehicleEntity.getApartment().getNumber());
+        dto.setRegisteredAt(vehicleEntity.getRegisteredAt());
+        dto.setOwnerType(vehicleEntity.getVehicleOwnerType());
         return dto;
     }
 

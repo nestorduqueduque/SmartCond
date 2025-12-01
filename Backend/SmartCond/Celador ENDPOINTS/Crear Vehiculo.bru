@@ -7,12 +7,11 @@ meta {
 post {
   url: http://localhost:8080/celador/create-vehicle
   body: json
-  auth: basic
+  auth: bearer
 }
 
-auth:basic {
-  username: nestorduquecelador@gmail.com
-  password: 1807NestorDuque
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJORVNUT1ItRFVRVUUtREVWRUxPUEVSIiwic3ViIjoibmVzdG9yZHVxdWVjZWxhZG9yQGdtYWlsLmNvbSIsInJvbGVzIjpbIlJPTEVfQ0VMQURPUiJdLCJpYXQiOjE3NjQ2MDI5MjUsImV4cCI6MTc2NDYwNDcyNSwianRpIjoiY2VmZDc3OWQtNjQwYy00ZTUyLWIxOGItYWUxZDlhYmU2Mjk4IiwibmJmIjoxNzY0NjAyOTI1fQ.EX3bmQu-H64roXPi9gIfIorU3lF1jZeCKkEDdwPbPBE
 }
 
 body:json {
@@ -21,10 +20,11 @@ body:json {
     "type": "CAR",
     "brand": "Toyota",
     "model": "Machito",
-    "apartment": 554
+    "apartment": 551
   }
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

@@ -1,0 +1,20 @@
+meta {
+  name: delete Notice
+  type: http
+  seq: 8
+}
+
+delete {
+  url: http://localhost:8080/admin/delete-notice/33
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJORVNUT1ItRFVRVUUtREVWRUxPUEVSIiwic3ViIjoibmVzdG9yZHVxdWVkdXF1ZUBnbWFpbC5jb20iLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTc2NDMzNzAwNiwiZXhwIjoxNzY0MzM4ODA2LCJqdGkiOiIzZWUwNTAzNC1iMWY4LTQ5YjItODY0MS1hMTBjYTNmMzcwYWMiLCJuYmYiOjE3NjQzMzcwMDZ9.tRW3_6oBKhUtn1F7UJzwKfmT3FLoUeG5mdRDzelE6iU
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

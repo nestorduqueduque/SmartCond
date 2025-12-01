@@ -5,7 +5,7 @@ meta {
 }
 
 post {
-  url: http://localhost:8080/developer/create-admin
+  url: https://smartcond-production.up.railway.app/developer/create-admin
   body: json
   auth: inherit
 }
@@ -14,8 +14,8 @@ body:json {
   {
     "name": "Nestor",
     "lastName": "Duque",
-    "document": 1524728,
-    "email": "elduque25@gmail.com",
+    "document": 1524728  ,
+    "email": "nestorduqueduque@gmail.com",
     "password": "1807NestorDuque",
     "phoneNumber": 3132627472,
     "direction": "Calle 45 #67-89"
@@ -25,4 +25,5 @@ body:json {
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import server.smartcond.Domain.Entities.NoticeEntity;
 import server.smartcond.Domain.Entities.PackageEntity;
 import server.smartcond.Domain.Utils.PackageStatus;
 import server.smartcond.Domain.dao.interfaces.IPackageDao;
@@ -39,6 +40,11 @@ public class PackageDaoImpl implements IPackageDao {
         return em.createQuery(
                         "SELECT p FROM PackageEntity p WHERE p.status = :status", PackageEntity.class)
                 .setParameter("status", PackageStatus.RECEIVED)
+                .getResultList();
+    }
+    @Override
+    public List<PackageEntity> findAllPackages() {
+        return em.createQuery("SELECT c FROM PackageEntity c ORDER BY c.receivedAt DESC", PackageEntity.class)
                 .getResultList();
     }
 

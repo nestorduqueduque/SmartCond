@@ -13,6 +13,8 @@ public interface IPackageDao {
 
     List<PackageEntity> findByStatusNoDelivered();
 
+    List<PackageEntity> findAllPackages();
+
     Optional<PackageEntity> findById(Long id);
     PackageEntity update(PackageEntity packageEntity);
 

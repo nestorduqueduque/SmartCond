@@ -1,0 +1,30 @@
+meta {
+  name: CREATE VEHICLE VISITOR
+  type: http
+  seq: 6
+}
+
+post {
+  url: http://localhost:8080/celador/create-vehicle-visitor
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJORVNUT1ItRFVRVUUtREVWRUxPUEVSIiwic3ViIjoibmVzdG9yZHVxdWVjZWxhZG9yQGdtYWlsLmNvbSIsInJvbGVzIjpbIlJPTEVfQ0VMQURPUiJdLCJpYXQiOjE3NjQ2MDMyODIsImV4cCI6MTc2NDYwNTA4MiwianRpIjoiZmM2ODBlYzQtZGY4ZC00YWE2LTlmZmMtZmY1ZGE2ZTdkZWFlIiwibmJmIjoxNzY0NjAzMjgyfQ.z4WTIxvUYgQMH06W_NFPo4L3zmNJzkUHIHSxW6-C1ZU
+}
+
+body:json {
+  {
+    "plate": "XYZ987",
+    "type": "CAR",
+    "brand": "Toyota",
+    "model": "Machito",
+    "apartment": 551
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

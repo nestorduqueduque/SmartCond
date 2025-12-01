@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import server.smartcond.Domain.Entities.PackageEntity;
 import server.smartcond.Domain.Entities.VisitorEntity;
 import server.smartcond.Domain.dao.interfaces.IVisitorDao;
 
@@ -30,7 +31,11 @@ public class VisitorDaoImpl implements IVisitorDao {
                 .setParameter("number", number)
                 .getResultList();
     }
-
+    @Override
+    public List<VisitorEntity> findAllVisitors() {
+        return em.createQuery("SELECT c FROM VisitorEntity c ORDER BY c.entryTime DESC", VisitorEntity .class)
+                .getResultList();
+    }
     @Override
     public List<VisitorEntity> findLatestVisitorsByApartment(Long apartmentId, int limit) {
         return em.createQuery(
