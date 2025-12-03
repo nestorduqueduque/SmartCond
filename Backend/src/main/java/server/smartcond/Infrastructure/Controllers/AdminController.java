@@ -17,7 +17,9 @@ import server.smartcond.Domain.Dto.response.NoticeResponseDTO;
 import server.smartcond.Domain.Dto.response.ResidentResponseDTO;
 import server.smartcond.Domain.Services.IAdminService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
@@ -27,10 +29,26 @@ public class AdminController {
     @Autowired
     private IAdminService adminService;
 
-    //Celador Endpoints
+    @GetMapping("/check/document/{document}")
+    public ResponseEntity<Map<String, Boolean>> checkDocument(@PathVariable String document) {
+        boolean exists = adminService.checkDocumentExists(document);
 
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("exists", exists);
 
-    @Operation(summary = "get all the celadors")
+        return ResponseEntity.ok(response);
+    }
+    @GetMapping("/check/email/{email}")
+    public ResponseEntity<Map<String, Boolean>> checkEmail(@PathVariable String email) {
+        boolean exists = adminService.checkEmailExists(email);
+
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("exists", exists);
+
+        return ResponseEntity.ok(response);
+    }
+
+    //Celador Endpoints    @Operation(summary = "get all the celadors")
     @GetMapping("/find-all-celador")
     public ResponseEntity<List<CeladorResponseDTO>> findAllCeladors(){
         return new ResponseEntity<>(this.adminService.findAllCeladors(), HttpStatus.OK);

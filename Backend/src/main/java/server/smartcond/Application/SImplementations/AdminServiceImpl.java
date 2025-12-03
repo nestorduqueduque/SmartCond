@@ -49,6 +49,16 @@ public class AdminServiceImpl implements IAdminService {
     private PasswordEncoder passwordEncoder;
 
 
+    @Override
+    public boolean checkDocumentExists(String document) {
+        return adminDao.existsByDocument(document);
+    }
+
+    @Override
+    public boolean checkEmailExists(String email) {
+        return adminDao.existsByEmail(email);
+    }
+
     //celador
     @Override
     public List<CeladorResponseDTO> findAllCeladors() {

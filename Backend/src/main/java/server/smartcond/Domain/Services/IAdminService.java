@@ -12,6 +12,9 @@ import java.util.List;
 
 public interface IAdminService {
 
+    boolean checkDocumentExists(String document);
+    boolean checkEmailExists(String email);
+
 
     //Celador Methods
     List<CeladorResponseDTO> findAllCeladors();

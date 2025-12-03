@@ -17,6 +17,25 @@ public class AdminDaoImpl implements IAdminDao {
 
     @PersistenceContext
     private EntityManager em;
+
+    @Override
+    public boolean existsByDocument(String document) {
+        String query = "SELECT COUNT(u) FROM UserEntity u WHERE u.document = :document";
+        Long count = em.createQuery(query, Long.class)
+                .setParameter("document", document)
+                .getSingleResult();
+        return count > 0;
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        String query = "SELECT COUNT(u) FROM UserEntity u WHERE u.email = :email";
+        Long count = em.createQuery(query, Long.class)
+                .setParameter("email", email)
+                .getSingleResult();
+        return count > 0;
+    }
+
     @Override
     public List<UserEntity> findAllAdmins() {
         return this.em.createQuery(

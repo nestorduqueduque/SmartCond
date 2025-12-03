@@ -7,6 +7,10 @@ import java.util.Optional;
 
 public interface IAdminDao {
 
+    boolean existsByDocument(String document);
+
+    boolean existsByEmail(String email);
+
     List<UserEntity> findAllAdmins();
 
     Optional<UserEntity> findAdminById(Long id);
