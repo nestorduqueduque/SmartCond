@@ -13,6 +13,13 @@ export class RegisterService {
   private apiUrl = 'https://smartcond-production.up.railway.app/admin';
 
 
+  checkDocumentExists(documento: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/check/document/${documento}`);
+  }
+ checkEmailExists(email: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/check/email/${email}`);
+  }
+
   //Celador
   getCeladorById(id: number): Observable<CeladorResponseDTO> {
     return this.http.get<CeladorResponseDTO>(`${this.apiUrl}/find-celador-byID/${id}`);

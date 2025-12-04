@@ -47,7 +47,7 @@ export class ResidentDashboard {
         this.apartmentNumber = data.apartment.number;
         this.towerNumber = data.apartment.tower.number;
 
-        
+
         this.latestPackages = data.latestPackages;
         this.latestVisitors = data.latestVisitors;
         this.latestNotices = data.latestNotices;

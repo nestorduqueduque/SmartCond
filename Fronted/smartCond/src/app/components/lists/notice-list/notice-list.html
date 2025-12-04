@@ -8,7 +8,7 @@
           <path d="M24 2L4 17.3826L24 31" stroke="#5D4F4F" stroke-width="4" stroke-linecap="round"/>
         </svg>
       </button>
-      <h2 style="color: #2f6e41; margin-left: 10px;">Gestión de Avisos</h2>
+      <h2 style="color: #2f6e41; margin-left: 10px;">Gestión de Comunicados</h2>
     </div>
 
     <div class="content-sections">
@@ -17,8 +17,8 @@
 
           <!-- TÍTULO + BOTÓN -->
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h3 class="section-title">Listado de Avisos</h3>
-            <button class="create-btn" [routerLink]="['/registro-noticias']">Crear Aviso</button>
+            <h3 class="section-title">Listado de Comunicados</h3>
+            <button class="create-btn" [routerLink]="['/registro-noticias']">Crear Comunicado</button>
           </div>
 
           <!-- INPUT BUSCAR -->
@@ -35,7 +35,7 @@
 
             <!-- LOADING -->
             <div *ngIf="isLoading" style="text-align: center; padding: 20px;">
-              <p>Cargando avisos...</p>
+              <p>Cargando comunicados...</p>
             </div>
 
             <!-- DESKTOP TABLE -->
