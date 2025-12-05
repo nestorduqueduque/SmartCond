@@ -73,6 +73,22 @@ public class UserDetailServiceImpl implements UserDetailsService {
             throw  new BadCredentialsException("Invalid username or password");
         }
 
+         if (!userDetails.isEnabled()) {
+            throw new BadCredentialsException("El usuario está deshabilitado");
+        }
+
+        if (!userDetails.isAccountNonLocked()) {
+            throw new BadCredentialsException("La cuenta está bloqueada");
+        }
+
+            if (!userDetails.isAccountNonExpired()) {
+            throw new BadCredentialsException("La cuenta está expirada");
+        }
+
+         if (!userDetails.isCredentialsNonExpired()) {
+            throw new BadCredentialsException("Las credenciales han expirado");
+        }
+
         if(!passwordEncoder.matches(password, userDetails.getPassword())){
             throw new BadCredentialsException("Invalid password");
         }
