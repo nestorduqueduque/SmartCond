@@ -29,8 +29,6 @@ export class CeladorRegister {
   private router = inject(Router);
 
   isSubmitting = false;
-
-  // toggles for eye icons
   showPassword = false;
   showPasswordConfirm = false;
 
@@ -38,36 +36,36 @@ export class CeladorRegister {
   readonly numberPattern = /^[0-9]+$/;
   readonly emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-  // Async validators with debounce (you had these — las dejé)
-  documentExistsValidator(registerService: RegisterService): AsyncValidatorFn {
+  // ASYNC VALIDATORS
+  documentExistsValidator(): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      if (!control.value || control.pristine) {
-        return of(null);
-      }
+
+      if (!control.value || control.value.length < 5) return of(null);
+
       return of(control.value).pipe(
-        debounceTime(500),
-        switchMap(documentValue => registerService.checkDocumentExists(documentValue)),
-        map((response: any) => (response && response.exists === true) ? { documentTaken: true } : null),
+        debounceTime(600),
+        switchMap(value => this.registerService.checkDocumentExists(value)),
+        map(res => res?.exists ? { documentTaken: true } : null),
         catchError(() => of(null))
       );
     };
   }
 
-  emailExistsValidator(registerService: RegisterService): AsyncValidatorFn {
+  emailExistsValidator(): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      if (!control.value || control.pristine) {
-        return of(null);
-      }
+
+      if (!control.value) return of(null);
+
       return of(control.value).pipe(
-        debounceTime(500),
-        switchMap(emailValue => registerService.checkEmailExists(emailValue)),
-        map((response: any) => (response && response.exists === true) ? { emailTaken: true } : null),
+        debounceTime(600),
+        switchMap(value => this.registerService.checkEmailExists(value)),
+        map(res => res?.exists ? { emailTaken: true } : null),
         catchError(() => of(null))
       );
     };
   }
 
-  // Form
+  // FORM
   celadorForm: FormGroup = this.fb.group(
     {
       name: ['', [
@@ -80,133 +78,118 @@ export class CeladorRegister {
         Validators.maxLength(30),
         Validators.pattern(this.textPattern)
       ]],
-      document: ['', {
-        validators: [
-          Validators.required,
-          Validators.maxLength(11),
-          Validators.pattern(this.numberPattern)
-        ],
-        asyncValidators: [this.documentExistsValidator(this.registerService)],
-        updateOn: 'blur'
-      }],
-      email: ['', {
-        validators: [
-          Validators.required,
-          Validators.pattern(this.emailPattern)
-        ],
-        asyncValidators: [this.emailExistsValidator(this.registerService)],
-        updateOn: 'blur'
-      }],
+      document: ['', [
+        Validators.required,
+        Validators.maxLength(11),
+        Validators.pattern(this.numberPattern)
+      ], [this.documentExistsValidator()]],
+
+      email: ['', [
+        Validators.required,
+        Validators.pattern(this.emailPattern)
+      ], [this.emailExistsValidator()]],
+
       emailConfirm: ['', [
         Validators.required,
         Validators.pattern(this.emailPattern)
       ]],
+
       password: ['', [
         Validators.required,
         Validators.minLength(6),
         Validators.maxLength(15)
       ]],
+
       passwordConfirm: ['', [
         Validators.required,
         Validators.minLength(6),
         Validators.maxLength(15)
       ]],
+
       phoneNumber: ['', [
         Validators.required,
         Validators.pattern(this.numberPattern),
         Validators.maxLength(15)
       ]],
+
       direction: ['', [
         Validators.required,
         Validators.maxLength(50)
       ]]
     },
-    { validators: this.matchFields.bind(this) } // group validator
+    { validators: this.matchFields.bind(this) }
   );
 
-  // Strip helper para inputs
+  // SANITIZADORES
   stripNonNumeric(controlName: string): void {
     const ctrl = this.celadorForm.get(controlName);
     if (!ctrl) return;
-    const cleaned = (ctrl.value || '').toString().replace(/[^0-9]/g, '');
-    if (cleaned !== ctrl.value) {
-      ctrl.setValue(cleaned, { emitEvent: false });
-    }
+    const clean = ctrl.value?.replace(/\D+/g, '') ?? '';
+    if (clean !== ctrl.value) ctrl.setValue(clean, { emitEvent: false });
   }
 
   stripNonAlpha(controlName: string): void {
     const ctrl = this.celadorForm.get(controlName);
     if (!ctrl) return;
-    const cleaned = (ctrl.value || '').toString().replace(/[^a-zA-ZñÑáéíóúÁÉÍÓÚ\s]/g, '');
-    if (cleaned !== ctrl.value) {
-      ctrl.setValue(cleaned, { emitEvent: false });
-    }
+    const clean = ctrl.value?.replace(/[^a-zA-ZñÑáéíóúÁÉÍÓÚ\s]/g, '') ?? '';
+    if (clean !== ctrl.value) ctrl.setValue(clean, { emitEvent: false });
   }
 
-  // Group validator to compare email/password and their confirms
-  private matchFields(control: AbstractControl | null) {
-    if (!control) return null;
-    const email = control.get('email');
-    const emailConfirm = control.get('emailConfirm');
-    const password = control.get('password');
-    const passwordConfirm = control.get('passwordConfirm');
+  // MATCH EMAIL / PASSWORD
+  private matchFields(form: AbstractControl) {
+    if (!form) return null;
 
-    // Email match
+    const email = form.get('email');
+    const emailConfirm = form.get('emailConfirm');
+    const pass = form.get('password');
+    const passConfirm = form.get('passwordConfirm');
+
     if (email && emailConfirm) {
-      if (email.value && emailConfirm.value && email.value !== emailConfirm.value) {
-        emailConfirm.setErrors({ ...(emailConfirm.errors || {}), emailMismatch: true });
-      } else {
-        // remove only emailMismatch (keep other errors)
-        if (emailConfirm.errors) {
-          const { emailMismatch, ...rest } = emailConfirm.errors;
-          const newErr = Object.keys(rest).length ? rest : null;
-          emailConfirm.setErrors(newErr);
-        }
-      }
+      emailConfirm.setErrors(
+        email.value && emailConfirm.value && email.value !== emailConfirm.value
+          ? { emailMismatch: true }
+          : null
+      );
     }
 
-    // Password match
-    if (password && passwordConfirm) {
-      if (password.value && passwordConfirm.value && password.value !== passwordConfirm.value) {
-        passwordConfirm.setErrors({ ...(passwordConfirm.errors || {}), passwordMismatch: true });
-      } else {
-        if (passwordConfirm.errors) {
-          const { passwordMismatch, ...rest } = passwordConfirm.errors;
-          const newErr = Object.keys(rest).length ? rest : null;
-          passwordConfirm.setErrors(newErr);
-        }
-      }
+    if (pass && passConfirm) {
+      passConfirm.setErrors(
+        pass.value && passConfirm.value && pass.value !== passConfirm.value
+          ? { passwordMismatch: true }
+          : null
+      );
     }
 
     return null;
   }
 
-  // Eye toggles
-  toggleShowPassword(): void {
+  toggleShowPassword() {
     this.showPassword = !this.showPassword;
   }
-  toggleShowPasswordConfirm(): void {
+
+  toggleShowPasswordConfirm() {
     this.showPasswordConfirm = !this.showPasswordConfirm;
   }
 
-  // Submit
+  // SUBMIT
   onSubmit(): void {
-    if (this.celadorForm.invalid || this.isSubmitting) {
+    if (this.celadorForm.invalid) {
       this.celadorForm.markAllAsTouched();
       return;
     }
 
     this.isSubmitting = true;
-    const formValue = this.celadorForm.value;
+
+    const v = this.celadorForm.value;
 
     const request: CeladorRequestDTO = {
-      name: formValue.name,
-      lastName: formValue.lastName,
-      document: Number(formValue.document),
-      email: formValue.email,
-      password: formValue.password,
-      phoneNumber: Number(formValue.phoneNumber),
-      direction: formValue.direction
+      name: v.name,
+      lastName: v.lastName,
+      document: Number(v.document),
+      email: v.email,
+      password: v.password,
+      phoneNumber: Number(v.phoneNumber),
+      direction: v.direction
     };
 
     this.registerService.createCelador(request).subscribe({
@@ -215,39 +198,25 @@ export class CeladorRegister {
           icon: 'success',
           title: '¡Éxito!',
           text: 'Celador registrado exitosamente.',
-          confirmButtonText: 'Aceptar',
           timer: 3000
         });
-        this.isSubmitting = false;
         this.router.navigate(['/admin-dashboard']);
+        this.isSubmitting = false;
       },
       error: (err) => {
-        let errorMessage = "Error al Registrar Celador. Verifique los Datos!";
+        let msg = "Error al Registrar Celador. Verifique los Datos!";
+        const backend = err.error?.message || err.error?.error || "";
 
-        if (err.status === 409 || err.status === 400) {
-            const backendMessage = err.error?.message || err.error?.error || '';
+        if (backend.toLowerCase().includes("documento")) msg = "El número de documento ya está registrado.";
+        if (backend.toLowerCase().includes("correo") || backend.toLowerCase().includes("email")) msg = "El correo ya está registrado.";
 
-            if (backendMessage.toLowerCase().includes('documento')) {
-                errorMessage = "El número de documento ya está registrado.";
-            } else if (backendMessage.toLowerCase().includes('correo') || backendMessage.toLowerCase().includes('email')) {
-                errorMessage = "El correo electrónico ya está registrado.";
-            } else {
-                errorMessage = backendMessage || errorMessage;
-            }
-        }
-
-        console.error('Error al crear celador:', err);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: errorMessage,
-        });
+        Swal.fire({ icon: "error", title: "Error", text: msg });
         this.isSubmitting = false;
       }
     });
   }
 
-  goBack(): void {
+  goBack() {
     this.router.navigate(['/admin-dashboard']);
   }
 }

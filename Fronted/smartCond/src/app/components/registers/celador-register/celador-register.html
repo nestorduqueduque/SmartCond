@@ -17,7 +17,7 @@
           <div class="section-content">
             <form [formGroup]="celadorForm" (ngSubmit)="onSubmit()" class="form form--registro">
 
-              <!-- Nombre -->
+              <!-- Nombres -->
               <div class="form__row">
                 <label class="form__label">Nombres</label>
                 <input type="text" formControlName="name" class="form__input" maxlength="30" (input)="stripNonAlpha('name')">
@@ -37,28 +37,28 @@
               <div class="form__row">
                 <label class="form__label">Documento</label>
                 <input type="text" formControlName="document" class="form__input" maxlength="11" (input)="stripNonNumeric('document')">
-                <small *ngIf="celadorForm.get('document')?.dirty && celadorForm.get('document')?.invalid && !celadorForm.get('document')?.pending" class="text-danger">
-                  <span *ngIf="celadorForm.get('document')?.errors?.['documentTaken']">Este documento ya está registrado.</span>
+                <small *ngIf="celadorForm.get('document')?.touched && celadorForm.get('document')?.invalid" class="text-danger">
+                  <span *ngIf="celadorForm.get('document')?.errors?.['documentTaken']">Documento ya registrado.</span>
                   <span *ngIf="celadorForm.get('document')?.errors?.['required']">El documento es requerido.</span>
-                  <span *ngIf="celadorForm.get('document')?.errors?.['pattern']">Solo se permiten números.</span>
+                  <span *ngIf="celadorForm.get('document')?.errors?.['pattern']">Solo números.</span>
                 </small>
               </div>
 
-              <!-- Email -->
+              <!-- Correo -->
               <div class="form__row">
-                <label class="form__label">Correo electrónico</label>
-                <input type="email" formControlName="email" class="form__input" maxlength="80">
-                <small *ngIf="celadorForm.get('email')?.dirty && celadorForm.get('email')?.invalid && !celadorForm.get('email')?.pending" class="text-danger">
+                <label class="form__label">Correo</label>
+                <input type="email" formControlName="email" class="form__input">
+                <small *ngIf="celadorForm.get('email')?.touched && celadorForm.get('email')?.invalid" class="text-danger">
                   <span *ngIf="celadorForm.get('email')?.errors?.['emailTaken']">Correo ya registrado.</span>
-                  <span *ngIf="celadorForm.get('email')?.errors?.['required']">El correo es requerido.</span>
+                  <span *ngIf="celadorForm.get('email')?.errors?.['required']">Correo requerido.</span>
                   <span *ngIf="celadorForm.get('email')?.errors?.['pattern']">Correo inválido.</span>
                 </small>
               </div>
 
-              <!-- Confirmación Email -->
+              <!-- Confirmar correo -->
               <div class="form__row">
                 <label class="form__label">Confirmar correo</label>
-                <input type="email" formControlName="emailConfirm" class="form__input" maxlength="80">
+                <input type="email" formControlName="emailConfirm" class="form__input">
                 <small *ngIf="celadorForm.get('emailConfirm')?.errors?.['emailMismatch'] && celadorForm.get('emailConfirm')?.touched" class="text-danger">Los correos no coinciden.</small>
               </div>
 
@@ -66,58 +66,40 @@
               <div class="form__row">
                 <label class="form__label">Celular</label>
                 <input type="text" formControlName="phoneNumber" class="form__input" maxlength="15" (input)="stripNonNumeric('phoneNumber')">
-                <small *ngIf="celadorForm.get('phoneNumber')?.touched && celadorForm.get('phoneNumber')?.errors?.['required']" class="text-danger">El celular es requerido.</small>
-                <small *ngIf="celadorForm.get('phoneNumber')?.touched && celadorForm.get('phoneNumber')?.errors?.['pattern']" class="text-danger">Solo se permiten números.</small>
+                <small *ngIf="celadorForm.get('phoneNumber')?.touched && celadorForm.get('phoneNumber')?.errors?.['required']" class="text-danger">El Numero de Celular es Requerido.</small>
+                <small *ngIf="celadorForm.get('phoneNumber')?.touched && celadorForm.get('phoneNumber')?.errors?.['pattern']" class="text-danger">Solo números.</small>
               </div>
 
               <!-- Dirección -->
               <div class="form__row">
                 <label class="form__label">Dirección</label>
-                <input type="text" formControlName="direction" class="form__input" maxlength="50">
-                <small *ngIf="celadorForm.get('direction')?.touched && celadorForm.get('direction')?.errors?.['required']" class="text-danger">La dirección es requerida.</small>
+                <input type="text" formControlName="direction" class="form__input">
+                <small *ngIf="celadorForm.get('direction')?.touched && celadorForm.get('direction')?.errors?.['required']" class="text-danger">La Dirección es Requerida.</small>
               </div>
 
               <!-- Contraseña -->
               <div class="form__row" style="position:relative;">
                 <label class="form__label">Contraseña</label>
-                <input [type]="showPassword ? 'text' : 'password'" formControlName="password" class="form__input" maxlength="15">
-                <button type="button" (click)="toggleShowPasswordConfirm()"
-                        aria-label="Mostrar confirmar contraseña"
-                        style="position:absolute; right:10px; top:32px; background:none; border:none; cursor:pointer; color: #666; display: flex; align-items: center;">
+                <input [type]="showPassword ? 'text' : 'password'" formControlName="password" class="form__input">
 
-                  <svg *ngIf="!showPasswordConfirm" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                  </svg>
-
-                  <svg *ngIf="showPasswordConfirm" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                    <line x1="1" y1="1" x2="23" y2="23"></line>
-                  </svg>
+                <button type="button" (click)="toggleShowPassword()" style="position:absolute; right:10px; top:32px;">
+                  👁
                 </button>
-                <small *ngIf="celadorForm.get('password')?.touched && celadorForm.get('password')?.errors?.['required']" class="text-danger">La contraseña es requerida.</small>
+
+                <small *ngIf="celadorForm.get('password')?.touched && celadorForm.get('password')?.errors?.['required']" class="text-danger">Requerida.</small>
                 <small *ngIf="celadorForm.get('password')?.touched && celadorForm.get('password')?.errors?.['minlength']" class="text-danger">Mínimo 6 caracteres.</small>
               </div>
 
-              <!-- Confirmación contraseña -->
+              <!-- Confirmar Contraseña -->
               <div class="form__row" style="position:relative;">
                 <label class="form__label">Confirmar contraseña</label>
-                <input [type]="showPasswordConfirm ? 'text' : 'password'" formControlName="passwordConfirm" class="form__input" maxlength="15">
-                <button type="button" (click)="toggleShowPasswordConfirm()"
-                        aria-label="Mostrar confirmar contraseña"
-                        style="position:absolute; right:10px; top:32px; background:none; border:none; cursor:pointer; color: #666; display: flex; align-items: center;">
+                <input [type]="showPasswordConfirm ? 'text' : 'password'" formControlName="passwordConfirm" class="form__input">
 
-                  <svg *ngIf="!showPasswordConfirm" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                  </svg>
-
-                  <svg *ngIf="showPasswordConfirm" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                    <line x1="1" y1="1" x2="23" y2="23"></line>
-                  </svg>
+                <button type="button" (click)="toggleShowPasswordConfirm()" style="position:absolute; right:10px; top:32px;">
+                  👁
                 </button>
-                <small *ngIf="celadorForm.get('passwordConfirm')?.errors?.['passwordMismatch'] && celadorForm.get('passwordConfirm')?.touched" class="text-danger">Las contraseñas no coinciden.</small>
+
+                <small *ngIf="celadorForm.get('passwordConfirm')?.errors?.['passwordMismatch'] && celadorForm.get('passwordConfirm')?.touched" class="text-danger">No coinciden.</small>
               </div>
 
               <!-- Botón -->
@@ -130,8 +112,7 @@
 
         </div>
       </div>
-
     </div>
+
   </div>
 </div>
->

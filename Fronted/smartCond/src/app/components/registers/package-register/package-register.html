@@ -27,6 +27,7 @@
                                     formControlName="description"
                                     placeholder="Ej: Caja de Amazon, Sobre blanco..."
                                     class="form__input"
+                                    maxlength="20"
                                 >
                                 <small *ngIf="packageForm.get('description')?.invalid && packageForm.get('description')?.touched"
                                       style="color: #d32f2f; font-size: 12px; margin-top: 4px;">
@@ -41,6 +42,7 @@
                                     formControlName="apartment"
                                     placeholder="Ej: 301"
                                     class="form__input"
+                                    maxlength="4"
                                 >
                                 <small *ngIf="packageForm.get('apartment')?.invalid && packageForm.get('apartment')?.touched"
                                       style="color: #d32f2f; font-size: 12px; margin-top: 4px;">

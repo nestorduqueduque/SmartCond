@@ -108,6 +108,7 @@
                 <input
                   type="text"
                   class="form-input-field"
+                  maxlength="20"
                   placeholder="Título"
                   name="title"
                   [(ngModel)]="newNotice.title"
@@ -122,6 +123,7 @@
               <div class="form-textarea-box">
                 <textarea
                   class="form-textarea-field"
+                  maxlength="100"
                   placeholder="Descripción"
                   name="content"
                   [(ngModel)]="newNotice.content"
