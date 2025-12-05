@@ -19,7 +19,7 @@
 
       <div class="left-content">
         <div class="section">
-          <h3 class="section-title">Editar Aviso</h3>
+          <h3 class="section-title">Editar Comunicado</h3>
 
           <form [formGroup]="noticeForm" (ngSubmit)="onSubmit()" class="form form--registro">
 
@@ -37,7 +37,7 @@
                     class="form__submit"
                     [disabled]="noticeForm.invalid || isSubmitting"
                     [style.opacity]="noticeForm.invalid ? '0.6' : '1'">
-              {{ isSubmitting ? 'Actualizando...' : 'Actualizar Aviso' }}
+              {{ isSubmitting ? 'Actualizando...' : 'Actualizar Comunicado' }}
             </button>
 
           </form>
