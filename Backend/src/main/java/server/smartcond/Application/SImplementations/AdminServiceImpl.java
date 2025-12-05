@@ -162,6 +162,7 @@ public class AdminServiceImpl implements IAdminService {
         UserEntity celador = celadorDao.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Celador no encontrado"));
         celador.setEnabled(false);
+        celador.setAccountNoLocked(false);
         celadorDao.saveUserCelador(celador);
 
     }
@@ -271,6 +272,7 @@ public class AdminServiceImpl implements IAdminService {
         UserEntity resident = residentDao.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Residente no encontrado"));
         resident.setEnabled(false);
+        resident.setAccountNoLocked(false);
         residentDao.saveUserResident(resident);
 
     }
