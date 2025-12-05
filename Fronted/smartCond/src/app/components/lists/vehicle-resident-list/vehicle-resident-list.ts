@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
 import { Celador } from '../../../services/celador';
 import { VehicleResponseDTO } from '../../dashboard/celador-dashboard/celador-dashboard.interface';
+import { Auth } from '../../../services/auth';
 
 @Component({
   selector: 'app-vehicle-resident-list',
@@ -16,6 +17,7 @@ export class VehicleResidentList {
   private registerService = inject(Celador);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+   private authService = inject(Auth);
 
   vehicles: VehicleResponseDTO[] = [];
   filteredVehicles: VehicleResponseDTO[] = [];
@@ -84,6 +86,19 @@ export class VehicleResidentList {
       }
     });
   }
+
+   private navigateToDashboard(): void {
+    const role = this.authService.getRole();
+
+    if (role === 'ADMIN') {
+      this.router.navigate(['/admin-dashboard']);
+    } else if (role === 'CELADOR') {
+      this.router.navigate(['/celador-dashboard']);
+    } else {
+      this.router.navigate(['/']);
+    }
+  }
+
   getVehicleTypeName(type: string): string {
   switch (type) {
     case 'CAR':
@@ -100,7 +115,7 @@ export class VehicleResidentList {
   }
 
   goBack(): void {
-    this.router.navigate(['/celador-dashboard']);
+    this.navigateToDashboard();
   }
 
 }
